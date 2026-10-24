@@ -283,7 +283,16 @@ main{min-height:60vh}
 .herophoto .main img{width:100%;aspect-ratio:5/4;object-fit:cover}
 .herophoto .mini{position:absolute;width:38%;left:-8%;bottom:-10%;background:var(--card);padding:8px 8px 30px;box-shadow:0 8px 20px var(--shadow);transform:rotate(-7deg)}
 .herophoto .mini img{aspect-ratio:1;object-fit:cover;width:100%}
-.herophoto .recipe-slip{position:absolute;right:-3%;top:-7%;width:118px;transform:rotate(9deg)}
+/* PEPPER GRINDER on the event photo: grinds spice (or sprinkles) onto the photo when it scrolls into view; tap/hover to repeat. */
+.grinder{position:absolute;right:-3%;top:-15%;width:72px;z-index:3;transform:rotate(8deg);transform-origin:50% 90%;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.grinder svg{width:100%;height:auto;display:block;overflow:visible}
+.grinder .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.grinder .grip{transition:none}
+.grinder.go .grip{animation:twist .16s linear infinite}
+@keyframes twist{to{transform:translateX(-6px)}}
+.speck{position:absolute;left:0;top:0;z-index:4;pointer-events:none;border-radius:50%;will-change:transform,opacity}
+.speck.rod{border-radius:2px}
+@media (max-width:860px){.grinder{width:62px;right:-1%;top:-13%}}
 @media (max-width:860px){.spread{grid-template-columns:1fr}.herophoto{order:-1;margin:10px 8px 40px}.herophoto .mini{left:-4px;width:34%}}
 
 .notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border-left:4px solid var(--terra);padding:12px 16px;border-radius:0 6px 6px 0;font-size:15px;margin:0 0 26px}
@@ -305,6 +314,16 @@ main{min-height:60vh}
 
 /* RECIPE */
 .recipe-sec{padding:70px 0 110px;text-align:center}
+/* ROLLING PIN above the recipes: rolls the dough ball flat when it scrolls into view; tap to roll again. */
+.roller{display:block;width:min(260px,72vw);height:auto;margin:0 auto 4px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.roller *{transform-box:fill-box}
+.roller .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.roller .dough,.roller .face{transform-origin:50% 100%}
+.roller .grain{transition:none}
+.roller.go .grain{animation:roll .22s linear infinite}
+@keyframes roll{to{transform:translateX(-8px)}}
+.roller .spark{transform-origin:50% 50%;transform:scale(0)}
+.roller:focus-visible{outline:3px solid var(--terra);outline-offset:4px;border-radius:8px}
 .recipe-sec h2{font-family:var(--serif);font-size:clamp(34px,5vw,58px);color:var(--olive);margin:0;letter-spacing:-.03em;font-weight:900}
 .recipe-sec > .wrap > p{margin:6px 0 40px;font-size:18px}
 .rcard{position:relative;max-width:640px;margin:0 auto;text-align:left;background:#FFFDF8;color:#463C35;box-shadow:0 14px 34px var(--shadow);border-radius:4px;overflow:hidden;
@@ -586,6 +605,51 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* Rolling pin + dough drawing (see .roller styles). The pin starts off-stage on the right; JS rolls it in. */
+function rollerSVG(){
+  const grain=Array.from({length:16},(_,i)=>`M${-56+i*8} -8v16`).join("");
+  const spark=(x,y)=>`<path class="spark" fill="#F1DAA4" stroke="#463C35" stroke-width="2" stroke-linejoin="round" d="M${x} ${y-8}l2.2 5.8 5.8 2.2-5.8 2.2-2.2 5.8-2.2-5.8-5.8-2.2 5.8-2.2z"/>`;
+  return `<svg class="roller" viewBox="0 0 240 104" role="img" aria-label="A rolling pin rolling out dough. Tap to roll again." tabindex="0">
+    <clipPath id="pinclip"><rect x="-44" y="-11" width="88" height="22" rx="11"/></clipPath>
+    <path class="ln" fill="none" d="M14 94h212"/>
+    <g fill="#FFFDF8" opacity=".9"><circle cx="40" cy="88" r="2"/><circle cx="58" cy="90" r="1.6"/><circle cx="186" cy="89" r="2"/><circle cx="204" cy="87" r="1.5"/><circle cx="196" cy="91" r="1.2"/></g>
+    <g class="dough"><path class="ln" fill="#FBEFD5" vector-effect="non-scaling-stroke" d="M94 94a26 26 0 1 1 52 0z"/></g>
+    <g class="face">
+      <rect x="100" y="76" width="40" height="15" fill="none"/>
+      <circle cx="111" cy="80" r="2.6" fill="#463C35"/><circle cx="129" cy="80" r="2.6" fill="#463C35"/>
+      <circle cx="106" cy="87" r="3.2" fill="#E8BFBE"/><circle cx="134" cy="87" r="3.2" fill="#E8BFBE"/>
+      <path class="ln" fill="none" stroke-width="2.5" d="M116 86q4 4 8 0"/>
+    </g>
+    ${spark(66,70)}${spark(176,66)}${spark(120,52)}
+    <g class="pin" transform="translate(320 29)"><g class="pinbody">
+      <rect class="ln" x="-72" y="-4" width="26" height="8" rx="4" fill="#C98975"/>
+      <rect class="ln" x="46" y="-4" width="26" height="8" rx="4" fill="#C98975"/>
+      <rect x="-44" y="-11" width="88" height="22" rx="11" fill="#F1DAA4"/>
+      <g clip-path="url(#pinclip)"><path class="grain" d="${grain}" stroke="#C98975" stroke-width="1.6" opacity=".35" fill="none"/></g>
+      <rect class="ln" x="-44" y="-11" width="88" height="22" rx="11" fill="none"/>
+      <circle cx="-7" cy="-1" r="1.9" fill="#463C35"/><circle cx="7" cy="-1" r="1.9" fill="#463C35"/>
+      <circle cx="-12" cy="4" r="2.4" fill="#E8BFBE"/><circle cx="12" cy="4" r="2.4" fill="#E8BFBE"/>
+    </g></g>
+  </svg>`;
+}
+/* Pepper grinder drawing (see .grinder styles). The grip lines scroll sideways to look like the cap twisting. */
+function grinderSVG(){
+  const grip=Array.from({length:12},(_,i)=>`M${12+i*6} 20v30`).join("");
+  return `<svg viewBox="0 0 80 160" aria-hidden="true">
+    <clipPath id="gripclip"><path d="M22 20h36q4 0 4 4v22q0 4-4 4h-36q-4 0-4-4v-22q0-4 4-4z"/></clipPath>
+    <circle class="ln" cx="40" cy="13" r="7" fill="#F1DAA4"/>
+    <path class="ln" fill="#C98975" d="M22 20h36q4 0 4 4v22q0 4-4 4h-36q-4 0-4-4v-22q0-4 4-4z"/>
+    <g clip-path="url(#gripclip)"><path class="grip" d="${grip}" stroke="#463C35" stroke-width="2" opacity=".3" fill="none"/></g>
+    <path class="ln" fill="none" d="M22 20h36q4 0 4 4v22q0 4-4 4h-36q-4 0-4-4v-22q0-4 4-4z"/>
+    <rect class="ln" x="21" y="50" width="38" height="8" rx="3" fill="#F1DAA4"/>
+    <path class="ln" fill="#A5B49C" d="M25 58h30q-2 18 6 34q8 18 2 40q-2 8-10 8h-26q-8 0-10-8q-6-22 2-40q8-16 6-34z"/>
+    <path d="M28 70q-5 30 1 58" fill="none" stroke="#F7F2E8" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+    <circle cx="29" cy="104" r="3.5" fill="#E8BFBE"/><circle cx="51" cy="104" r="3.5" fill="#E8BFBE"/>
+    <path class="ln" fill="none" stroke-width="2.5" d="M31 97q3-4 6 0M43 97q3-4 6 0M37 103q3 3.5 6 0"/>
+    <path class="ln" fill="#C98975" d="M25 140h30v7q0 4-4 4h-22q-4 0-4-4z"/>
+    <circle class="nozzle" cx="40" cy="152" r="1" fill="none"/>
+  </svg>`;
+}
 /* Simmering pot drawing (see .pot styles). Steam puffs are one cloud shape reused. */
 function potSVG(){
   const cloud=`<path class="ln" fill="#FFFDF8" d="M-11 5a6 6 0 0 1 0-11a8 8 0 0 1 14-3a6 6 0 0 1 8 8a5 5 0 0 1-3 6z"/>`;
@@ -735,7 +799,7 @@ function eventView(e){
       <div class="herophoto">
         <div class="main" style="view-transition-name:photo-${e.slug}"><img class="fade" ${FADE} src="${cover.url}" alt="${cover.alt}, ${e.subtitle}" fetchpriority="high"></div>
         <div class="mini"><span class="tape ${e.tape}"></span><img class="fade" ${FADE} src="${mini.thumb}" alt=""></div>
-        ${recipesOf(e).length?use("i-lemon","recipe-slip","height:100px"):use("i-star","recipe-slip","height:90px;width:90px")}
+        <button class="grinder" data-kind="${e.theme==="cake"?"sprinkles":"spice"}" aria-label="${e.theme==="cake"?"Add some sprinkles":"Add a pinch of spice"}">${grinderSVG()}</button>
       </div>
     </section>
     <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
@@ -748,6 +812,7 @@ function eventView(e){
 function recipeBlock(e){
   const rs=recipesOf(e);
   return `<section class="recipe-sec"><div class="wrap">
+    ${rollerSVG()}
     <h2 class="reveal">Psst… want the recipe${rs.length>1?"s":""}?</h2>
     <p class="reveal">Because good food deserves a second round.</p>
     ${rs.map((r,k)=>recipeCard(e,r,k)).join("")}
@@ -806,7 +871,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io, potIO;
+let io, potIO, grIO, rollIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -824,6 +889,93 @@ function bind(ev){
   }
   // tappable stickers
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
+  // rolling pin: rolls the dough flat once when it comes into view; tap / click / Enter to roll again
+  rollIO&&rollIO.disconnect(); rollIO=null;
+  const roller=app.querySelector(".roller");
+  if(roller&&!reduce.matches){
+    const pin=roller.querySelector(".pin"), dough=roller.querySelector(".dough"), face=roller.querySelector(".face"), sparks=[...roller.querySelectorAll(".spark")];
+    let busy=false, flat=false, live=[];
+    const S=(x,y)=>({transform:`scale(${x},${y})`}), P=(x,y)=>({transform:`translate(${x}px,${y}px)`});
+    // the face squishes much less than the dough and slides down with it, so the smile stays visible
+    const F=(y,x,s)=>({transform:`translate(0,${y}px) scale(${x},${s})`});
+    const run=(el,kf,o)=>{const a=el.animate(kf,{fill:"forwards",...o}); live.push(a); return a;};
+    const roll=()=>{
+      if(busy) return; busy=true;
+      live.forEach(a=>a.cancel()); live=[];
+      const T=2600, steps=[0,.18,.32,.46,.6,.72,.84,1];
+      const pinAt=[P(320,57),P(120,57),P(84,65),P(156,69),P(92,71),P(148,71),P(150,50),P(330,50)];
+      const dAt=[S(1,1),S(1,1),S(1.4,.68),S(1.6,.55),S(1.75,.48),S(1.8,.45),S(1.8,.45),S(1.8,.45)];
+      const fAt=[F(0,1,1),F(0,1,1),F(1,1.05,.85),F(1.5,1.08,.72),F(2,1.1,.64),F(2,1.1,.6),F(2,1.1,.6),F(2,1.1,.6)];
+      const start=()=>{
+        run(pin,pinAt.map((k,i)=>({...k,offset:steps[i]})),{duration:T,easing:"ease-in-out"});
+        run(dough,dAt.map((k,i)=>({...k,offset:steps[i]})),{duration:T,easing:"ease-in-out"});
+        run(face,fAt.map((k,i)=>({...k,offset:steps[i]})),{duration:T,easing:"ease-in-out"});
+        roller.classList.add("go"); setTimeout(()=>roller.classList.remove("go"),T*.86);
+        // the rolled-out dough wobbles a little, then three sparkles pop
+        run(dough,[S(1.8,.45),S(1.74,.52),S(1.83,.42),S(1.8,.45)],{duration:500,delay:T,easing:"ease-out"});
+        sparks.forEach((s,i)=>run(s,[{transform:"scale(0) rotate(0deg)"},{transform:"scale(1.15) rotate(45deg)",offset:.45},{transform:"scale(0) rotate(90deg)"}],{duration:700,delay:T+80+i*130,easing:"ease-out"}));
+        setTimeout(()=>{busy=false;flat=true;},T+500);
+      };
+      if(flat){ // spring back into a ball first
+        run(face,[F(2,1.1,.6),F(-3,.95,1.12),F(0,1,1)],{duration:520,easing:"ease-out"});
+        run(dough,[S(1.8,.45),S(.82,1.22),S(1.06,.94),S(1,1)],{duration:520,easing:"ease-out"}).onfinish=start;
+      } else start();
+    };
+    rollIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ rollIO.disconnect(); setTimeout(roll,250); } }),{threshold:.6});
+    rollIO.observe(roller);
+    roller.addEventListener("click",roll);
+    roller.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); roll(); } });
+  }
+  // pepper grinder: grinds once when the photo comes into view; tap (or mouse hover) to grind again
+  grIO&&grIO.disconnect(); grIO=null;
+  const gr=app.querySelector(".grinder");
+  if(gr){
+    const hp=gr.closest(".herophoto"), photo=hp.querySelector(".main"), nozzle=gr.querySelector(".nozzle");
+    const sprinkles=gr.dataset.kind==="sprinkles";
+    const colors=sprinkles?["#E8BFBE","#F1DAA4","#B6CED5","#C98975","#A5B49C"]:["#463C35","#463C35","#C98975","#3F5545","#8A6D4F"];
+    const R=(a,b)=>a+Math.random()*(b-a);
+    let busy=false;
+    const speck=()=>{
+      const n=nozzle.getBoundingClientRect(), h=hp.getBoundingClientRect(), p=photo.getBoundingClientRect();
+      const s=document.createElement("span"), rod=sprinkles||Math.random()<.2;
+      const w=rod?(sprinkles?R(7,10):R(4,6)):R(2.5,4.5), ht=rod?(sprinkles?3:2):w;
+      s.className="speck"+(rod?" rod":"");
+      s.style.cssText+=`width:${w}px;height:${ht}px;background:${colors[Math.floor(Math.random()*colors.length)]}`;
+      const x0=n.left-h.left-w/2, y0=n.top-h.top;
+      // most specks settle on the white frame along the top edge; a few drift a little way into the picture
+      const onFrame=Math.random()<.65;
+      const dx=R(-40,26), dy=Math.max(30,(p.top-h.top)-y0+(onFrame?R(4,13):R(16,p.height*.16))), rot=R(-200,200);
+      const a=s.animate([
+        {transform:`translate(${x0}px,${y0}px) rotate(0deg)`,opacity:1,easing:"cubic-bezier(.5,0,1,.6)"},
+        {transform:`translate(${x0+dx}px,${y0+dy}px) rotate(${rot}deg)`,opacity:1,offset:.42,easing:"ease-out"},
+        {transform:`translate(${x0+dx*1.08}px,${y0+dy-4}px) rotate(${rot*1.1}deg)`,opacity:1,offset:.5,easing:"ease-in"},
+        {transform:`translate(${x0+dx*1.12}px,${y0+dy}px) rotate(${rot*1.1}deg)`,opacity:1,offset:.58},
+        {transform:`translate(${x0+dx*1.12}px,${y0+dy}px) rotate(${rot*1.1}deg)`,opacity:0}],
+        {duration:R(2100,2700),fill:"forwards"});
+      hp.appendChild(s); a.onfinish=()=>s.remove();
+    };
+    const grind=()=>{
+      if(busy||reduce.matches) return; busy=true;
+      // lift just high enough that the nozzle clears the top of the photo frame
+      // ...but never so high that it slides under the sticky header
+      const room=gr.getBoundingClientRect().top-$(".nav").getBoundingClientRect().bottom-8;
+      const up=Math.round(Math.max(0, Math.min(Math.max(16, nozzle.getBoundingClientRect().bottom-photo.getBoundingClientRect().top+12), room)));
+      const at=(x,r)=>({transform:`translate(${x}px,-${up}px) rotate(${r}deg)`});
+      const hop=gr.animate([
+        {transform:"translate(0,0) rotate(8deg)"},
+        {...at(-38,-5),offset:.16},{...at(-38,4),offset:.3},{...at(-40,-5),offset:.44},
+        {...at(-38,4),offset:.58},{...at(-40,-4),offset:.72},{...at(-38,2),offset:.82},
+        {transform:"translate(0,0) rotate(8deg)"}],{duration:2600,easing:"ease-in-out"});
+      setTimeout(()=>gr.classList.add("go"),380);
+      let t=0; const drop=setInterval(()=>{ speck(); if(Math.random()<.5) speck(); if((t+=55)>1500) clearInterval(drop); },55);
+      setTimeout(()=>gr.classList.remove("go"),2050);
+      hop.onfinish=()=>{busy=false};
+    };
+    grIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ grIO.disconnect(); setTimeout(grind,350); } }),{threshold:.5});
+    grIO.observe(hp);
+    gr.addEventListener("click",grind);
+    gr.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") grind(); });
+  }
   // simmering pot: animate only while on screen; mouse hover or tap makes it boil over
   potIO&&potIO.disconnect(); potIO=null;
   const pot=app.querySelector(".pot");
