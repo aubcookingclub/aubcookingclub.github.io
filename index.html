@@ -296,6 +296,16 @@ main{min-height:60vh}
 @media (max-width:860px){.spread{grid-template-columns:1fr}.herophoto{order:-1;margin:10px 8px 40px}.herophoto .mini{left:-4px;width:34%}}
 
 .notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border-left:4px solid var(--terra);padding:12px 16px;border-radius:0 6px 6px 0;font-size:15px;margin:0 0 26px}
+/* CUPCAKE (cake workshop page): a piping bag frosts it when it scrolls into view; tap to frost a fresh one. */
+.cupcake{display:block;width:min(190px,52vw);height:auto;margin:6px auto 22px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cupcake *{transform-box:fill-box}
+.cupcake .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.cupcake .lay{transform-origin:50% 100%}
+.cupcake .sp{transform-origin:50% 50%}
+.cupcake .bag{transform:translate(100px,-90px)}
+.cupcake.bare .lay,.cupcake.bare .sp{transform:scale(0)}
+.cupcake.bare .cherry{transform:translate(0,-90px)}
+.cupcake:focus-visible{outline:3px solid var(--terra);outline-offset:4px;border-radius:8px}
 .galhead{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;border-top:2px solid var(--olive);padding-top:18px;margin-bottom:22px}
 .galhead h2{font-family:var(--serif);font-size:clamp(30px,4vw,44px);color:var(--olive);margin:0;letter-spacing:-.02em;font-weight:800}
 .galhead .hand{font-size:24px}
@@ -605,6 +615,34 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* Cupcake drawing (see .cupcake styles). Frosting layers, cherry and sprinkles are drawn finished; JS hides and pipes them. */
+function cupcakeSVG(){
+  const sprinkles=[[72,104,20,"#F1DAA4"],[88,99,-30,"#B6CED5"],[112,100,40,"#FFFDF8"],[128,104,-15,"#A5B49C"],[100,107,70,"#C98975"],[64,101,60,"#B6CED5"],
+    [80,89,-40,"#C98975"],[96,84,15,"#F1DAA4"],[118,88,-60,"#B6CED5"],[90,73,30,"#A5B49C"],[110,73,-20,"#FFFDF8"],[101,77,80,"#F1DAA4"]]
+    .map(([x,y,r,c])=>`<g transform="translate(${x} ${y}) rotate(${r})"><rect class="sp" x="-3.5" y="-1.3" width="7" height="2.6" rx="1.3" fill="${c}" stroke="#463C35" stroke-width="1"/></g>`).join("");
+  return `<svg class="cupcake" viewBox="0 0 200 168" role="img" aria-label="A cupcake being frosted. Tap to frost another." tabindex="0">
+    <path class="ln" fill="none" d="M40 163h120"/>
+    <path class="ln" fill="#E9C9A0" d="M62 113q0-14 38-14t38 14z"/>
+    <path class="ln" fill="#A5B49C" d="M60 112h80l-9 46q-1 4-5 4h-52q-4 0-5-4z"/>
+    <path fill="none" stroke="#463C35" stroke-width="2" stroke-linecap="round" opacity=".25" d="M74 116l3 42M87 116l1.5 42M100 116v42M113 116l-1.5 42M126 116l-3 42"/>
+    <circle cx="82" cy="138" r="3.6" fill="#E8BFBE"/><circle cx="118" cy="138" r="3.6" fill="#E8BFBE"/>
+    <path class="ln" fill="none" stroke-width="2.5" d="M86 131q3-4 6 0M108 131q3-4 6 0M97 137q3 3.5 6 0"/>
+    <g class="frost">
+      <g class="lay l1"><path class="ln" fill="#E8BFBE" d="M56 112q-6-14 10-18q10-6 34-6t34 6q16 4 10 18z"/><path d="M66 104q34 8 68 0" fill="none" stroke="#463C35" stroke-width="2" stroke-linecap="round" opacity=".22"/><path d="M68 98q8-4 18-5" fill="none" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" opacity=".8"/></g>
+      <g class="lay l2"><path class="ln" fill="#E8BFBE" d="M68 96q-4-12 10-15q8-5 22-5t22 5q14 3 10 15z"/><path d="M76 89q24 6 48 0" fill="none" stroke="#463C35" stroke-width="2" stroke-linecap="round" opacity=".22"/><path d="M78 84q6-3 13-4" fill="none" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" opacity=".8"/></g>
+      <g class="lay l3"><path class="ln" fill="#E8BFBE" d="M80 80q-2-10 10-12q4-4 10-4t10 4q12 2 10 12z"/></g>
+      <g class="lay l4"><path class="ln" fill="#E8BFBE" d="M93 66q1-13 11-17q-3 8 3 17z"/></g>
+      ${sprinkles}
+      <g class="cherry"><path class="ln" fill="none" stroke-width="2.5" d="M101 38q1-9 9-13"/><circle class="ln" cx="100" cy="44" r="8" fill="#C98975"/><path d="M96 41q2-3 5-3" fill="none" stroke="#FFFDF8" stroke-width="2.5" stroke-linecap="round"/></g>
+    </g>
+    <g class="bag">
+      <path class="ln" fill="#FFFDF8" d="M-7-8l-21-44q22-10 56 0l-21 44z"/>
+      <path fill="#E8BFBE" d="M-9-13l-12-26q18-6 42 0l-12 26z"/>
+      <path class="ln" fill="none" d="M-7-8l-21-44q22-10 56 0l-21 44z"/>
+      <path class="ln" fill="#C98975" d="M-6-9h12l-3 9h-6z"/>
+    </g>
+  </svg>`;
+}
 /* Rolling pin + dough drawing (see .roller styles). The pin starts off-stage on the right; JS rolls it in. */
 function rollerSVG(){
   const grain=Array.from({length:16},(_,i)=>`M${-56+i*8} -8v16`).join("");
@@ -802,6 +840,7 @@ function eventView(e){
         <button class="grinder" data-kind="${e.theme==="cake"?"sprinkles":"spice"}" aria-label="${e.theme==="cake"?"Add some sprinkles":"Add a pinch of spice"}">${grinderSVG()}</button>
       </div>
     </section>
+    ${e.theme==="cake"?cupcakeSVG():""}
     <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
     <div class="gallery">${tiles}</div>
   </div>
@@ -871,7 +910,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io, potIO, grIO, rollIO;
+let io, potIO, grIO, rollIO, cakeIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -889,6 +928,40 @@ function bind(ev){
   }
   // tappable stickers
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
+  // cupcake: a piping bag frosts it once when it comes into view; tap / click / Enter to frost a fresh one
+  cakeIO&&cakeIO.disconnect(); cakeIO=null;
+  const cup=app.querySelector(".cupcake");
+  if(cup&&!reduce.matches){
+    const bag=cup.querySelector(".bag"), frost=cup.querySelector(".frost"), cherry=cup.querySelector(".cherry");
+    const L=[1,2,3,4].map(i=>cup.querySelector(".l"+i)), sps=[...cup.querySelectorAll(".sp")];
+    let busy=false, done=false, live=[];
+    const run=(el,kf,o)=>{const a=el.animate(kf,{fill:"both",...o}); live.push(a); return a;};
+    cup.classList.add("bare");
+    const T=3600, at=(x,y,o)=>({transform:`translate(${x}px,${y}px)`,offset:o});
+    const pipe=()=>{
+      live.forEach(a=>a.cancel()); live=[];
+      // the bag swirls over each layer while it grows, pulls up a little peak, then leaves
+      run(bag,[at(100,-10,0),at(100,90,.11),at(82,92,.17),at(118,90,.23),at(88,88,.29),at(112,88,.33),at(100,76,.37),at(88,76,.43),at(112,76,.49),
+        at(100,64,.53),at(94,62,.58),at(106,62,.63),at(100,50,.7),at(100,-30,.8),at(100,-30,1)],{duration:T,easing:"ease-in-out"});
+      const grow=[{transform:"scale(.15,.25)",opacity:0},{transform:"scale(.7,.7)",opacity:1,offset:.4},{transform:"scale(1.06,1.04)",offset:.8},{transform:"scale(1,1)"}];
+      [[.11,.24],[.35,.18],[.53,.13],[.64,.08]].forEach(([d,len],i)=>run(L[i],grow,{delay:T*d,duration:T*len,easing:"ease-out"}));
+      // a cherry drops on top and bounces, then the sprinkles pop
+      run(cherry,[{transform:"translate(0,-70px)",easing:"cubic-bezier(.5,0,1,.6)"},{transform:"translate(0,0)",offset:.55,easing:"ease-out"},{transform:"translate(0,-10px)",offset:.75,easing:"ease-in"},{transform:"translate(0,0)"}],{delay:T*.8,duration:620});
+      sps.forEach((s,i)=>run(s,[{transform:"scale(0)"},{transform:"scale(1.5)",offset:.6},{transform:"scale(1)"}],{delay:T*.86+i*40,duration:420,easing:"ease-out"}));
+      setTimeout(()=>{busy=false;done=true;},T*.86+sps.length*40+450);
+    };
+    const go=()=>{
+      if(busy) return; busy=true;
+      if(done){ // scrape the old frosting off, then pipe a fresh one
+        const f=frost.animate([{opacity:1,transform:"translateY(0)"},{opacity:0,transform:"translateY(-8px)"}],{duration:280,easing:"ease-in"});
+        f.onfinish=()=>{ pipe(); f.cancel(); };
+      } else pipe();
+    };
+    cakeIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ cakeIO.disconnect(); setTimeout(go,250); } }),{threshold:.6});
+    cakeIO.observe(cup);
+    cup.addEventListener("click",go);
+    cup.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+  }
   // rolling pin: rolls the dough flat once when it comes into view; tap / click / Enter to roll again
   rollIO&&rollIO.disconnect(); rollIO=null;
   const roller=app.querySelector(".roller");
