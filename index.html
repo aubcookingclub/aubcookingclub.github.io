@@ -273,6 +273,16 @@ main{min-height:60vh}
 
 /* RECIPE */
 .recipe-sec{padding:70px 0 110px;text-align:center}
+/* ROLLING PIN above the recipes: rolls the dough ball flat when it scrolls into view; tap to roll again. */
+.roller{display:block;width:min(260px,72vw);height:auto;margin:0 auto 4px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.roller *{transform-box:fill-box}
+.roller .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.roller .dough,.roller .face{transform-origin:50% 100%}
+.roller .grain{transition:none}
+.roller.go .grain{animation:roll .22s linear infinite}
+@keyframes roll{to{transform:translateX(-8px)}}
+.roller .spark{transform-origin:50% 50%;transform:scale(0)}
+.roller:focus-visible{outline:3px solid var(--terra);outline-offset:4px;border-radius:8px}
 .recipe-sec h2{font-family:var(--serif);font-size:clamp(34px,5vw,58px);color:var(--olive);margin:0;letter-spacing:-.03em;font-weight:900}
 .recipe-sec > .wrap > p{margin:6px 0 40px;font-size:18px}
 .rcard{position:relative;max-width:640px;margin:0 auto;text-align:left;background:#FFFDF8;color:#463C35;box-shadow:0 14px 34px var(--shadow);border-radius:4px;overflow:hidden;
@@ -554,6 +564,33 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* Rolling pin + dough drawing (see .roller styles). The pin starts off-stage on the right; JS rolls it in. */
+function rollerSVG(){
+  const grain=Array.from({length:16},(_,i)=>`M${-56+i*8} -8v16`).join("");
+  const spark=(x,y)=>`<path class="spark" fill="#F1DAA4" stroke="#463C35" stroke-width="2" stroke-linejoin="round" d="M${x} ${y-8}l2.2 5.8 5.8 2.2-5.8 2.2-2.2 5.8-2.2-5.8-5.8-2.2 5.8-2.2z"/>`;
+  return `<svg class="roller" viewBox="0 0 240 104" role="img" aria-label="A rolling pin rolling out dough. Tap to roll again." tabindex="0">
+    <clipPath id="pinclip"><rect x="-44" y="-11" width="88" height="22" rx="11"/></clipPath>
+    <path class="ln" fill="none" d="M14 94h212"/>
+    <g fill="#FFFDF8" opacity=".9"><circle cx="40" cy="88" r="2"/><circle cx="58" cy="90" r="1.6"/><circle cx="186" cy="89" r="2"/><circle cx="204" cy="87" r="1.5"/><circle cx="196" cy="91" r="1.2"/></g>
+    <g class="dough"><path class="ln" fill="#FBEFD5" vector-effect="non-scaling-stroke" d="M94 94a26 26 0 1 1 52 0z"/></g>
+    <g class="face">
+      <rect x="100" y="76" width="40" height="15" fill="none"/>
+      <circle cx="111" cy="80" r="2.6" fill="#463C35"/><circle cx="129" cy="80" r="2.6" fill="#463C35"/>
+      <circle cx="106" cy="87" r="3.2" fill="#E8BFBE"/><circle cx="134" cy="87" r="3.2" fill="#E8BFBE"/>
+      <path class="ln" fill="none" stroke-width="2.5" d="M116 86q4 4 8 0"/>
+    </g>
+    ${spark(66,70)}${spark(176,66)}${spark(120,52)}
+    <g class="pin" transform="translate(320 29)"><g class="pinbody">
+      <rect class="ln" x="-72" y="-4" width="26" height="8" rx="4" fill="#C98975"/>
+      <rect class="ln" x="46" y="-4" width="26" height="8" rx="4" fill="#C98975"/>
+      <rect x="-44" y="-11" width="88" height="22" rx="11" fill="#F1DAA4"/>
+      <g clip-path="url(#pinclip)"><path class="grain" d="${grain}" stroke="#C98975" stroke-width="1.6" opacity=".35" fill="none"/></g>
+      <rect class="ln" x="-44" y="-11" width="88" height="22" rx="11" fill="none"/>
+      <circle cx="-7" cy="-1" r="1.9" fill="#463C35"/><circle cx="7" cy="-1" r="1.9" fill="#463C35"/>
+      <circle cx="-12" cy="4" r="2.4" fill="#E8BFBE"/><circle cx="12" cy="4" r="2.4" fill="#E8BFBE"/>
+    </g></g>
+  </svg>`;
+}
 /* Pepper grinder drawing (see .grinder styles). The grip lines scroll sideways to look like the cap twisting. */
 function grinderSVG(){
   const grip=Array.from({length:12},(_,i)=>`M${12+i*6} 20v30`).join("");
@@ -720,6 +757,7 @@ function eventView(e){
 function recipeBlock(e){
   const rs=recipesOf(e);
   return `<section class="recipe-sec"><div class="wrap">
+    ${rollerSVG()}
     <h2 class="reveal">Psst… want the recipe${rs.length>1?"s":""}?</h2>
     <p class="reveal">Because good food deserves a second round.</p>
     ${rs.map((r,k)=>recipeCard(e,r,k)).join("")}
@@ -777,7 +815,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io, potIO, grIO;
+let io, potIO, grIO, rollIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -795,6 +833,43 @@ function bind(ev){
   }
   // tappable stickers
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
+  // rolling pin: rolls the dough flat once when it comes into view; tap / click / Enter to roll again
+  rollIO&&rollIO.disconnect(); rollIO=null;
+  const roller=app.querySelector(".roller");
+  if(roller&&!reduce.matches){
+    const pin=roller.querySelector(".pin"), dough=roller.querySelector(".dough"), face=roller.querySelector(".face"), sparks=[...roller.querySelectorAll(".spark")];
+    let busy=false, flat=false, live=[];
+    const S=(x,y)=>({transform:`scale(${x},${y})`}), P=(x,y)=>({transform:`translate(${x}px,${y}px)`});
+    // the face squishes much less than the dough and slides down with it, so the smile stays visible
+    const F=(y,x,s)=>({transform:`translate(0,${y}px) scale(${x},${s})`});
+    const run=(el,kf,o)=>{const a=el.animate(kf,{fill:"forwards",...o}); live.push(a); return a;};
+    const roll=()=>{
+      if(busy) return; busy=true;
+      live.forEach(a=>a.cancel()); live=[];
+      const T=2600, steps=[0,.18,.32,.46,.6,.72,.84,1];
+      const pinAt=[P(320,57),P(120,57),P(84,65),P(156,69),P(92,71),P(148,71),P(150,50),P(330,50)];
+      const dAt=[S(1,1),S(1,1),S(1.4,.68),S(1.6,.55),S(1.75,.48),S(1.8,.45),S(1.8,.45),S(1.8,.45)];
+      const fAt=[F(0,1,1),F(0,1,1),F(1,1.05,.85),F(1.5,1.08,.72),F(2,1.1,.64),F(2,1.1,.6),F(2,1.1,.6),F(2,1.1,.6)];
+      const start=()=>{
+        run(pin,pinAt.map((k,i)=>({...k,offset:steps[i]})),{duration:T,easing:"ease-in-out"});
+        run(dough,dAt.map((k,i)=>({...k,offset:steps[i]})),{duration:T,easing:"ease-in-out"});
+        run(face,fAt.map((k,i)=>({...k,offset:steps[i]})),{duration:T,easing:"ease-in-out"});
+        roller.classList.add("go"); setTimeout(()=>roller.classList.remove("go"),T*.86);
+        // the rolled-out dough wobbles a little, then three sparkles pop
+        run(dough,[S(1.8,.45),S(1.74,.52),S(1.83,.42),S(1.8,.45)],{duration:500,delay:T,easing:"ease-out"});
+        sparks.forEach((s,i)=>run(s,[{transform:"scale(0) rotate(0deg)"},{transform:"scale(1.15) rotate(45deg)",offset:.45},{transform:"scale(0) rotate(90deg)"}],{duration:700,delay:T+80+i*130,easing:"ease-out"}));
+        setTimeout(()=>{busy=false;flat=true;},T+500);
+      };
+      if(flat){ // spring back into a ball first
+        run(face,[F(2,1.1,.6),F(-3,.95,1.12),F(0,1,1)],{duration:520,easing:"ease-out"});
+        run(dough,[S(1.8,.45),S(.82,1.22),S(1.06,.94),S(1,1)],{duration:520,easing:"ease-out"}).onfinish=start;
+      } else start();
+    };
+    rollIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ rollIO.disconnect(); setTimeout(roll,250); } }),{threshold:.6});
+    rollIO.observe(roller);
+    roller.addEventListener("click",roll);
+    roller.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); roll(); } });
+  }
   // pepper grinder: grinds once when the photo comes into view; tap (or mouse hover) to grind again
   grIO&&grIO.disconnect(); grIO=null;
   const gr=app.querySelector(".grinder");
