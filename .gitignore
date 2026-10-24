@@ -4,3 +4,9 @@ Desktop.ini
 .DS_Store
 .vscode/
 .idea/
+
+# Original workshop photos/videos (large, may hold location data). Only the
+# resized web copies in photos/<event-slug>/ are committed.
+photos/**/wetransfer_*/
+*.mov
+*.MOV

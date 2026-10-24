@@ -2,7 +2,7 @@
 
 Single-file static site: `index.html` (HTML, CSS and JS together, no build step).
 Workshop content lives in the `EVENTS` array near the top of the `<script>`.
-Photos are currently generated placeholders. Events hold recipes in a `recipes` array (one card and PDF each); Chapter 02 has the real Pink Pasta and Beetroot Pasta recipes, merged from the workshop table sheets.
+Photos are the club's real workshop photos (see the photos note below). Events hold recipes in a `recipes` array (one card and PDF each); Chapter 02 has the real Pink Pasta and Beetroot Pasta recipes, merged from the workshop table sheets.
 
 ## Rules
 - **Always ask me before running `git push`.** Commit locally as needed, but never push without my explicit go-ahead in that message.
@@ -18,4 +18,5 @@ Photos are currently generated placeholders. Events hold recipes in a `recipes` 
 - Commits use the repo-local identity `mariammansour308` with GitHub's no-reply email, so the personal Gmail address stays out of the history.
 - The repo was made public on 2026-10-24 so free GitHub Pages could be used; everything in it, including history, is publicly visible.
 - An older copy, `AUB Cooking Club · Our Recipe for Memories.html` (artifact-only downloads), was removed; it is still in the first commit (b5bee71) if ever needed.
+- Photos (added 2026-10-24): the club's original uploads (WeTransfer folders, about 1.4 GB, including .mov videos) sit in `photos/<event-slug>/wetransfer_*/` and are git-ignored, because they are large and carry camera/location metadata. The site uses a hand-picked set (33 cake, 31 pasta; blurry shots and near-duplicates left out, no videos): `photos/<slug>/<slug>-NN.jpg` at 1600px (lightbox and download) and `photos/<slug>/thumb/` at 640px (tiles, collage, cards), re-encoded with no metadata. Alt text and sizes live in the `PHOTOS` object in `index.html`; `photos[0]` is the cover, `photos[3]` the small hero photo, `recipePhotos` picks each recipe card's photo, and `homeView` picks the collage and cookbook photos by index.
 <!-- Project memory: facts, decisions and preferences learned across sessions go here. -->

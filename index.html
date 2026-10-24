@@ -385,24 +385,85 @@ footer p{margin:14px auto 34px;max-width:40ch;font-size:18px}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ---------- Placeholder photo generator (clearly labelled, not real event photos) ---------- */
-const PAL = ["#A5B49C","#F1DAA4","#B6CED5","#E8BFBE","#C98975","#EFE7D8"];
-function rnd(seed){let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280}}
-function placeholder(seed,w,h,theme){
-  const r=rnd(seed*7+3);
-  const bg = PAL[Math.floor(r()*PAL.length)];
-  let fg = PAL[Math.floor(r()*PAL.length)]; if(fg===bg) fg="#F7F2E8";
-  const cx=w*(.35+r()*.3), cy=h*(.4+r()*.25), R=Math.min(w,h)*(.24+r()*.1);
-  const motif = theme==="cake"
-    ? `<rect x="${cx-R*.8}" y="${cy-R*.3}" width="${R*1.6}" height="${R*.9}" rx="${R*.12}" fill="${fg}" stroke="#463C35" stroke-width="3"/><path d="M${cx-R*.8} ${cy}q${R*.2} ${R*.25} ${R*.4} 0t${R*.4} 0t${R*.4} 0t${R*.4} 0" fill="none" stroke="#F7F2E8" stroke-width="5"/><circle cx="${cx}" cy="${cy-R*.45}" r="${R*.12}" fill="#C98975" stroke="#463C35" stroke-width="3"/>`
-    : `<circle cx="${cx}" cy="${cy}" r="${R}" fill="#F7F2E8" stroke="#463C35" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="${R*.7}" fill="${fg}"/><path d="M${cx-R*.5} ${cy-R*.1}c${R*.3} ${-R*.3} ${R*.6} ${R*.3} ${R*.9} 0s${R*.3} ${R*.3} ${R*.2} ${R*.3}" fill="none" stroke="#E8BFBE" stroke-width="${R*.12}" stroke-linecap="round"/><path d="M${cx-R*.4} ${cy+R*.2}c${R*.3} ${-R*.25} ${R*.5} ${R*.25} ${R*.8} 0" fill="none" stroke="#C98975" stroke-width="${R*.1}" stroke-linecap="round"/>`;
-  const dots = Array.from({length:6},()=>`<circle cx="${r()*w}" cy="${r()*h}" r="${4+r()*10}" fill="#F7F2E8" opacity=".55"/>`).join("");
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="${bg}"/><g opacity=".5">${dots}</g>${motif}<rect x="10" y="${h-34}" width="122" height="24" rx="12" fill="#463C35" opacity=".78"/><text x="71" y="${h-17}" font-family="Helvetica,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.2" text-anchor="middle" fill="#F7F2E8">PLACEHOLDER</text></svg>`;
-  return {svg, url:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg), w, h};
-}
-const SIZES=[[600,800],[800,600],[600,600],[600,900],[800,560],[600,720]];
-function makePhotos(seed,n,theme){
-  return Array.from({length:n},(_,i)=>{const [w,h]=SIZES[(i*5+seed)%SIZES.length];return {...placeholder(seed*100+i,w,h,theme),alt:`Placeholder photo ${i+1}`}});
+/* ---------- Workshop photos ----------
+   Files live in photos/<slug>/<slug>-NN.jpg (1600px, used for the lightbox and
+   downloads) and photos/<slug>/thumb/ (640px, used for tiles and the collage).
+   Each entry is [width, height, alt text] in gallery order. */
+const PHOTOS = {
+  "cake-for-a-cause":[
+    [1600,1200,"Four friends holding up their decorated cakes in front of pink tinsel"],
+    [1600,1200,"Four friends posing in the pink Baking for a Cause photo frame"],
+    [1600,1200,"Tables of decorators at work on the rooftop terrace"],
+    [1200,1600,"A circle of hands holding up the finished pink and white cakes"],
+    [1200,1600,"Two decorators concentrating as they pipe pink icing"],
+    [1200,1600,"Overhead view of a cake topped with icing flowers and sprinkles"],
+    [1600,1200,"Three friends smiling with their cakes and piping bags"],
+    [1600,1200,"Four friends posing on the terrace against the sunset sky"],
+    [1200,1600,"Black and white photo of two friends by the sea"],
+    [1200,1600,"A finished cake with pink hearts and ruffles on its box"],
+    [1600,1200,"Two decorators piping icing onto their cakes"],
+    [1600,1200,"Two friends posing with a crown and heart glasses props"],
+    [1200,1600,"Close-up of pink icing being piped onto a cake"],
+    [1200,1600,"Two friends pulling faces with their finished cakes"],
+    [1200,1600,"Overhead view of a sprinkle-topped cake next to a pink ribbon prop"],
+    [1600,1200,"A big group squeezed into the Baking for a Cause photo frame"],
+    [1200,1600,"Smiling with a finished cake on the rooftop at night"],
+    [1200,1600,"Squeezing icing straight from the piping bag into a friend's mouth"],
+    [1600,1200,"Three decorators piping side by side"],
+    [1200,1600,"A cake decorated with a pink awareness ribbon"],
+    [1200,1600,"Piping a tall swirl of pink icing"],
+    [1600,1200,"Two friends showing off their decorated cakes"],
+    [1200,1600,"Four friends with their cakes, one with a candle"],
+    [1200,1600,"Three decorated cakes held together from above"],
+    [1600,1200,"Three friends with shocked faces holding their cakes"],
+    [1600,1200,"Three friends taking a big bite of their cakes"],
+    [1600,1200,"Dabbing icing on a friend's nose"],
+    [1200,1600,"Friends chatting on the terrace overlooking the sea"],
+    [1200,1600,"Overhead view of three cakes in progress on the table"],
+    [1200,1600,"Two friends smiling with a finished cake"],
+    [1200,1600,"A cake decorated with pink bows and icing swirls"],
+    [1600,1200,"Two friends smiling against an orange sunset"],
+    [1600,1200,"Four friends with their cakes and cake boxes"]
+  ],
+  "twirl-in-pink":[
+    [1600,1067,"Three friends in aprons holding bowls of pink pasta"],
+    [1600,1067,"The whole group cheering in front of pink tinsel"],
+    [1200,1600,"The teaching kitchen as the workshop gets started"],
+    [1200,1600,"A pot of bright pink bow-tie pasta being stirred"],
+    [1200,1600,"Chopped onion, herbs, garlic and lemons on a cutting board"],
+    [1200,1600,"Pink ribbon and crown props laid out on the counter"],
+    [1200,1600,"Cooking pasta in pots on the stove"],
+    [1200,1600,"A pink awareness ribbon pinned to a shirt"],
+    [1200,1600,"Bottles of pink lemonade decorated with ribbons"],
+    [1200,1600,"Everyone in hairnets gathered around the kitchen"],
+    [1200,1600,"Scooping pink pasta into bowls"],
+    [1600,1067,"Three friends posing in the Baking for a Cause photo frame"],
+    [1067,1600,"Two friends hugging in front of the pink tinsel"],
+    [1067,1600,"Four friends posing in front of the pink tinsel"],
+    [1600,1067,"Two cooks in hairnets and aprons"],
+    [1600,1067,"Posing with pink crown and ribbon props"],
+    [1600,1067,"Two bowls of pink bow-tie pasta held up to the camera"],
+    [1600,1067,"Bowls of pasta with pink lemonade on the counter"],
+    [1600,1067,"Stirring chicken in a red pan on the stove"],
+    [1600,1067,"Two friends cooking at the stove"],
+    [1600,1067,"A row of pink lemonade bottles on the counter"],
+    [1600,1067,"Blending the bright pink sauce"],
+    [1600,1067,"Halved oranges ready to be squeezed"],
+    [1600,1067,"Stirring the sauce in pots on the stove"],
+    [1600,1067,"Three friends cheering in the kitchen"],
+    [1600,1067,"A team cooking together around the stove"],
+    [1600,1067,"Three friends in hairnets posing in the photo frame"],
+    [1600,1067,"Four friends cooking at a row of pots"],
+    [1600,1067,"Chopping ingredients at the station"],
+    [1600,1067,"A team waving from their cooking station"],
+    [1600,1067,"Two friends holding pink ribbon props by the tinsel"]
+  ]
+};
+function realPhotos(slug){
+  return PHOTOS[slug].map(([w,h,alt],i)=>{
+    const file=`${slug}-${String(i+1).padStart(2,"0")}.jpg`;
+    return {url:`photos/${slug}/${file}`, thumb:`photos/${slug}/thumb/${file}`, file, w, h, alt};
+  });
 }
 
 /* ---------- Content (editable starter data; an admin dashboard would replace this) ---------- */
@@ -411,12 +472,12 @@ const EVENTS = [
     date:"2026-10-19", caption:"Something sweet for a meaningful cause.", organizers:"With HOPE Clinic",
     desc:"A little creativity, a lot of sweetness, and a meaningful cause. Our cake decoration workshop brought everyone together for a special evening dedicated to breast cancer awareness.",
     note:"frosting everywhere (worth it)", theme:"cake", variant:"v-pol", tape:"pink", stick:"i-star",
-    photos:makePhotos(1,14,"cake"), recipe:null },
+    photos:realPhotos("cake-for-a-cause"), recipe:null },
   { slug:"twirl-in-pink", title:"Twirl in Pink!", subtitle:"Pink Pasta Workshop",
     date:"2026-10-23", caption:"A little pasta, a lot of pink!", organizers:null,
     desc:"Things got a little pink in the kitchen! From making pasta to mixing up pink lemonade, this workshop brought creativity, good food, and great company together.",
     note:"a little pink, a little pasta", theme:"pasta", variant:"v-clip", tape:"blue", stick:"i-pasta",
-    photos:makePhotos(2,16,"pasta"),
+    photos:realPhotos("twirl-in-pink"), recipePhotos:[17,16],
     recipes:[
       { label:"Pink Pasta", name:"Creamy Pink Pasta", time:"30 min", serves:"4",
         ingredients:["400 g pasta: farfalle, fusilli or penne","200 g crème fraîche","3 tbsp tomato paste","2 tbsp olive oil","2 garlic cloves","50 g Parmesan, grated","1 tsp Italian seasoning","Salt and black pepper","Up to ½ cup pasta cooking water","Optional: cooked chicken and cooked onions, to serve"],
@@ -450,7 +511,8 @@ const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidde
 
 /* ---------- Views ---------- */
 function homeView(){
-  const ph1=placeholder(41,600,700,"pasta"), ph2=placeholder(57,600,600,"cake"), pk1=placeholder(71,300,300,"pasta"), pk2=placeholder(83,300,300,"cake");
+  const ph=(slug,i)=>EVENTS.find(e=>e.slug===slug).photos[i];
+  const ph1=ph("twirl-in-pink",10), ph2=ph("cake-for-a-cause",23), pk1=ph("twirl-in-pink",3), pk2=ph("cake-for-a-cause",19);
   return `
   <section class="hero view">
     <div class="wrap">
@@ -466,8 +528,8 @@ function homeView(){
       </div>
       <div class="collage" aria-hidden="true">
         <div class="grid-patch"></div>
-        <figure class="polaroid p1"><span class="tape"></span><img src="${ph1.url}" alt=""><figcaption>pasta night!</figcaption></figure>
-        <figure class="polaroid p2"><span class="tape pink"></span><img src="${ph2.url}" alt=""><figcaption>sprinkle squad</figcaption></figure>
+        <figure class="polaroid p1"><span class="tape"></span><img src="${ph1.thumb}" alt=""><figcaption>pasta night!</figcaption></figure>
+        <figure class="polaroid p2"><span class="tape pink"></span><img src="${ph2.thumb}" alt=""><figcaption>sprinkle squad</figcaption></figure>
         <div class="sticker fork tapsay">${use("i-fork","", "width:100%;height:130px")}<span class="yum">yum!</span></div>
         <div class="sticker pasta tapsay">${use("i-pasta","","width:100%;height:50px")}<span class="yum">yum!</span></div>
         <div class="sticker lemon tapsay">${use("i-lemon","","width:100%;height:52px")}<span class="yum">zesty!</span></div>
@@ -488,8 +550,8 @@ function homeView(){
       <div class="stage reveal">
         <button class="book" id="book" aria-label="Open the cookbook: Our recipe for memories">
           <div class="pages">
-            <div class="peek" style="left:12%;top:14%;transform:rotate(-6deg)"><img src="${pk1.url}" alt=""></div>
-            <div class="peek" style="right:10%;top:38%;transform:rotate(5deg)"><img src="${pk2.url}" alt=""></div>
+            <div class="peek" style="left:12%;top:14%;transform:rotate(-6deg)"><img src="${pk1.thumb}" alt=""></div>
+            <div class="peek" style="right:10%;top:38%;transform:rotate(5deg)"><img src="${pk2.thumb}" alt=""></div>
           </div>
           <div class="cover">
             <span class="frame"></span>
@@ -513,7 +575,7 @@ function memoriesView(){
     return `<button class="chapter ${e.variant} reveal" data-event="${e.slug}" aria-label="Open chapter ${e.chapter}: ${e.title}, ${e.subtitle}">
       <div class="sheet">
         ${e.variant==="v-pol"?`<span class="tape ${e.tape}"></span>`:""}
-        <div class="photo" style="view-transition-name:photo-${e.slug}"><img src="${cover.url}" alt="" width="${cover.w}" height="${cover.h}" loading="lazy"></div>
+        <div class="photo" style="view-transition-name:photo-${e.slug}"><img src="${cover.thumb}" alt="" width="${cover.w}" height="${cover.h}" loading="lazy"></div>
         <span class="num">Chapter ${e.chapter}</span>
         <h2>${e.title}</h2>
         <span class="sub">${e.subtitle}</span>
@@ -544,7 +606,7 @@ function eventView(e){
     const deco = i%7===2?"framed": (i%9===5?"taped":"");
     return `<button class="tile ${deco}" data-idx="${i}" aria-label="Open photo ${i+1} of ${e.photos.length}">
       ${deco==="taped"?`<span class="tape ${i%2?"blue":""}"></span>`:""}
-      <img src="${p.url}" alt="${p.alt}, ${e.subtitle}" width="${p.w}" height="${p.h}" loading="lazy" decoding="async">
+      <img src="${p.thumb}" alt="${p.alt}, ${e.subtitle}" width="${p.w}" height="${p.h}" loading="lazy" decoding="async">
       <span class="zoom">${use("i-zoom","","width:20px;height:20px")}</span></button>`}).join("");
   return `<div class="view"><div class="wrap">
     <button class="back" data-go="memories">${use("i-arrow","","width:30px;height:18px;transform:scaleX(-1);color:currentColor")} ALL MEMORIES</button>
@@ -559,11 +621,10 @@ function eventView(e){
       </div>
       <div class="herophoto">
         <div class="main" style="view-transition-name:photo-${e.slug}"><img src="${cover.url}" alt="${cover.alt}, ${e.subtitle}"></div>
-        <div class="mini"><span class="tape ${e.tape}"></span><img src="${mini.url}" alt=""></div>
+        <div class="mini"><span class="tape ${e.tape}"></span><img src="${mini.thumb}" alt=""></div>
         ${recipesOf(e).length?use("i-lemon","recipe-slip","height:100px"):use("i-star","recipe-slip","height:90px;width:90px")}
       </div>
     </section>
-    <div class="notice"><span>✶</span><span>These are placeholder images. Real workshop photos will replace them once the club uploads them.</span></div>
     <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
     <div class="gallery">${tiles}</div>
   </div>
@@ -580,7 +641,7 @@ function recipeBlock(e){
   </div></section>`;
 }
 function recipeCard(e,r,k){
-  const rp=r.photo?{url:r.photo}:placeholder(909+k,800,400,e.theme);
+  const rp=r.photo?{url:r.photo,alt:r.name}:(e.photos[(e.recipePhotos||[])[k]]||e.photos[0]);
   return `<div class="rcard reveal" data-recipe="${k}">
       <button class="closed" aria-expanded="false" aria-controls="rbody${k}">
         <h3>${r.label||"The Recipe"}</h3><span>Open for something delicious.</span>
@@ -591,7 +652,7 @@ function recipeCard(e,r,k){
         ${r.sample?`<p class="sample">Sample recipe for the prototype. The club will swap in its own.</p>`:""}
         <h4 style="font-size:32px;margin-top:10px">${r.name}</h4>
         <div class="facts"><span class="chip">⏱ ${r.time}</span><span class="chip alt">Serves ${r.serves}</span></div>
-        <img class="rphoto" src="${rp.url}" alt="${r.photo?r.name:"Placeholder photo for the recipe"}">
+        <img class="rphoto" src="${rp.url}" alt="${rp.alt}">
         <h4>You’ll need</h4>
         <ul>${r.ingredients.map((x,i)=>`<li style="transition-delay:${150+i*40}ms">${x}</li>`).join("")}</ul>
         <h4>Let’s cook</h4>
@@ -673,6 +734,7 @@ function showLB(){
   const p=lbEv.photos[lbI];
   lbImg.style.opacity=0;
   setTimeout(()=>{lbImg.src=p.url;lbImg.alt=`${p.alt}, ${lbEv.subtitle}`;lbImg.style.opacity=1},reduce.matches?0:90);
+  new Image().src=lbEv.photos[(lbI+1)%lbEv.photos.length].url; /* warm up the next photo */
   $("#lbCount").textContent=`${lbI+1} / ${lbEv.photos.length}`;
   $("#lbCap").textContent=`Chapter ${lbEv.chapter} ✶ ${lbEv.subtitle}`;
 }
@@ -680,7 +742,7 @@ function step(d){lbI=(lbI+d+lbEv.photos.length)%lbEv.photos.length;showLB()}
 function closeLB(){lb.classList.remove("open");document.body.style.overflow="";lastFocus&&lastFocus.focus()}
 $("#lbPrev").onclick=()=>step(-1); $("#lbNext").onclick=()=>step(1); $("#lbClose").onclick=closeLB;
 lb.addEventListener("click",e=>{if(e.target===lb)closeLB()});
-$("#lbDl").onclick=()=>{const p=lbEv.photos[lbI];saveFile(`aub-cooking-club-${lbEv.slug}-${String(lbI+1).padStart(2,"0")}.svg`,p.svg)};
+$("#lbDl").onclick=async()=>{const p=lbEv.photos[lbI];try{const r=await fetch(p.url);if(!r.ok)throw new Error(r.status);saveFile(`aub-cooking-club-${p.file}`,await r.blob())}catch(e){toast("That download didn’t go through.")}};
 document.addEventListener("keydown",e=>{
   if(lb.classList.contains("open")){
     if(e.key==="Escape")closeLB(); else if(e.key==="ArrowRight")step(1); else if(e.key==="ArrowLeft")step(-1);
