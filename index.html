@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AUB Cooking Club · Our Recipe for Memories</title>
 <meta name="description" content="Photos, memories and recipes from the AUB Cooking Club’s workshops.">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,500..900,50;1,9..144,500..900,50&display=swap" rel="stylesheet">
@@ -52,7 +55,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1.5px dashed var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-weight:800;color:var(--olive);font-size:19px;letter-spacing:-.01em;background:none;border:0;padding:0}
-.logo svg{width:36px;height:36px}
+.logo img{width:44px;height:44px;display:block;flex:none}
 .navlinks{display:flex;gap:6px}
 .navlinks button{background:none;border:0;padding:8px 14px;font-weight:700;font-size:14px;letter-spacing:.08em;color:var(--olive);border-radius:999px;position:relative}
 .navlinks button[aria-current="page"]::after{content:"";position:absolute;left:14px;right:14px;bottom:2px;height:6px;background:var(--butter);z-index:-1;border-radius:3px;transform:rotate(-1deg)}
@@ -146,7 +149,7 @@ main{min-height:60vh}
 .cover small{font-weight:700;letter-spacing:.2em;font-size:11px}
 .cover h3{font-family:var(--serif);font-size:clamp(30px,8vw,40px);line-height:.95;margin:12px 0;font-weight:900;color:#2f4235;letter-spacing:-.02em}
 .cover p{margin:0;font-size:14px;line-height:1.4;max-width:22ch}
-.cover .bowl{width:84px;margin:14px auto 6px}
+.cover .bowl{width:84px;height:84px;display:block;margin:12px auto 4px}
 .cover .peekline{font-family:var(--hand);font-size:24px;font-weight:700;color:#7a3f30;margin-top:6px}
 .book:hover{transform:translateY(-10px) rotate(-2.5deg)}
 .book:hover .pages{box-shadow:0 34px 50px var(--shadow), inset -6px 0 0 #e9e1d1, inset -10px 0 0 #fffdf8, inset -13px 0 0 #e9e1d1}
@@ -328,7 +331,6 @@ img.fade.ok{opacity:1}
     <symbol id="i-lemon" viewBox="0 0 90 80"><g stroke="#463C35" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M8 44c0-18 18-32 38-32s36 14 36 32-16 30-36 30S8 62 8 44z" fill="#F1DAA4"/><path d="M82 40c4 0 6 2 6 5M8 44c-4 0-5 3-4 5" fill="none"/><path d="M46 12c2-6 8-10 16-10-2 8-8 12-16 10z" fill="#A5B49C"/><path d="M30 34c4-4 10-6 16-6" fill="none" stroke-width="2.5"/></g></symbol>
     <symbol id="i-whisk" viewBox="0 0 60 150"><g fill="none" stroke="#463C35" stroke-width="3" stroke-linecap="round"><path d="M30 90C8 70 6 20 30 6c24 14 22 64 0 84z" /><path d="M30 90C18 64 18 24 30 6M30 90c12-26 12-66 0-84"/><rect x="24" y="90" width="12" height="54" rx="6" fill="#C98975"/></g></symbol>
     <symbol id="i-arrow" viewBox="0 0 100 60"><path d="M6 10c20 30 50 38 80 26m-12-14 14 14-18 6" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-bowl" viewBox="0 0 120 80"><g stroke="#2f4235" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 34h104c0 24-22 40-52 40S8 58 8 34z" fill="#F1DAA4"/><path d="M40 30c0-16 6-24 14-28M56 30c2-14 10-22 20-24" fill="none"/><path d="M24 50c6 6 14 10 24 11" fill="none" stroke-width="2.5"/></g></symbol>
     <symbol id="i-star" viewBox="0 0 60 60"><path d="M30 4l6 18 19 1-15 12 6 19-16-11-16 11 6-19L5 23l19-1z" fill="#E8BFBE" stroke="#463C35" stroke-width="3" stroke-linejoin="round"/></symbol>
     <symbol id="i-tomato" viewBox="0 0 80 80"><g stroke="#463C35" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="40" cy="46" r="30" fill="#C98975"/><path d="M26 18l14 8 14-8-6 12 10 4-18 2-18-2 10-4z" fill="#A5B49C"/><path d="M22 44c2-8 8-14 16-14" fill="none" stroke="#F7F2E8" stroke-width="3"/></g></symbol>
     <symbol id="i-zoom" viewBox="0 0 24 24"><g fill="none" stroke="#3F5545" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6"/></g></symbol>
@@ -338,7 +340,7 @@ img.fade.ok{opacity:1}
 <header class="nav">
   <div class="wrap">
     <button class="logo" data-go="home" aria-label="AUB Cooking Club, home">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#F1DAA4" stroke="#3F5545" stroke-width="2.5"/><path d="M12 22h16c0 6-3.6 9-8 9s-8-3-8-9z" fill="#C98975" stroke="#3F5545" stroke-width="2" stroke-linejoin="round"/><path d="M16 19c0-4 2-6 4-7M21 19c1-4 3-5 5-5" fill="none" stroke="#3F5545" stroke-width="2" stroke-linecap="round"/></svg>
+      <img src="assets/logo/aub-cooking-club-logo-olive-256.png" alt="" width="44" height="44">
       AUB Cooking Club
     </button>
     <nav class="navlinks" aria-label="Main">
@@ -566,7 +568,7 @@ function homeView(){
             <span class="frame"></span>
             <small>VOL. 01 ✶ AUB</small>
             <h3>Our Recipe for Memories</h3>
-            <svg class="bowl" viewBox="0 0 120 80" aria-hidden="true"><use href="#i-bowl"/></svg>
+            <img class="bowl" src="assets/logo/aub-cooking-club-logo-olive-256.png" alt="" width="84" height="84">
             <p>A collection of everything we’ve cooked up together.</p>
             <div class="peekline">Go on, take a peek!</div>
           </div>
