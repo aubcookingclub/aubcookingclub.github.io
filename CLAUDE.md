@@ -6,6 +6,7 @@ Photos are the club's real workshop photos (see the photos note below). Events h
 
 ## Rules
 - **Always ask me before running `git push`.** Commit locally as needed, but never push without my explicit go-ahead in that message.
+- **After every push, tell me the rollback point.** Name the commit that was live just before the push (short ID + message), so I can say "go back to <ID>" to undo it. The site has one branch, `main`, so a rollback point is a commit on `main`, not a separate branch. Going back is done with `git revert` (a new commit that undoes the change), never by rewriting history.
 - Keep the site a single `index.html` unless I say otherwise.
 - Downloads use standard browser downloads (Blob + anchor), so they work on GitHub Pages.
 - **Keep all memory for this project inside the AUB COOKING WEBSITE folder.** Save project notes in the "Notes" section of this CLAUDE.md, never in the user-profile memory folder (`~/.claude/projects/.../memory`).
