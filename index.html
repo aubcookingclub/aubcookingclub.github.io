@@ -35,6 +35,21 @@
   --paper:#2B2622; --paper-2:#342E29; --olive:#C9D8C0; --espresso:#EDE4D3;
   --card:#F4EDE0; --line:rgba(201,216,192,.07); --shadow:rgba(0,0,0,.45); color-scheme:dark;
 }
+/* AWARENESS PINK: workshop pages whose event has `awareness:true` (render() sets .aware on <html>). */
+:root.aware{
+  --paper:#FBEDEA; --paper-2:#F5DAD7; --butter:#EDB3B9; --powder:#F7D3D4; --terra:#BF5F78;
+  --line:rgba(191,95,120,.16); --shadow:rgba(120,60,72,.2);
+}
+@media (prefers-color-scheme:dark){
+  :root.aware:not([data-theme="light"]){
+    --paper:#35262A; --paper-2:#412E33; --terra:#EFA3B5; --line:rgba(239,163,181,.12); --shadow:rgba(0,0,0,.45);
+  }
+}
+:root.aware[data-theme="dark"]{
+  --paper:#35262A; --paper-2:#412E33; --terra:#EFA3B5; --line:rgba(239,163,181,.12); --shadow:rgba(0,0,0,.45);
+}
+body,.nav,body::before,.chip,.notice{transition:background-color .45s ease}
+.spread .num,.galhead .hand{transition:color .45s ease}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px);height:100%}
 *,*::before,*::after{box-sizing:border-box}
 body{
@@ -225,6 +240,32 @@ main{min-height:60vh}
   .pot *{animation:none!important}
   .pot .pf2{opacity:.9;transform:translate(0,-14px) scale(.9)}
   .pot .bub{transform:scale(1)}
+}
+
+/* AWARENESS RIBBON (next to the chapter number on .aware workshop pages). Draws itself in, then sways; hover or tap makes it wiggle. */
+.numrow{display:flex;align-items:flex-end;gap:12px}
+.ribbon{position:relative;width:64px;flex:none;margin:-30px 0 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ribbon svg{width:100%;height:auto;display:block;overflow:visible}
+.ribbon .sway{transform-box:view-box;transform-origin:40px 8px;animation:ribSway 4s 1.4s ease-in-out infinite}
+.ribbon .band{fill:none;stroke-dasharray:1;stroke-dashoffset:1;animation:ribDraw .6s cubic-bezier(.5,0,.3,1) forwards}
+.ribbon .bB{animation-delay:.55s;animation-duration:.5s}
+.ribbon .ink{stroke:#463C35;stroke-width:20}
+.ribbon .silk{stroke:#E8A1AE;stroke-width:14}
+.ribbon .shine{fill:none;stroke:#FFFDF8;stroke-width:3;stroke-linecap:round;opacity:0;animation:ribFade .3s 1s forwards}
+.ribbon .cut{fill:none;stroke:#463C35;stroke-width:3;stroke-linecap:round;opacity:0;animation:ribFade .2s 1.05s forwards}
+.ribbon .yum{top:-30px;white-space:nowrap}
+.ribbon.said .sway{animation:ribWiggle .6s ease-in-out}
+.ribbon.said .yum{opacity:1;transform:translate(-50%,-6px)}
+@media (hover:hover){.ribbon:hover .sway{animation:ribWiggle .6s ease-in-out}.ribbon:hover .yum{opacity:1;transform:translate(-50%,-6px)}}
+@keyframes ribDraw{to{stroke-dashoffset:0}}
+@keyframes ribFade{to{opacity:.9}}
+@keyframes ribSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes ribWiggle{0%,100%{transform:none}20%{transform:rotate(-12deg) scale(1.06)}45%{transform:rotate(10deg) scale(1.06)}70%{transform:rotate(-5deg)}}
+@media (max-width:860px){.ribbon{width:50px;margin-top:-26px}}
+@media (prefers-reduced-motion:reduce){
+  .ribbon *{animation:none!important}
+  .ribbon .band{stroke-dashoffset:0}
+  .ribbon .shine,.ribbon .cut{opacity:.9}
 }
 
 /* EVENT PAGE */
@@ -507,12 +548,12 @@ const EVENTS = [
   { slug:"cake-for-a-cause", title:"Breast Cancer Awareness", subtitle:"Cake Decoration Workshop",
     date:"2026-10-19", organizers:"With HOPE Clinic",
     desc:"A little creativity, a lot of sweetness, and a meaningful cause. Our cake decoration workshop brought everyone together for a special evening dedicated to breast cancer awareness.",
-    theme:"cake", variant:"v-pol", tape:"pink", stick:"i-star",
+    theme:"cake", awareness:true, variant:"v-pol", tape:"pink", stick:"i-star",
     photos:realPhotos("cake-for-a-cause"), recipe:null },
   { slug:"twirl-in-pink", title:"Bows & Beets", subtitle:"Pink Pasta Workshop",
     date:"2026-10-23", organizers:null,
     desc:"Things got a little pink in the kitchen! From making pasta to mixing up pink lemonade, this workshop brought creativity, good food, and great company together.",
-    theme:"pasta", variant:"v-clip", tape:"blue", stick:"i-pasta",
+    theme:"pasta", awareness:true, variant:"v-clip", tape:"blue", stick:"i-pasta",
     photos:realPhotos("twirl-in-pink"), recipePhotos:[17,16],
     recipes:[
       { label:"Pink Pasta", name:"Creamy Pink Pasta", time:"30 min", serves:"4",
@@ -567,6 +608,20 @@ function potSVG(){
     <g transform="translate(104 60)"><g class="puff pf3" style="--dx:12px">${cloud}</g></g>
     <g transform="translate(80 46)"><g class="big"><path class="ln" fill="#FFFDF8" vector-effect="non-scaling-stroke" transform="scale(2.2)" d="M-11 5a6 6 0 0 1 0-11a8 8 0 0 1 14-3a6 6 0 0 1 8 8a5 5 0 0 1-3 6z"/></g></g>
   </svg>`;
+}
+
+/* Pink awareness ribbon (see .ribbon styles). Each strand is a wide espresso stroke under a pink one.
+   Both outlines go first so the strands join seamlessly at the top of the loop (B starts a little inside A);
+   strand B's outline, clipped to the crossing, then sits over strand A so B reads as crossing on top. */
+function ribbonSVG(){
+  const A="M20 112C28 92 34 80 40 66C46 50 58 32 52 16C47 4 33 4 28 16", B="M29.2 13.2L28 16C22 32 34 50 40 66C46 82 52 94 60 112";
+  const p=(d,cls)=>`<path class="band ${cls}" pathLength="1" d="${d}"/>`;
+  return `<div class="ribbon tapsay" aria-hidden="true"><svg viewBox="0 0 80 122"><defs><clipPath id="ribX"><circle cx="40" cy="66" r="15"/></clipPath></defs><g class="sway">
+    ${p(A,"ink bA")}${p(B,"ink bB")}${p(A,"silk bA")}
+    <g clip-path="url(#ribX)">${p(B,"ink bB")}</g>${p(B,"silk bB")}
+    <path class="shine" d="M47 22q2-8-4-11"/><path class="shine" d="M45 80q4 9 7 15"/>
+    <path class="cut" d="M11.5 108.5l17 8M51.5 116.5l17-8"/>
+  </g></svg><span class="yum">think pink!</span></div>`;
 }
 
 /* ---------- Views ---------- */
@@ -671,7 +726,7 @@ function eventView(e){
     <button class="back" data-go="memories">${use("i-arrow","","width:30px;height:18px;transform:scaleX(-1);color:currentColor")} ALL MEMORIES</button>
     <section class="spread">
       <div>
-        <span class="num">Chapter ${e.chapter}</span>
+        <div class="numrow"><span class="num">Chapter ${e.chapter}</span>${e.awareness?ribbonSVG():""}</div>
         <h1>${e.title}</h1>
         <div class="subt">${e.subtitle}</div>
         <div class="meta"><span class="chip"><time datetime="${e.date}">${fmtDate(e.date)}</time></span>${e.organizers?`<span class="chip alt">${e.organizers}</span>`:""}<span class="chip alt">${e.photos.length} photos</span></div>
@@ -727,6 +782,7 @@ function render(route, opts={}){
   const name = ev?route:(route==="memories"?"memories":"home");
   const doRender=()=>{
     app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():homeView();
+    document.documentElement.classList.toggle("aware",!!(ev&&ev.awareness)); /* pink awareness palette */
     current=name;
     document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
     document.querySelectorAll(".navlinks button").forEach(b=>{ if(b.dataset.go===(ev?"memories":name)) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
