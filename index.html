@@ -242,7 +242,16 @@ main{min-height:60vh}
 .herophoto .main img{width:100%;aspect-ratio:5/4;object-fit:cover}
 .herophoto .mini{position:absolute;width:38%;left:-8%;bottom:-10%;background:var(--card);padding:8px 8px 30px;box-shadow:0 8px 20px var(--shadow);transform:rotate(-7deg)}
 .herophoto .mini img{aspect-ratio:1;object-fit:cover;width:100%}
-.herophoto .recipe-slip{position:absolute;right:-3%;top:-7%;width:118px;transform:rotate(9deg)}
+/* PEPPER GRINDER on the event photo: grinds spice (or sprinkles) onto the photo when it scrolls into view; tap/hover to repeat. */
+.grinder{position:absolute;right:-3%;top:-15%;width:72px;z-index:3;transform:rotate(8deg);transform-origin:50% 90%;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.grinder svg{width:100%;height:auto;display:block;overflow:visible}
+.grinder .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.grinder .grip{transition:none}
+.grinder.go .grip{animation:twist .16s linear infinite}
+@keyframes twist{to{transform:translateX(-6px)}}
+.speck{position:absolute;left:0;top:0;z-index:4;pointer-events:none;border-radius:50%;will-change:transform,opacity}
+.speck.rod{border-radius:2px}
+@media (max-width:860px){.grinder{width:62px;right:-1%;top:-13%}}
 @media (max-width:860px){.spread{grid-template-columns:1fr}.herophoto{order:-1;margin:10px 8px 40px}.herophoto .mini{left:-4px;width:34%}}
 
 .notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border-left:4px solid var(--terra);padding:12px 16px;border-radius:0 6px 6px 0;font-size:15px;margin:0 0 26px}
@@ -545,6 +554,24 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* Pepper grinder drawing (see .grinder styles). The grip lines scroll sideways to look like the cap twisting. */
+function grinderSVG(){
+  const grip=Array.from({length:12},(_,i)=>`M${12+i*6} 20v30`).join("");
+  return `<svg viewBox="0 0 80 160" aria-hidden="true">
+    <clipPath id="gripclip"><path d="M22 20h36q4 0 4 4v22q0 4-4 4h-36q-4 0-4-4v-22q0-4 4-4z"/></clipPath>
+    <circle class="ln" cx="40" cy="13" r="7" fill="#F1DAA4"/>
+    <path class="ln" fill="#C98975" d="M22 20h36q4 0 4 4v22q0 4-4 4h-36q-4 0-4-4v-22q0-4 4-4z"/>
+    <g clip-path="url(#gripclip)"><path class="grip" d="${grip}" stroke="#463C35" stroke-width="2" opacity=".3" fill="none"/></g>
+    <path class="ln" fill="none" d="M22 20h36q4 0 4 4v22q0 4-4 4h-36q-4 0-4-4v-22q0-4 4-4z"/>
+    <rect class="ln" x="21" y="50" width="38" height="8" rx="3" fill="#F1DAA4"/>
+    <path class="ln" fill="#A5B49C" d="M25 58h30q-2 18 6 34q8 18 2 40q-2 8-10 8h-26q-8 0-10-8q-6-22 2-40q8-16 6-34z"/>
+    <path d="M28 70q-5 30 1 58" fill="none" stroke="#F7F2E8" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+    <circle cx="29" cy="104" r="3.5" fill="#E8BFBE"/><circle cx="51" cy="104" r="3.5" fill="#E8BFBE"/>
+    <path class="ln" fill="none" stroke-width="2.5" d="M31 97q3-4 6 0M43 97q3-4 6 0M37 103q3 3.5 6 0"/>
+    <path class="ln" fill="#C98975" d="M25 140h30v7q0 4-4 4h-22q-4 0-4-4z"/>
+    <circle class="nozzle" cx="40" cy="152" r="1" fill="none"/>
+  </svg>`;
+}
 /* Simmering pot drawing (see .pot styles). Steam puffs are one cloud shape reused. */
 function potSVG(){
   const cloud=`<path class="ln" fill="#FFFDF8" d="M-11 5a6 6 0 0 1 0-11a8 8 0 0 1 14-3a6 6 0 0 1 8 8a5 5 0 0 1-3 6z"/>`;
@@ -680,7 +707,7 @@ function eventView(e){
       <div class="herophoto">
         <div class="main" style="view-transition-name:photo-${e.slug}"><img class="fade" ${FADE} src="${cover.url}" alt="${cover.alt}, ${e.subtitle}" fetchpriority="high"></div>
         <div class="mini"><span class="tape ${e.tape}"></span><img class="fade" ${FADE} src="${mini.thumb}" alt=""></div>
-        ${recipesOf(e).length?use("i-lemon","recipe-slip","height:100px"):use("i-star","recipe-slip","height:90px;width:90px")}
+        <button class="grinder" data-kind="${e.theme==="cake"?"sprinkles":"spice"}" aria-label="${e.theme==="cake"?"Add some sprinkles":"Add a pinch of spice"}">${grinderSVG()}</button>
       </div>
     </section>
     <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
@@ -750,7 +777,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io, potIO;
+let io, potIO, grIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -768,6 +795,56 @@ function bind(ev){
   }
   // tappable stickers
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
+  // pepper grinder: grinds once when the photo comes into view; tap (or mouse hover) to grind again
+  grIO&&grIO.disconnect(); grIO=null;
+  const gr=app.querySelector(".grinder");
+  if(gr){
+    const hp=gr.closest(".herophoto"), photo=hp.querySelector(".main"), nozzle=gr.querySelector(".nozzle");
+    const sprinkles=gr.dataset.kind==="sprinkles";
+    const colors=sprinkles?["#E8BFBE","#F1DAA4","#B6CED5","#C98975","#A5B49C"]:["#463C35","#463C35","#C98975","#3F5545","#8A6D4F"];
+    const R=(a,b)=>a+Math.random()*(b-a);
+    let busy=false;
+    const speck=()=>{
+      const n=nozzle.getBoundingClientRect(), h=hp.getBoundingClientRect(), p=photo.getBoundingClientRect();
+      const s=document.createElement("span"), rod=sprinkles||Math.random()<.2;
+      const w=rod?(sprinkles?R(7,10):R(4,6)):R(2.5,4.5), ht=rod?(sprinkles?3:2):w;
+      s.className="speck"+(rod?" rod":"");
+      s.style.cssText+=`width:${w}px;height:${ht}px;background:${colors[Math.floor(Math.random()*colors.length)]}`;
+      const x0=n.left-h.left-w/2, y0=n.top-h.top;
+      // most specks settle on the white frame along the top edge; a few drift a little way into the picture
+      const onFrame=Math.random()<.65;
+      const dx=R(-40,26), dy=Math.max(30,(p.top-h.top)-y0+(onFrame?R(4,13):R(16,p.height*.16))), rot=R(-200,200);
+      const a=s.animate([
+        {transform:`translate(${x0}px,${y0}px) rotate(0deg)`,opacity:1,easing:"cubic-bezier(.5,0,1,.6)"},
+        {transform:`translate(${x0+dx}px,${y0+dy}px) rotate(${rot}deg)`,opacity:1,offset:.42,easing:"ease-out"},
+        {transform:`translate(${x0+dx*1.08}px,${y0+dy-4}px) rotate(${rot*1.1}deg)`,opacity:1,offset:.5,easing:"ease-in"},
+        {transform:`translate(${x0+dx*1.12}px,${y0+dy}px) rotate(${rot*1.1}deg)`,opacity:1,offset:.58},
+        {transform:`translate(${x0+dx*1.12}px,${y0+dy}px) rotate(${rot*1.1}deg)`,opacity:0}],
+        {duration:R(2100,2700),fill:"forwards"});
+      hp.appendChild(s); a.onfinish=()=>s.remove();
+    };
+    const grind=()=>{
+      if(busy||reduce.matches) return; busy=true;
+      // lift just high enough that the nozzle clears the top of the photo frame
+      // ...but never so high that it slides under the sticky header
+      const room=gr.getBoundingClientRect().top-$(".nav").getBoundingClientRect().bottom-8;
+      const up=Math.round(Math.max(0, Math.min(Math.max(16, nozzle.getBoundingClientRect().bottom-photo.getBoundingClientRect().top+12), room)));
+      const at=(x,r)=>({transform:`translate(${x}px,-${up}px) rotate(${r}deg)`});
+      const hop=gr.animate([
+        {transform:"translate(0,0) rotate(8deg)"},
+        {...at(-38,-5),offset:.16},{...at(-38,4),offset:.3},{...at(-40,-5),offset:.44},
+        {...at(-38,4),offset:.58},{...at(-40,-4),offset:.72},{...at(-38,2),offset:.82},
+        {transform:"translate(0,0) rotate(8deg)"}],{duration:2600,easing:"ease-in-out"});
+      setTimeout(()=>gr.classList.add("go"),380);
+      let t=0; const drop=setInterval(()=>{ speck(); if(Math.random()<.5) speck(); if((t+=55)>1500) clearInterval(drop); },55);
+      setTimeout(()=>gr.classList.remove("go"),2050);
+      hop.onfinish=()=>{busy=false};
+    };
+    grIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ grIO.disconnect(); setTimeout(grind,350); } }),{threshold:.5});
+    grIO.observe(hp);
+    gr.addEventListener("click",grind);
+    gr.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") grind(); });
+  }
   // simmering pot: animate only while on screen; mouse hover or tap makes it boil over
   potIO&&potIO.disconnect(); potIO=null;
   const pot=app.querySelector(".pot");
