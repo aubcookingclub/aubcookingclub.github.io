@@ -2,7 +2,7 @@
 
 Single-file static site: `index.html` (HTML, CSS and JS together, no build step).
 Workshop content lives in the `EVENTS` array near the top of the `<script>`.
-Photos are currently generated placeholders; recipe for Chapter 02 is a sample.
+Photos are currently generated placeholders. Events hold recipes in a `recipes` array (one card and PDF each); Chapter 02 has the real Pink Pasta and Beetroot Pasta recipes, merged from the workshop table sheets.
 
 ## Rules
 - **Always ask me before running `git push`.** Commit locally as needed, but never push without my explicit go-ahead in that message.
