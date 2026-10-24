@@ -11,8 +11,9 @@ Photos are currently generated placeholders; recipe for Chapter 02 is a sample.
 - **Keep all memory for this project inside the AUB COOKING WEBSITE folder.** Save project notes in the "Notes" section of this CLAUDE.md, never in the user-profile memory folder (`~/.claude/projects/.../memory`).
 
 ## Notes
-- GitHub: public repo https://github.com/mariammansour308/aub-cooking-website, remote `origin`, branch `main`. Signed in with GitHub CLI as `mariammansour308`.
-- Live site (GitHub Pages, free, from `main` / root): https://mariammansour308.github.io/aub-cooking-website/. Every push to `main` goes live, so a push is a publish.
+- GitHub: public repo https://github.com/aubcookingclub/aubcookingclub.github.io (owned by the free `aubcookingclub` organization; `mariammansour308` is its admin), remote `origin`, branch `main`. Signed in with GitHub CLI as `mariammansour308`.
+- Live site (GitHub Pages, free, from `main` / root): https://aubcookingclub.github.io/. Every push to `main` goes live, so a push is a publish.
+- On 2026-10-24 the repo moved from `mariammansour308/aub-cooking-website`; the old Pages URL (mariammansour308.github.io/aub-cooking-website) now returns 404.
 - Commits use the repo-local identity `mariammansour308` with GitHub's no-reply email, so the personal Gmail address stays out of the history.
 - The repo was made public on 2026-10-24 so free GitHub Pages could be used; everything in it, including history, is publicly visible.
 - An older copy, `AUB Cooking Club · Our Recipe for Memories.html` (artifact-only downloads), was removed; it is still in the first commit (b5bee71) if ever needed.
