@@ -95,8 +95,6 @@ main{min-height:60vh}
 @keyframes rise{from{transform:translateY(105%)}to{transform:none}}
 @keyframes draw{to{stroke-dashoffset:0}}
 .hero p.lede{max-width:46ch;font-size:clamp(17px,1.6vw,19px);margin:30px 0 30px;color:var(--espresso)}
-.annot{position:absolute;font-size:28px;transform:rotate(-6deg);top:clamp(10px,3vw,40px);left:clamp(160px,38vw,500px)}
-.annot svg{width:70px;height:46px;position:absolute;left:-60px;top:22px;transform:rotate(10deg)}
 .collage{position:relative;height:clamp(380px,46vw,540px)}
 .polaroid{position:absolute;background:var(--card);padding:12px 12px 46px;box-shadow:0 10px 24px var(--shadow);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .polaroid img{width:100%;height:100%;object-fit:cover}
@@ -124,8 +122,6 @@ main{min-height:60vh}
   background-image:linear-gradient(var(--powder) 1px,transparent 1px),linear-gradient(90deg,var(--powder) 1px,transparent 1px);background-size:14px 14px;opacity:.75}
 @media (max-width:860px){
   .hero .wrap{grid-template-columns:1fr}
-  .annot{position:relative;display:inline-block;top:auto;left:auto;margin:0 0 6px 54px;font-size:25px}
-  .annot svg{display:none}
   .collage{height:min(98vw,460px);margin-top:10px}
   .badge{width:96px;height:96px}
 }
@@ -210,7 +206,6 @@ main{min-height:60vh}
 .chip{display:inline-block;padding:5px 13px;border-radius:999px;font-size:14px;font-weight:700;background:var(--butter);color:#463C35}
 .chip.alt{background:var(--powder)}
 .spread .desc{font-size:19px;max-width:44ch;margin:0}
-.spread .hand.note{font-size:26px;margin-top:22px;display:block;transform:rotate(-2deg)}
 .herophoto{position:relative}
 .herophoto .main{background:var(--card);padding:14px;box-shadow:0 14px 34px var(--shadow);transform:rotate(1.5deg)}
 .herophoto .main img{width:100%;aspect-ratio:5/4;object-fit:cover}
@@ -362,7 +357,7 @@ img.fade.ok{opacity:1}
 
 <footer id="join">
   <div class="wrap">
-    <h2>Stay for seconds!</h2>
+    <h2>What’s cooking next?</h2>
     <p>Good food, good company, and more memories to come.</p>
     <div class="socials">
       <a href="https://www.instagram.com/aubcookingclub/" target="_blank" rel="noopener" aria-label="AUB Cooking Club on Instagram (@aubcookingclub)" style="--c:#E8BFBE">
@@ -479,14 +474,14 @@ function realPhotos(slug){
 /* ---------- Content (editable starter data; an admin dashboard would replace this) ---------- */
 const EVENTS = [
   { slug:"cake-for-a-cause", title:"Breast Cancer Awareness", subtitle:"Cake Decoration Workshop",
-    date:"2026-10-19", caption:"Something sweet for a meaningful cause.", organizers:"With HOPE Clinic",
+    date:"2026-10-19", organizers:"With HOPE Clinic",
     desc:"A little creativity, a lot of sweetness, and a meaningful cause. Our cake decoration workshop brought everyone together for a special evening dedicated to breast cancer awareness.",
-    note:"frosting everywhere (worth it)", theme:"cake", variant:"v-pol", tape:"pink", stick:"i-star",
+    theme:"cake", variant:"v-pol", tape:"pink", stick:"i-star",
     photos:realPhotos("cake-for-a-cause"), recipe:null },
-  { slug:"twirl-in-pink", title:"Twirl in Pink!", subtitle:"Pink Pasta Workshop",
-    date:"2026-10-23", caption:"A little pasta, a lot of pink!", organizers:null,
+  { slug:"twirl-in-pink", title:"Bows & Beets", subtitle:"Pink Pasta Workshop",
+    date:"2026-10-23", organizers:null,
     desc:"Things got a little pink in the kitchen! From making pasta to mixing up pink lemonade, this workshop brought creativity, good food, and great company together.",
-    note:"a little pink, a little pasta", theme:"pasta", variant:"v-clip", tape:"blue", stick:"i-pasta",
+    theme:"pasta", variant:"v-clip", tape:"blue", stick:"i-pasta",
     photos:realPhotos("twirl-in-pink"), recipePhotos:[17,16],
     recipes:[
       { label:"Pink Pasta", name:"Creamy Pink Pasta", time:"30 min", serves:"4",
@@ -528,7 +523,6 @@ function homeView(){
   <section class="hero view">
     <div class="wrap">
       <div>
-        <div class="hand annot">Made with love, served with memories!<svg viewBox="0 0 100 60" style="color:var(--terra)"><use href="#i-arrow"/></svg></div>
         <h1>
           <span><i>Good food.</i></span>
           <span><i>Good people.</i></span>
@@ -591,7 +585,6 @@ function memoriesView(){
         <h2>${e.title}</h2>
         <span class="sub">${e.subtitle}</span>
         <time datetime="${e.date}">${fmtDate(e.date)}</time>
-        <span class="cap">“${e.caption}”</span>
         <span class="look">take a look ${use("i-arrow","","width:34px;height:20px;color:currentColor")}</span>
       </div>
       ${use(e.stick,"stick")}
@@ -599,7 +592,7 @@ function memoriesView(){
   const next=String(EVENTS.length+1).padStart(2,"0");
   return `<div class="view">
     <section class="pagehead"><div class="wrap">
-      <h1><span>A little mess.</span><span>A lot of memories.</span></h1>
+      <h1><span>Recipes we made.</span><span>Memories we kept.</span></h1>
       <p>Every workshop has a story. Here’s ours.</p>
       ${use("i-whisk","doodle reveal","height:160px")}
     </div></section>
@@ -628,7 +621,6 @@ function eventView(e){
         <div class="subt">${e.subtitle}</div>
         <div class="meta"><span class="chip"><time datetime="${e.date}">${fmtDate(e.date)}</time></span>${e.organizers?`<span class="chip alt">${e.organizers}</span>`:""}<span class="chip alt">${e.photos.length} photos</span></div>
         <p class="desc">${e.desc}</p>
-        <span class="hand note">psst… ${e.note}</span>
       </div>
       <div class="herophoto">
         <div class="main" style="view-transition-name:photo-${e.slug}"><img class="fade" ${FADE} src="${cover.url}" alt="${cover.alt}, ${e.subtitle}" fetchpriority="high"></div>
