@@ -238,7 +238,9 @@ main{min-height:60vh}
 .recipe-sec > .wrap > p{margin:6px 0 40px;font-size:18px}
 .rcard{position:relative;max-width:640px;margin:0 auto;text-align:left;background:#FFFDF8;color:#463C35;box-shadow:0 14px 34px var(--shadow);border-radius:4px;overflow:hidden;
   background-image:linear-gradient(transparent 29px,rgba(182,206,213,.55) 30px),linear-gradient(90deg,transparent 46px,rgba(201,137,117,.5) 46px,rgba(201,137,117,.5) 48px,transparent 48px);background-size:100% 30px,100% 100%}
-.rcard .closed{width:100%;border:0;background:none;padding:40px 30px 40px 70px;display:block;text-align:left;position:relative;color:#463C35}
+.rcard + .rcard{margin-top:30px}
+.rcard li b{color:#3F5545}
+.rcard .closed{width:100%;border:0;background:none;padding:40px 120px 40px 70px;display:block;text-align:left;position:relative;color:#463C35}
 .rcard .closed:hover .corner{width:44px;height:44px}
 .rcard .closed h3{font-family:var(--serif);font-size:44px;color:#3F5545;margin:0;letter-spacing:-.02em;font-weight:900}
 .rcard .closed span{font-family:var(--hand);font-size:26px;color:#a3604c;font-weight:700}
@@ -258,7 +260,7 @@ main{min-height:60vh}
 .rcard .sample{font-size:14px;background:#F1DAA4;padding:8px 12px;border-radius:4px;margin:0 0 6px}
 .rcard .dlrow{margin-top:28px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .rcard .rphoto{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:3px;margin:4px 0 4px}
-@media (max-width:560px){.rcard .closed{padding:30px 20px 30px 62px}.rcard .closed h3{font-size:34px}.rcard .seal{width:58px;height:58px;right:16px;margin-top:-29px}.rcard .inner{padding:0 20px 28px 62px}}
+@media (max-width:560px){.rcard .closed{padding:30px 84px 30px 62px}.rcard .closed h3{font-size:34px}.rcard .seal{width:58px;height:58px;right:16px;margin-top:-29px}.rcard .inner{padding:0 20px 28px 62px}}
 
 /* FOOTER */
 footer{background:var(--olive);color:var(--paper);position:relative;margin-top:30px;padding:90px 0 calc(40px + env(safe-area-inset-bottom,0px))}
@@ -416,12 +418,18 @@ const EVENTS = [
     desc:"Things got a little pink in the kitchen! From making pasta to mixing up pink lemonade, this workshop brought creativity, good food, and great company together.",
     note:"a little pink, a little pasta", theme:"pasta", variant:"v-clip", tape:"blue", stick:"i-pasta",
     photos:makePhotos(2,16,"pasta"),
-    recipe:{ name:"Pink Beet Pasta", time:"1 h 15 min", serves:"4", sample:true,
-      ingredients:["300 g “00” flour, plus extra for dusting","100 g cooked beetroot, blended smooth","2 large eggs","A pinch of salt","60 g butter","1 garlic clove, finely grated","Zest of 1 lemon","40 g grated parmesan","A handful of fresh basil"],
-      steps:["Mound the flour on a clean surface and make a well in the centre.","Add the beetroot purée, eggs and salt to the well and mix with a fork, slowly pulling in flour.","Knead for 8 to 10 minutes until smooth and bright pink. Wrap and rest for 30 minutes.","Roll the dough thin, dust with flour and cut into ribbons.","Cook in well-salted boiling water for 2 to 3 minutes.","Melt the butter with the garlic and lemon zest, toss with the pasta and a splash of pasta water, then finish with parmesan and basil."] } }
+    recipes:[
+      { label:"Pink Pasta", name:"Creamy Pink Pasta", time:"30 min", serves:"4",
+        ingredients:["400 g pasta: farfalle, fusilli or penne","200 g crème fraîche","3 tbsp tomato paste","2 tbsp olive oil","2 garlic cloves","50 g Parmesan, grated","1 tsp Italian seasoning","Salt and black pepper","Up to ½ cup pasta cooking water","Optional: cooked chicken and cooked onions, to serve"],
+        steps:["Get ready: Wash your hands. Peel the garlic and chop it into tiny pieces. Measure all the sauce ingredients before you start.","Boil the water: Fill a large pot about two-thirds full of water and bring it to a rolling boil. Add a generous pinch of salt.","Cook the pasta: Add the pasta and stir so it doesn’t stick. Cook for the time on the packet, usually 9 to 13 minutes, until cooked but still slightly firm. Using more than one shape? Cook them in separate pots, or add each shape at its own time.","Save water, then drain: Scoop out ½ cup of the pasta cooking water and keep it. Drain the pasta in a colander.","Start the sauce: Warm the olive oil in a pan over medium-low heat. Add the garlic and stir for 30 seconds, without letting it brown. Add the tomato paste and stir for 1 to 2 minutes.","Make it pink: Turn the heat to low. Add the crème fraîche and stir gently until the sauce turns pink. Stir in the Parmesan, Italian seasoning and a pinch of salt and pepper. If it’s thick, add a little saved pasta water, 1 tbsp at a time.","Coat the pasta: Add the pasta to the pan and toss gently for about 1 minute, until every piece is covered in sauce.","Plate it up: Divide between 4 plates. Add chicken and onions only to the plates that want them, never to the sauce pan, so everyone gets their favourite."] },
+      { label:"Beetroot Pasta", name:"Creamy Beetroot Pasta", time:"30 min", serves:"5",
+        ingredients:["500 g farfalle","500 g cooked beetroot","190 g cream cheese","125 g feta","2 garlic cloves, peeled","2½ tbsp olive oil","Salt and black pepper","Up to ¾ cup pasta cooking water","Optional: cooked chicken and cooked onions, to serve"],
+        steps:["Get ready: Wash your hands and clear your work area.","Boil the water: Fill a large pot about two-thirds full of water and bring it to a rolling boil. Add a generous pinch of salt.","Cook the pasta: Add the farfalle and stir right away so it doesn’t stick. Cook for the time on the packet, usually 10 to 13 minutes, until cooked but still slightly firm.","Save water, then drain: Scoop out ¾ cup of the pasta cooking water and set it aside. Drain the pasta in a colander.","Blend the sauce: Put the beetroot, cream cheese, feta, garlic and olive oil in a blender. Add 2 tbsp of the saved pasta water and blend until completely smooth.","Warm it gently: Pour the sauce into a pan over low heat and stir for 1 to 2 minutes. If it’s too thick, add pasta water one spoonful at a time. Don’t let it boil hard.","Coat the pasta: Add the pasta to the sauce and toss until every piece is coated. Season with salt and pepper to taste.","Plate it up: Divide between 5 plates. Add chicken and onions only to the plates that want them, never to the sauce pan, so everyone gets their favourite."] }
+    ] }
 ];
 EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
 EVENTS.forEach((e,i)=>e.chapter=String(i+1).padStart(2,"0"));
+const recipesOf=e=>e.recipes||(e.recipe?[e.recipe]:[]);
 const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
 
 /* ---------- Helpers ---------- */
@@ -553,41 +561,45 @@ function eventView(e){
       <div class="herophoto">
         <div class="main" style="view-transition-name:photo-${e.slug}"><img src="${cover.url}" alt="${cover.alt}, ${e.subtitle}"></div>
         <div class="mini"><span class="tape ${e.tape}"></span><img src="${mini.url}" alt=""></div>
-        ${e.recipe?use("i-lemon","recipe-slip","height:100px"):use("i-star","recipe-slip","height:90px;width:90px")}
+        ${recipesOf(e).length?use("i-lemon","recipe-slip","height:100px"):use("i-star","recipe-slip","height:90px;width:90px")}
       </div>
     </section>
     <div class="notice"><span>✶</span><span>These are placeholder images. Real workshop photos will replace them once the club uploads them.</span></div>
     <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
     <div class="gallery">${tiles}</div>
   </div>
-  ${e.recipe?recipeBlock(e):""}
+  ${recipesOf(e).length?recipeBlock(e):""}
   </div>`;
 }
 
 function recipeBlock(e){
-  const r=e.recipe, rp=placeholder(909,800,400,"pasta");
+  const rs=recipesOf(e);
   return `<section class="recipe-sec"><div class="wrap">
-    <h2 class="reveal">Psst… want the recipe?</h2>
+    <h2 class="reveal">Psst… want the recipe${rs.length>1?"s":""}?</h2>
     <p class="reveal">Because good food deserves a second round.</p>
-    <div class="rcard reveal" id="rcard">
-      <button class="closed" aria-expanded="false" aria-controls="rbody">
-        <h3>The Recipe</h3><span>Open for something delicious.</span>
+    ${rs.map((r,k)=>recipeCard(e,r,k)).join("")}
+  </div></section>`;
+}
+function recipeCard(e,r,k){
+  const rp=r.photo?{url:r.photo}:placeholder(909+k,800,400,e.theme);
+  return `<div class="rcard reveal" data-recipe="${k}">
+      <button class="closed" aria-expanded="false" aria-controls="rbody${k}">
+        <h3>${r.label||"The Recipe"}</h3><span>Open for something delicious.</span>
         <svg class="seal" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="36" fill="#E8BFBE" stroke="#463C35" stroke-width="3" stroke-dasharray="6 4"/><circle cx="40" cy="40" r="26" fill="#C98975"/><text x="40" y="46" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="20" fill="#FFFDF8">yum!</text></svg>
         <span class="corner"></span>
       </button>
-      <div class="body" id="rbody"><div><div class="inner">
+      <div class="body" id="rbody${k}"><div><div class="inner">
         ${r.sample?`<p class="sample">Sample recipe for the prototype. The club will swap in its own.</p>`:""}
         <h4 style="font-size:32px;margin-top:10px">${r.name}</h4>
         <div class="facts"><span class="chip">⏱ ${r.time}</span><span class="chip alt">Serves ${r.serves}</span></div>
-        <img class="rphoto" src="${rp.url}" alt="Placeholder photo for the recipe">
+        <img class="rphoto" src="${rp.url}" alt="${r.photo?r.name:"Placeholder photo for the recipe"}">
         <h4>You’ll need</h4>
         <ul>${r.ingredients.map((x,i)=>`<li style="transition-delay:${150+i*40}ms">${x}</li>`).join("")}</ul>
         <h4>Let’s cook</h4>
-        <ol>${r.steps.map((x,i)=>`<li style="transition-delay:${350+i*60}ms">${x}</li>`).join("")}</ol>
-        <div class="dlrow"><button class="btn magnetic" id="savePdf" data-needs-dl ${downloads?"":"hidden"}>SAVE THE RECIPE</button><span class="hand" style="font-size:22px">from Chapter ${e.chapter}, ${e.subtitle}</span></div>
+        <ol>${r.steps.map((x,i)=>`<li style="transition-delay:${350+i*60}ms">${x.replace(/^([^:]{1,32}):/,"<b>$1:</b>")}</li>`).join("")}</ol>
+        <div class="dlrow"><button class="btn magnetic savePdf" data-needs-dl ${downloads?"":"hidden"}>SAVE THE RECIPE</button><span class="hand" style="font-size:22px">from Chapter ${e.chapter}, ${e.subtitle}</span></div>
       </div></div></div>
-    </div>
-  </div></section>`;
+    </div>`;
 }
 
 /* ---------- Router ---------- */
@@ -646,12 +658,11 @@ function bind(ev){
   }
   if(ev){
     app.querySelectorAll(".tile").forEach(t=>t.addEventListener("click",()=>openLB(ev,+t.dataset.idx)));
-    const rc=$("#rcard");
-    if(rc){
-      const btn=rc.querySelector(".closed");
+    app.querySelectorAll(".rcard").forEach(rc=>{
+      const btn=rc.querySelector(".closed"), r=recipesOf(ev)[+rc.dataset.recipe];
       btn.addEventListener("click",()=>{const o=rc.classList.toggle("open");btn.setAttribute("aria-expanded",o)});
-      const sp=$("#savePdf"); if(sp) sp.addEventListener("click",()=>recipePDF(ev));
-    }
+      const sp=rc.querySelector(".savePdf"); if(sp) sp.addEventListener("click",()=>recipePDF(ev,r));
+    });
   }
 }
 
@@ -687,14 +698,21 @@ function closeMenu(){mm.classList.remove("open");mbtn.setAttribute("aria-expande
 mbtn.onclick=()=>{const o=mm.classList.toggle("open");mbtn.setAttribute("aria-expanded",o);mbtn.textContent=o?"Close":"Menu";if(o)mm.querySelector("button").focus()};
 
 /* ---------- Recipe PDF ---------- */
-function recipePDF(ev){
+function recipePDF(ev,r=recipesOf(ev)[0]){
   if(!window.jspdf){toast("The PDF tool didn’t load. Try again in a moment.");return}
-  const r=ev.recipe, {jsPDF}=window.jspdf, d=new jsPDF({unit:"pt",format:"a4"});
-  const W=595,H=842, clean=s=>s.replace(/[’‘]/g,"'").replace(/[“”]/g,'"');
-  d.setFillColor(247,242,232);d.rect(0,0,W,H,"F");
-  d.setDrawColor(182,206,213);d.setLineWidth(.6);for(let y=150;y<H-60;y+=22)d.line(40,y,W-40,y);
-  d.setDrawColor(201,137,117);d.setLineWidth(1.2);d.line(70,130,70,H-50);
-  d.setDrawColor(63,85,69);d.setLineWidth(2);d.rect(24,24,W-48,H-48);d.setLineWidth(.7);d.rect(30,30,W-60,H-60);
+  const {jsPDF}=window.jspdf, d=new jsPDF({unit:"pt",format:"a4"});
+  const W=595,H=842, BOTTOM=H-66, clean=s=>s.replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,"-");
+  // paper background, ruled lines, margin line and frame; the first page also gets the header circles
+  const paper=first=>{
+    d.setFillColor(247,242,232);d.rect(0,0,W,H,"F");
+    d.setDrawColor(182,206,213);d.setLineWidth(.6);for(let y=first?150:62;y<H-60;y+=22)d.line(40,y,W-40,y);
+    d.setDrawColor(201,137,117);d.setLineWidth(1.2);d.line(70,first?130:40,70,H-50);
+    d.setDrawColor(63,85,69);d.setLineWidth(2);d.rect(24,24,W-48,H-48);d.setLineWidth(.7);d.rect(30,30,W-60,H-60);
+    d.setFont("times","italic");d.setFontSize(13);d.setTextColor(201,137,117);d.text("Made with love by the AUB Cooking Club.",W/2,H-44,{align:"center"});
+  };
+  // start a new page when a block whose last line sits `need` pt below y would pass the bottom margin
+  const room=(y,need=0)=>{ if(y+need<=BOTTOM) return y; d.addPage(); paper(false); d.setFont("times","italic");d.setFontSize(12);d.setTextColor(63,85,69);d.text(clean(r.name)+" (continued)",86,56); d.setFont("helvetica","normal");d.setFontSize(11);d.setTextColor(70,60,53); return 84; };
+  paper(true);
   d.setFillColor(241,218,164);d.circle(W-92,92,40,"F");d.setFillColor(201,137,117);d.circle(W-92,92,16,"F");
   d.setFillColor(232,191,190);d.circle(W-60,60,10,"F");
   d.setTextColor(63,85,69);d.setFont("helvetica","bold");d.setFontSize(9);d.text("AUB COOKING CLUB  *  OUR RECIPE FOR MEMORIES",54,64);
@@ -706,11 +724,10 @@ function recipePDF(ev){
   d.setFont("helvetica","bold");d.setFontSize(10);d.text(clean("Time: "+r.time),96,y+1);d.text("Serves "+r.serves,214,y+1);
   y+=44;d.setFont("times","bold");d.setFontSize(18);d.setTextColor(63,85,69);d.text("You'll need",86,y);y+=22;
   d.setFont("helvetica","normal");d.setFontSize(11);d.setTextColor(70,60,53);
-  r.ingredients.forEach(x=>{d.setFillColor(201,137,117);d.circle(92,y-3.5,2.2,"F");d.splitTextToSize(clean(x),400).forEach(l=>{d.text(l,102,y);y+=22})});
-  y+=14;d.setFont("times","bold");d.setFontSize(18);d.setTextColor(63,85,69);d.text("Let's cook",86,y);y+=22;
+  r.ingredients.forEach(x=>{const ls=d.splitTextToSize(clean(x),400);y=room(y,(ls.length-1)*22);d.setFillColor(201,137,117);d.circle(92,y-3.5,2.2,"F");ls.forEach(l=>{d.text(l,102,y);y+=22})});
+  y=room(y+14,44);d.setFont("times","bold");d.setFontSize(18);d.setTextColor(63,85,69);d.text("Let's cook",86,y);y+=22;
   d.setFont("helvetica","normal");d.setFontSize(11);d.setTextColor(70,60,53);
-  r.steps.forEach((x,i)=>{d.setFont("helvetica","bold");d.text(String(i+1)+".",86,y);d.setFont("helvetica","normal");d.splitTextToSize(clean(x),400).forEach(l=>{d.text(l,104,y);y+=22})});
-  d.setFont("times","italic");d.setFontSize(13);d.setTextColor(201,137,117);d.text("Made with love by the AUB Cooking Club.",W/2,H-44,{align:"center"});
+  r.steps.forEach((x,i)=>{const ls=d.splitTextToSize(clean(x),400);y=room(y,(ls.length-1)*22);d.setFont("helvetica","bold");d.text(String(i+1)+".",86,y);d.setFont("helvetica","normal");ls.forEach(l=>{d.text(l,104,y);y+=22})});
   saveFile(`${r.name.toLowerCase().replace(/\s+/g,"-")}-aub-cooking-club.pdf`,d.output("blob"));
 }
 
