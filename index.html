@@ -196,6 +196,37 @@ main{min-height:60vh}
 .chapter.soon:hover{transform:none}
 .chapter.soon .cap{color:var(--espresso)}
 
+/* SIMMERING POT (Chapter "next" card). Loops gently only while on screen; hover or tap makes it boil over. */
+.pot{width:150px;height:auto;display:block;margin:-18px auto 6px;overflow:visible;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pot *{transform-box:fill-box}
+.pot .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.pot .lid{transform-origin:50% 100%;animation:lidJig 2.6s ease-in-out infinite}
+@keyframes lidJig{0%,56%,100%{transform:none}60%{transform:translateY(-3px) rotate(-3deg)}64%{transform:none}68%{transform:translateY(-2px) rotate(2.5deg)}72%{transform:none}}
+.pot .puff{transform-origin:50% 50%;opacity:0;animation:puff 3s cubic-bezier(.3,.6,.4,1) infinite}
+.pot .pf2{animation-delay:1s}.pot .pf3{animation-delay:2s}
+@keyframes puff{0%{opacity:0;transform:translate(0,6px) scale(.35)}15%{opacity:1}65%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),-48px) scale(1.15)}}
+.pot .bub{transform-origin:50% 50%;animation:bub 1.8s ease-in infinite}
+.pot .bub:nth-of-type(2){animation-delay:.6s}.pot .bub:nth-of-type(3){animation-delay:1.2s}
+@keyframes bub{0%{transform:scale(0);opacity:1}70%{transform:scale(1);opacity:1}80%{transform:scale(1.35);opacity:0}100%{transform:scale(0);opacity:0}}
+.pot .flame{transform-origin:50% 100%;animation:flick .45s ease-in-out infinite alternate}
+@keyframes flick{from{transform:scale(.85,.8)}to{transform:scale(1.05,1.12)}}
+.pot .big{opacity:0;transform-origin:50% 100%}
+.pot .eyes-open{opacity:0}
+/* boil over */
+.pot.boil .lid{animation:lidPop 1s cubic-bezier(.3,1.3,.5,1)}
+@keyframes lidPop{0%{transform:none}22%{transform:translateY(-24px) rotate(-16deg)}50%{transform:translateY(-19px) rotate(-11deg)}78%{transform:translateY(2px) rotate(3deg)}88%{transform:translateY(-3px) rotate(-1deg)}100%{transform:none}}
+.pot.boil .big{animation:bigPuff 1s ease-out}
+@keyframes bigPuff{0%{opacity:0;transform:translateY(12px) scale(.3)}28%{opacity:1;transform:translateY(-6px) scale(1)}100%{opacity:0;transform:translateY(-38px) scale(1.35)}}
+.pot.boil .bub{animation-duration:.55s}
+.pot.boil .eyes-shut{opacity:0}.pot.boil .eyes-open{opacity:1}
+/* only animate while visible */
+.pot:not(.on) *{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){
+  .pot *{animation:none!important}
+  .pot .pf2{opacity:.9;transform:translate(0,-14px) scale(.9)}
+  .pot .bub{transform:scale(1)}
+}
+
 /* EVENT PAGE */
 .back{background:none;border:0;padding:8px 0;font-weight:700;font-size:14px;letter-spacing:.08em;color:var(--olive);display:inline-flex;gap:8px;align-items:center;margin-top:26px}
 .spread{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(24px,5vw,70px);align-items:center;padding:24px 0 60px}
@@ -514,6 +545,29 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* Simmering pot drawing (see .pot styles). Steam puffs are one cloud shape reused. */
+function potSVG(){
+  const cloud=`<path class="ln" fill="#FFFDF8" d="M-11 5a6 6 0 0 1 0-11a8 8 0 0 1 14-3a6 6 0 0 1 8 8a5 5 0 0 1-3 6z"/>`;
+  const flame=(x,d)=>`<g transform="translate(${x} 157) scale(1.25)"><g class="flame" style="animation-delay:${d}s"><path class="ln" fill="#F1DAA4" d="M0 0c-7 0-9-7-5-12c1 3 3 4 4 2c-1-4 1-8 4-10c0 5 6 7 6 13c0 4-3 7-9 7z"/><path fill="#C98975" d="M1-2c-3 0-4-3-2-6c1 2 2 2 3 0c2 2 3 6-1 6z"/></g></g>`;
+  return `<svg class="pot" viewBox="0 -12 160 174" aria-hidden="true">
+    ${flame(62,0)}${flame(80,.15)}${flame(98,.3)}
+    <path class="ln" fill="none" d="M50 159h60M22 135h116M28 135v8M132 135v8"/>
+    <path class="ln" fill="none" d="M32 92h-9a6 6 0 0 0 0 12h9M128 92h9a6 6 0 0 1 0 12h-9"/>
+    <path class="ln" fill="#C98975" d="M32 85h96v26q0 20-20 20h-56q-20 0-20-20z"/>
+    <path d="M42 94v22" stroke="#F7F2E8" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
+    <circle cx="61" cy="112" r="4.5" fill="#E8BFBE"/><circle cx="99" cy="112" r="4.5" fill="#E8BFBE"/>
+    <g class="eyes-shut ln" fill="none"><path d="M64 104q4-5 8 0M88 104q4-5 8 0"/></g>
+    <g class="eyes-open" fill="#463C35"><circle cx="68" cy="102" r="3.2"/><circle cx="92" cy="102" r="3.2"/></g>
+    <path class="ln" fill="none" d="M75 110q5 5 10 0"/>
+    <g fill="#FFFDF8"><circle class="ln bub" stroke-width="2.5" cx="31" cy="72" r="4.5"/><circle class="ln bub" stroke-width="2.5" cx="131" cy="71" r="4"/><circle class="ln bub" stroke-width="2.5" cx="114" cy="69" r="3.5"/></g>
+    <rect class="ln" x="26" y="76" width="108" height="9" rx="4.5" fill="#E8BFBE"/>
+    <g class="lid"><path class="ln" fill="#A5B49C" d="M30 77Q80 40 130 77z"/><path d="M50 69q13-11 28-13" fill="none" stroke="#F7F2E8" stroke-width="3" stroke-linecap="round" opacity=".8"/><circle class="ln" cx="80" cy="54" r="6" fill="#F1DAA4"/></g>
+    <g transform="translate(58 60)"><g class="puff" style="--dx:-10px">${cloud}</g></g>
+    <g transform="translate(80 40)"><g class="puff pf2" style="--dx:5px">${cloud}</g></g>
+    <g transform="translate(104 60)"><g class="puff pf3" style="--dx:12px">${cloud}</g></g>
+    <g transform="translate(80 46)"><g class="big"><path class="ln" fill="#FFFDF8" vector-effect="non-scaling-stroke" transform="scale(2.2)" d="M-11 5a6 6 0 0 1 0-11a8 8 0 0 1 14-3a6 6 0 0 1 8 8a5 5 0 0 1-3 6z"/></g></g>
+  </svg>`;
+}
 
 /* ---------- Views ---------- */
 function homeView(){
@@ -599,6 +653,7 @@ function memoriesView(){
     <section class="wrap"><div class="chapters">
       ${cards}
       <div class="chapter soon reveal"><div class="sheet">
+        ${potSVG()}
         <span class="num">Chapter ${next}</span><h2>Still simmering…</h2><span class="cap">Our next workshop lands here. Save a seat!</span>
       </div></div>
     </div></section></div>`;
@@ -695,7 +750,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io;
+let io, potIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -713,6 +768,17 @@ function bind(ev){
   }
   // tappable stickers
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
+  // simmering pot: animate only while on screen; mouse hover or tap makes it boil over
+  potIO&&potIO.disconnect(); potIO=null;
+  const pot=app.querySelector(".pot");
+  if(pot){
+    potIO=new IntersectionObserver(es=>es.forEach(x=>pot.classList.toggle("on",x.isIntersecting)));
+    potIO.observe(pot);
+    const boil=()=>{ if(reduce.matches||pot.classList.contains("boil")) return; pot.classList.add("boil"); };
+    pot.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") boil(); });
+    pot.addEventListener("click",boil);
+    pot.addEventListener("animationend",e=>{ if(e.animationName==="lidPop") pot.classList.remove("boil"); });
+  }
   // cookbook
   const book=$("#book");
   if(book){
