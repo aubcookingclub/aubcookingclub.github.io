@@ -84,6 +84,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 .mobilemenu button{display:block;width:100%;text-align:left;background:none;border:0;padding:6px 0;font-family:var(--serif);font-size:30px;font-weight:700;color:#3F5545}
 .mobilemenu .hand{font-size:22px;margin-top:8px}
 @media (max-width:760px){.navlinks{display:none}.menubtn{display:inline-block}}
+/* sound effects on/off (off by default) */
+.nav .wrap{gap:6px}
+.navlinks{margin-left:auto}
+.sndbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:none;color:var(--olive);display:grid;place-items:center;transition:background .2s}
+.sndbtn:hover{background:var(--paper-2)}
+.sndbtn svg{width:23px;height:23px}
+.sndbtn .waves,.sndbtn[aria-pressed="true"] .mute{display:none}
+.sndbtn[aria-pressed="true"] .waves{display:inline}
+@media (max-width:760px){.sndbtn{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){.sndbtn{display:none}}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:10px;background:var(--olive);color:var(--paper);border:0;border-radius:999px;padding:15px 26px;font-weight:700;font-size:14px;letter-spacing:.1em;
@@ -606,6 +616,9 @@ img.fade.ok{opacity:1}
       <button data-go="memories">OUR MEMORIES</button>
       <button data-go="join">JOIN THE TABLE</button>
     </nav>
+    <button class="sndbtn" aria-pressed="false" aria-label="Sound effects" title="Sound effects: off">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fill-opacity=".15"/><g class="waves"><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M18 7a7 7 0 0 1 0 10"/></g><g class="mute"><path d="M16 9.5l5 5M21 9.5l-5 5"/></g></svg>
+    </button>
     <button class="menubtn" aria-expanded="false" aria-controls="mmenu">Menu</button>
   </div>
 </header>
@@ -787,6 +800,63 @@ const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long
 const $=(s,el=document)=>el.querySelector(s);
 const app=$("#app");
 const reduce=matchMedia("(prefers-reduced-motion: reduce)");
+/* ---------- Sound effects ----------
+   Off by default: the speaker button in the header turns them on (remembered on this device only).
+   Every sound is synthesised in the browser with the Web Audio API, so there are no sound files.
+   Sounds only ever play in response to something on the page, and never for reduced-motion visitors. */
+const SFX=(()=>{
+  let ac=null, master=null, on=false;
+  try{ on=localStorage.getItem("aubcc-sound")==="on"; }catch(e){}
+  function ctx(){
+    if(!ac){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null; ac=new AC(); master=ac.createGain(); master.gain.value=.5; master.connect(ac.destination); }
+    if(ac.state==="suspended") ac.resume(); return ac;
+  }
+  // a burst of filtered noise (crunches, swishes, paper, steam) with a quick fade-out
+  function noise(t,{dur=.1,type="bandpass",f0=2000,f1=f0,q=1,vol=.5,attack=.004}={}){
+    const n=Math.max(1,Math.floor(ac.sampleRate*dur)), b=ac.createBuffer(1,n,ac.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+    const s=ac.createBufferSource(), fl=ac.createBiquadFilter(), g=ac.createGain();
+    s.buffer=b; fl.type=type; fl.Q.value=q; fl.frequency.setValueAtTime(f0,t); fl.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+attack); g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+    s.connect(fl); fl.connect(g); g.connect(master); s.start(t); s.stop(t+dur+.02);
+  }
+  // a short pitched note, optionally sliding from f0 to f1 (boops, plops, bells)
+  function tone(t,{dur=.15,type="sine",f0=440,f1=f0,vol=.4,attack=.005}={}){
+    const o=ac.createOscillator(), g=ac.createGain(); o.type=type; o.frequency.setValueAtTime(f0,t);
+    if(f1!==f0) o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+attack); g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+.02);
+  }
+  const S={
+    step:   t=>noise(t,{dur:.05,type:"lowpass",f0:520,f1:240,vol:.45}),                                   // soft footstep
+    grind:  t=>{ for(let i=0;i<4;i++) noise(t+i*.035+Math.random()*.01,{dur:.03,f0:3200,f1:2600,q:2.5,vol:.45}); }, // pepper grinder crunch
+    hi:     t=>{ tone(t,{dur:.08,f0:880,f1:1100,vol:.16}); tone(t+.09,{dur:.12,f0:1170,f1:1480,vol:.16}); },  // little "hi!" chirp
+    boing:  t=>{ const o=ac.createOscillator(), g=ac.createGain(), l=ac.createOscillator(), lg=ac.createGain();   // springy underline
+      o.type="triangle"; o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(420,t+.18); o.frequency.exponentialRampToValueAtTime(300,t+.5);
+      l.frequency.value=14; lg.gain.setValueAtTime(40,t); lg.gain.exponentialRampToValueAtTime(2,t+.5); l.connect(lg); lg.connect(o.frequency);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.32,t+.01); g.gain.exponentialRampToValueAtTime(.0008,t+.55);
+      o.connect(g); g.connect(master); o.start(t); l.start(t); o.stop(t+.6); l.stop(t+.6); },
+    clonk:  t=>{ tone(t,{dur:.16,f0:180,f1:90,vol:.42}); tone(t,{dur:.12,type:"triangle",f0:620,f1:560,vol:.1}); noise(t,{dur:.03,type:"lowpass",f0:1500,vol:.18}); }, // pot lands
+    whoop:  t=>tone(t,{dur:.18,f0:320,f1:980,vol:.18}),                                                       // something flies up
+    plop:   t=>tone(t,{dur:.11,f0:700,f1:140,vol:.28}),                                                       // ...and lands in the pot
+    rattle: t=>{ for(let i=0;i<5;i++) tone(t+i*.055,{dur:.05,type:"triangle",f0:1100+Math.random()*250,vol:.1}); noise(t+.05,{dur:.6,type:"highpass",f0:3500,f1:5000,vol:.12,attack:.05}); }, // lid + steam
+    sizzle: t=>{ noise(t,{dur:.7,type:"highpass",f0:4000,f1:6000,vol:.1,attack:.03}); noise(t+.22,{dur:.25,f0:500,f1:1600,q:.8,vol:.16}); }, // pan sizzle + toss whoosh
+    squeeze:t=>noise(t,{dur:.32,type:"lowpass",f0:280,f1:900,q:4,vol:.9,attack:.04}),                        // piping bag
+    sparkle:t=>[2600,3300,2900,3900].forEach((f,i)=>tone(t+i*.06,{dur:.25,f0:f,vol:.13})),                  // sprinkles
+    flip:   t=>{ noise(t,{dur:.16,f0:2600,f1:900,q:.7,vol:.3}); noise(t+.12,{dur:.14,f0:1800,f1:700,q:.7,vol:.18}); }, // cookbook page
+    unfold: t=>noise(t,{dur:.14,type:"highpass",f0:1800,f1:3200,vol:.16}),                                   // recipe card opens
+    tick:   t=>tone(t,{dur:.03,type:"square",f0:1800,vol:.1}),                                               // checklist / timer tick
+    ding:   t=>{ tone(t,{dur:1.2,f0:1318,vol:.2}); tone(t,{dur:.9,f0:2637,vol:.055}); tone(t,{dur:.5,f0:3951,vol:.025}); }, // bell
+    swish:  t=>noise(t,{dur:.22,f0:500,f1:2200,q:.6,vol:.5,attack:.06}),                                     // next photo
+    pop:    t=>{ tone(t,{dur:.09,f0:260,f1:620,vol:.28}); noise(t,{dur:.04,f0:2000,vol:.12}); },              // toaster pop / sound on
+    shutter:t=>{ noise(t,{dur:.04,f0:3400,q:.9,vol:.75,attack:.001}); noise(t+.085,{dur:.07,f0:1700,q:.9,vol:.55,attack:.001}); } // camera
+  };
+  return {
+    play(name,delay=0){ if(!on||reduce.matches||!S[name]) return; try{ if(ctx()) S[name](ac.currentTime+.01+delay); }catch(e){} },
+    get on(){ return on; },
+    set(v){ on=!!v; try{ localStorage.setItem("aubcc-sound",on?"on":"off"); }catch(e){} if(on) ctx(); }
+  };
+})();
 let downloads=true; /* standard browser downloads */
 document.querySelectorAll("[data-needs-dl]").forEach(b=>b.hidden=false); $("#lbDl").hidden=false;
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),2600)}
@@ -1256,8 +1326,9 @@ function startChef(hero){
 
   async function walkTo(x,y){
     face(x-pos.x); chef.classList.add("walk");
+    const steps=setInterval(()=>SFX.play("step"),340); timers.push(steps);   // a footfall each time a foot lands
     const a=await run(chef,[{transform:T(pos.x,pos.y)},{transform:T(x,y)}],{duration:Math.max(350,Math.abs(x-pos.x)/(G.H*2.2)*1000),easing:"linear"});
-    place(x,y); a.cancel(); chef.classList.remove("walk");
+    clearInterval(steps); place(x,y); a.cancel(); chef.classList.remove("walk");
   }
   async function hop(x,y,peak,flip){
     face(x-pos.x);
@@ -1302,8 +1373,8 @@ function startChef(hero){
   const nz=()=>{const r=nozzle.getBoundingClientRect(), s=stage.getBoundingClientRect(); return {x:r.left+r.width/2-s.left,y:r.top-s.top}};
   async function season(w,dur){ // standing above a word on line 1: grind straight down onto it
     chef.classList.add("season"); await wait(260);
-    const s=stage.getBoundingClientRect(), wr=w.getBoundingClientRect(); let shook=false;
-    const tick=setInterval(()=>{ if(!alive) return clearInterval(tick); const n=nz();
+    const s=stage.getBoundingClientRect(), wr=w.getBoundingClientRect(); let shook=false, gi=0;
+    const tick=setInterval(()=>{ if(!alive) return clearInterval(tick); const n=nz(); if(gi++%2===0) SFX.play("grind");
       for(let k=0;k<2;k++) speck(n.x,n.y,R(wr.left,wr.right)-s.left,G.top1+R(0,G.f*.06),0,shook?null:()=>{shook=true;wobble(w,"shiver")}); },70);
     timers.push(tick); await wait(dur); clearInterval(tick);
     chef.classList.remove("season"); yum("yum!"); await wait(400);
@@ -1313,18 +1384,19 @@ function startChef(hero){
     try{
       const s=stage.getBoundingClientRect(), wr=w.getBoundingClientRect(), ty=inkTop(w.closest("h1 > span"));
       face((wr.left+wr.right)/2-s.left-pos.x); chef.classList.add("season"); await wait(220); let shook=false;
-      for(let i=0;i<14;i++){ const n=nz(); speck(n.x,n.y,R(wr.left,wr.right)-s.left,ty+R(0,G.f*.05),G.f*R(.35,.6),shook?null:()=>{shook=true;wobble(w,"shiver")}); await wait(55); }
+      for(let i=0;i<14;i++){ const n=nz(); if(i%3===0) SFX.play("grind"); speck(n.x,n.y,R(wr.left,wr.right)-s.left,ty+R(0,G.f*.05),G.f*R(.35,.6),shook?null:()=>{shook=true;wobble(w,"shiver")}); await wait(55); }
       await wait(450); chef.classList.remove("season"); yum(["yum!","spicy!","perfect!"][Math.random()*3|0]); await wait(400); settle();
     } finally { busy=false; }
   }
   async function trampoline(){ // the underline's tip dips under him, then flings him back up with a flip
-    const dip=Math.max(6,G.ul.h*.45);
+    const dip=Math.max(6,G.ul.h*.45); SFX.play("boing");
     try{ ulPath.animate([{d:'path("M8 26C90 14 220 10 392 22")'},{d:'path("M8 26C100 18 260 30 392 40")',offset:.35},{d:'path("M8 26C90 10 200 2 392 8")',offset:.62},{d:'path("M8 26C90 16 220 12 392 25")',offset:.82},{d:'path("M8 26C90 14 220 10 392 22")'}],{duration:950,easing:"ease-out"}); }catch(e){}
     const a=await run(chef,[{transform:T(pos.x,pos.y)},{transform:T(pos.x,pos.y+dip)}],{duration:320,easing:"ease-in"}); place(pos.x,pos.y+dip); a.cancel();
     await hop(G.idleX,G.top2,G.f*.9+dip,true);
   }
   async function dropPot(){
     const [x,y]=potXY(); pot.style.transform=`translate(${x}px,${y}px)`; pot.style.opacity=1;
+    SFX.play("clonk",.39);   // lands 60% of the way through the drop
     await run(pot,[{transform:`translate(${x}px,${y-G.H*1.6}px)`,opacity:0,easing:"cubic-bezier(.5,0,1,.6)"},{transform:`translate(${x}px,${y}px)`,opacity:1,offset:.6},{transform:`translate(${x}px,${y}px) scale(1.15,.8)`,offset:.78},{transform:`translate(${x}px,${y}px)`,opacity:1}],{duration:650}).then(a=>a.cancel());
   }
   function settle(){ face(G.potSide); chef.classList.add("stir"); }
@@ -1334,8 +1406,9 @@ function startChef(hero){
       chef.classList.add("wow"); look.style.transform="translate(0px,-1.8px)";
       const it=add("citem",CHEF_ITEMS[Math.random()*CHEF_ITEMS.length|0]), z=Math.round(G.P*.55); it.style.width=it.style.height=z+"px";
       const x=G.potX-z/2, y0=G.potY-G.P*.85, top=y0-G.H*1.25, spin=Math.random()<.5?-1:1;
+      SFX.play("whoop");
       await run(it,[{transform:`translate(${x}px,${y0}px)`,easing:"cubic-bezier(.2,.7,.4,1)"},{transform:`translate(${x}px,${top}px) rotate(${200*spin}deg)`,offset:.5,easing:"cubic-bezier(.6,0,.8,.3)"},{transform:`translate(${x}px,${y0}px) rotate(${400*spin}deg)`}],{duration:1000});
-      it.remove(); const [px,py]=potXY();
+      it.remove(); SFX.play("plop"); const [px,py]=potXY();
       pot.animate([{transform:`translate(${px}px,${py}px) scale(1.12,.86)`},{transform:`translate(${px}px,${py}px)`}],{duration:260,easing:"ease-out"});
       chef.classList.remove("wow"); look.style.transform=""; yum(["ta-da!","yum!","got it!"][Math.random()*3|0]);
     } finally { busy=false; }
@@ -1368,7 +1441,7 @@ function startChef(hero){
     await walkTo(G.foodX,G.top1);                       // 1. walks in along the tops of "Good food."
     await season(word("food"),1100);                    // 2. seasons "food." (its letters shiver)
     await hop(G.idleX,G.top2,G.f*.35);                  // 3. hops onto the end of "people." ...
-    chef.classList.add("wave"); wobble(word("people"),"wave"); yum("hi!");
+    chef.classList.add("wave"); wobble(word("people"),"wave"); yum("hi!"); SFX.play("hi");
     await wait(1300); chef.classList.remove("wave");     //    ... and waves; the word waves back
     await hop(G.tipX,G.tipY,G.f*.3);                    // 4. lands on the tip of the underline,
     await trampoline();                                 //    which flings him back up with a flip
@@ -1433,7 +1506,7 @@ function bind(ev){
     const q=s=>cam.querySelector(s); let busy=false; const T=2400;
     const K=(list)=>list.map(([o,v])=>({offset:o,...v}));
     const snap=()=>{
-      if(busy) return; busy=true;
+      if(busy) return; busy=true; SFX.play("shutter",T*.6/1000);   // in time with the flash
       q(".ph").animate(K([[0,{transform:"rotate(0)"}],[.12,{transform:"rotate(-6deg)"}],[.26,{transform:"rotate(5deg)"}],[.38,{transform:"rotate(-3deg)"}],
         [.5,{transform:"rotate(0)"}],[.58,{transform:"scale(.96)"}],[.64,{transform:"scale(1.02)"}],[.72,{transform:"scale(1)"}],[1,{transform:"rotate(0)"}]]).map(k=>({...k,easing:"ease-in-out"})),{duration:T});
       q(".brk").animate(K([[0,{transform:"scale(1)"}],[.4,{transform:"scale(1.35)",opacity:.5}],[.54,{transform:"scale(.94)",opacity:1}],[.6,{transform:"scale(1)"}],[1,{transform:"scale(1)"}]]),{duration:T});
@@ -1456,7 +1529,7 @@ function bind(ev){
     const pans=[...pt.querySelectorAll(".pan")], fds=[...pt.querySelectorAll(".fd")], wh=pt.querySelector(".whoosh");
     let busy=false; const T=2200, Rn=(a,b)=>a+Math.random()*(b-a);
     const toss=()=>{
-      if(busy) return; busy=true;
+      if(busy) return; busy=true; SFX.play("sizzle",.35);
       const pk=[["0,0",0,0],["0,4",3,.18],["-4,-8",-9,.3],["0,-2",-3,.42],["0,0",0,.72],["0,5",2,.8],["0,-1",-1,.9],["0,0",0,1]]
         .map(([t,r,o])=>({transform:`translate(${t.replace(",","px,")}px) rotate(${r}deg)`,offset:o,easing:"ease-in-out"}));
       pans.forEach(p=>p.animate(pk,{duration:T}));
@@ -1486,6 +1559,7 @@ function bind(ev){
     const T=3600, at=(x,y,o)=>({transform:`translate(${x}px,${y}px)`,offset:o});
     const pipe=()=>{
       live.forEach(a=>a.cancel()); live=[];
+      SFX.play("squeeze",T*.11/1000); SFX.play("squeeze",T*.35/1000); SFX.play("sparkle",T*.86/1000);   // piping, then sprinkles
       // the bag swirls over each layer while it grows, pulls up a little peak, then leaves
       run(bag,[at(100,-10,0),at(100,90,.11),at(82,92,.17),at(118,90,.23),at(88,88,.29),at(112,88,.33),at(100,76,.37),at(88,76,.43),at(112,76,.49),
         at(100,64,.53),at(94,62,.58),at(106,62,.63),at(100,50,.7),at(100,-30,.8),at(100,-30,1)],{duration:T,easing:"ease-in-out"});
@@ -1586,7 +1660,7 @@ function bind(ev){
         {...at(-38,4),offset:.58},{...at(-40,-4),offset:.72},{...at(-38,2),offset:.82},
         {transform:"translate(0,0) rotate(8deg)"}],{duration:2600,easing:"ease-in-out"});
       setTimeout(()=>gr.classList.add("go"),380);
-      let t=0; const drop=setInterval(()=>{ speck(); if(Math.random()<.5) speck(); if((t+=55)>1500) clearInterval(drop); },55);
+      let t=0; const drop=setInterval(()=>{ speck(); if(Math.random()<.5) speck(); if(t%165===0) SFX.play("grind"); if((t+=55)>1500) clearInterval(drop); },55);
       setTimeout(()=>gr.classList.remove("go"),2050);
       hop.onfinish=()=>{busy=false};
     };
@@ -1601,7 +1675,7 @@ function bind(ev){
   if(pot){
     potIO=new IntersectionObserver(es=>es.forEach(x=>pot.classList.toggle("on",x.isIntersecting)));
     potIO.observe(pot);
-    const boil=()=>{ if(reduce.matches||pot.classList.contains("boil")) return; pot.classList.add("boil"); };
+    const boil=()=>{ if(reduce.matches||pot.classList.contains("boil")) return; pot.classList.add("boil"); SFX.play("rattle"); };
     pot.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") boil(); });
     pot.addEventListener("click",boil);
     pot.addEventListener("animationend",e=>{ if(e.animationName==="lidPop") pot.classList.remove("boil"); });
@@ -1611,7 +1685,7 @@ function bind(ev){
   if(book){
     book.addEventListener("click",()=>{
       if(reduce.matches){render("memories");return}
-      book.classList.add("opening");
+      book.classList.add("opening"); SFX.play("flip");
       setTimeout(()=>render("memories"),780);
     });
   }
@@ -1620,13 +1694,14 @@ function bind(ev){
     const gal=app.querySelector(".gallery"); if(gal) balanceGallery(gal);
     app.querySelectorAll(".rcard").forEach(rc=>{
       const btn=rc.querySelector(".closed"), r=recipesOf(ev)[+rc.dataset.recipe];
-      btn.addEventListener("click",()=>{const o=rc.classList.toggle("open");btn.setAttribute("aria-expanded",o)});
-      const sp=rc.querySelector(".savePdf"); if(sp) sp.addEventListener("click",()=>recipePDF(ev,r));
+      btn.addEventListener("click",()=>{const o=rc.classList.toggle("open");btn.setAttribute("aria-expanded",o); if(o) SFX.play("unfold");});
+      const sp=rc.querySelector(".savePdf"); if(sp) sp.addEventListener("click",()=>{ recipePDF(ev,r); SFX.play("ding",.15); });
       // ingredient checklist: each tick drops a bit into the mixing bowl; all ticked = the bowl stirs "ready to cook!"
       const inner=rc.querySelector(".inner"), bowl=rc.querySelector(".mixbowl"), bits=bowl.querySelector(".bits"), ings=[...rc.querySelectorAll("li.ing")];
       const bitCols=["#E8BFBE","#F1DAA4","#A5B49C","#C98975","#FFFDF8","#B6CED5","#D98CA0"];
       const tickIng=li=>{
         const on=li.classList.toggle("done"); li.setAttribute("aria-checked",on);
+        if(on) SFX.play("tick");
         if(on){
           const i=ings.indexOf(li), col=bitCols[i%bitCols.length], bx=Rr(22,98), by=Rr(24,31);
           const dot=document.createElementNS("http://www.w3.org/2000/svg","circle");
@@ -1645,7 +1720,7 @@ function bind(ev){
       ings.forEach(li=>{ li.addEventListener("click",()=>tickIng(li)); li.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tickIng(li);}}); });
       // recipe steps: tap to cross one off, with a quick stir of a wooden spoon in the margin
       rc.querySelectorAll("li.stp").forEach(li=>{
-        const tog=()=>{ const on=li.classList.toggle("done"); li.setAttribute("aria-pressed",on);
+        const tog=()=>{ const on=li.classList.toggle("done"); li.setAttribute("aria-pressed",on); if(on) SFX.play("tick");
           if(on&&!reduce.matches){ const s=document.createElement("span"); s.className="spoonstir"; li.appendChild(s);
             s.animate([{rotate:"-25deg",opacity:0},{rotate:"25deg",opacity:1,offset:.2},{rotate:"-25deg",offset:.4},{rotate:"25deg",offset:.6},{rotate:"-20deg",opacity:1,offset:.8},{rotate:"0deg",opacity:0}],{duration:1000,easing:"ease-in-out"}).onfinish=()=>s.remove(); } };
         li.addEventListener("click",tog); li.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tog();}});
@@ -1669,7 +1744,7 @@ function showLB(){
   $("#lbCount").textContent=`${lbI+1} / ${lbEv.photos.length}`;
   $("#lbCap").textContent=`Chapter ${lbEv.chapter} ✶ ${lbEv.subtitle}`;
 }
-function step(d){lbI=(lbI+d+lbEv.photos.length)%lbEv.photos.length;showLB()}
+function step(d){lbI=(lbI+d+lbEv.photos.length)%lbEv.photos.length;showLB();SFX.play("swish")}
 function closeLB(){lb.classList.remove("open");document.body.style.overflow="";lastFocus&&lastFocus.focus()}
 $("#lbPrev").onclick=()=>step(-1); $("#lbNext").onclick=()=>step(1); $("#lbClose").onclick=closeLB;
 lb.addEventListener("click",e=>{if(e.target===lb)closeLB()});
@@ -1740,6 +1815,7 @@ const mk=html=>{const t=document.createElement("template"); t.innerHTML=html.tri
 function popToaster(){
   const t=$(".toaster"); if(!t||t._busy||reduce.matches) return; t._busy=true; t.classList.add("on");
   const slice=t.querySelector(".slice"), ding=t.querySelector(".ding"), body=t.querySelector(".body"), T=4200;
+  SFX.play("pop",T*.25/1000); SFX.play("ding",T*.3/1000);   // the toast pops up, "ding!"
   const parts=[
     t.animate([{opacity:0,transform:"scale(.6) translateY(10px)"},{opacity:1,transform:"scale(1.06)",offset:.08},{opacity:1,transform:"none",offset:.12},{opacity:1,transform:"none",offset:.9},{opacity:0,transform:"translateY(6px)"}],{duration:T,fill:"forwards"}),
     slice.animate([{transform:"translateY(40px)"},{transform:"translateY(40px)",offset:.22},{transform:"translateY(-12px)",offset:.32,easing:"ease-out"},{transform:"translateY(0)",offset:.38},{transform:"translateY(0)",offset:.78},{transform:"translateY(40px)",offset:.88},{transform:"translateY(40px)"}],{duration:T,fill:"forwards"}),
@@ -1764,24 +1840,15 @@ let lbLastTap=0;
 lbImg.addEventListener("touchend",e=>{const t=Date.now(),c=e.changedTouches[0]; if(t-lbLastTap<300){heartAt(c.clientX,c.clientY);lbLastTap=0}else lbLastTap=t},{passive:true});
 
 /* photo viewer: downloading packs the photo into a little takeaway box, "to go!" */
-/* camera shutter "ka-chick" when a photo is downloaded: two short filtered noise clicks made in the browser (no sound file) */
-let shutterCtx=null;
-function shutterSound(){
-  try{
-    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
-    shutterCtx=shutterCtx||new AC(); const ac=shutterCtx; if(ac.state==="suspended") ac.resume();
-    const click=(at,dur,freq,vol)=>{
-      const n=Math.floor(ac.sampleRate*dur), buf=ac.createBuffer(1,n,ac.sampleRate), d=buf.getChannelData(0);
-      for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3);
-      const src=ac.createBufferSource(), bp=ac.createBiquadFilter(), g=ac.createGain();
-      src.buffer=buf; bp.type="bandpass"; bp.frequency.value=freq; bp.Q.value=.9; g.gain.value=vol;
-      src.connect(bp); bp.connect(g); g.connect(ac.destination); src.start(at);
-    };
-    const t=ac.currentTime+.01;
-    click(t,.04,3400,.8);      // "ka" - the shutter opening
-    click(t+.085,.07,1700,.6); // "chick" - the shutter closing
-  }catch(e){ /* sound is a bonus; never block the download */ }
-}
+/* speaker button: turns the sound effects on/off; the choice is remembered on this device */
+(()=>{
+  const b=$(".sndbtn"); if(!b) return;
+  const show=()=>{ b.setAttribute("aria-pressed",SFX.on); b.title="Sound effects: "+(SFX.on?"on":"off"); };
+  show();
+  b.addEventListener("click",()=>{ SFX.set(!SFX.on); show(); toast(SFX.on?"Sound effects on":"Sound effects off"); SFX.play("pop"); });
+})();
+/* camera shutter "ka-chick" when a photo is downloaded (part of the site's sound effects, so it follows the speaker button) */
+function shutterSound(){ SFX.play("shutter"); }
 function toGo(p){
   if(reduce.matches) return;
   const g=mk(`<svg class="togo" viewBox="0 0 130 130" aria-hidden="true"><g class="all">
@@ -1813,6 +1880,8 @@ function kitchenTimer(chip){
     <g class="dial"><circle cx="30" cy="42" r="16" fill="none"/><path d="M30 42V29" stroke="#463C35" stroke-width="3" stroke-linecap="round"/><circle cx="30" cy="42" r="3" fill="#463C35"/></g></g>
     <text class="dg" x="56" y="16" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#C98975" opacity="0">ding!</text></svg>`);
   chip.appendChild(k); const q=s=>k.querySelector(s), T=2200;
+  for(let s=T*.28;s<T*.73;s+=150) SFX.play("tick",s/1000);   // ticking while the dial runs down...
+  SFX.play("ding",T*.76/1000);                                // ...then the bell
   q(".tm").style.transformOrigin="50% 60%"; q(".dial").style.transformOrigin="50% 50%";
   q(".tm").animate([{transform:"scale(0)",opacity:0},{transform:"scale(1.1)",opacity:1,offset:.1},{transform:"scale(1)",offset:.14},{transform:"rotate(0)",offset:.74},
     {transform:"rotate(-12deg)",offset:.77},{transform:"rotate(12deg)",offset:.8},{transform:"rotate(-10deg)",offset:.83},{transform:"rotate(8deg)",offset:.86},{transform:"rotate(0)",offset:.9,opacity:1},{transform:"scale(.6)",opacity:0}],{duration:T,fill:"forwards"});
