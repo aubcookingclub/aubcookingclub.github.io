@@ -1060,9 +1060,11 @@ const PHOTOS = {
 };
 /* Which photos each workshop album shows, and in what order (photo numbers = the NN in <slug>-NN.jpg; the first is the cover).
    null = show every photo in number order. Made with the photo picker (.claude/photo-picker.html in the preview). */
-const PHOTO_PICKS = {
-  "cake-for-a-cause": null,
-  "twirl-in-pink": null
+const PHOTO_PICKS = { // chosen 2026-10-26 with the photo picker (80 of 203 cake, 64 of 138 pasta)
+  "cake-for-a-cause": [1,2,4,5,6,7,8,10,11,12,13,14,16,17,18,19,20,21,22,23,24,26,30,31,32,33,35,37,39,40,45,48,50,53,54,63,67,68,69,71,
+    75,79,80,85,88,95,97,100,104,105,106,112,113,117,119,120,121,122,125,126,128,136,141,143,144,145,149,151,154,162,167,170,171,173,174,178,184,186,187,189],
+  "twirl-in-pink": [1,2,3,4,9,10,11,12,14,15,16,17,18,20,21,22,24,25,26,27,28,29,30,31,32,52,55,61,62,65,66,70,72,75,77,80,82,83,86,87,
+    93,99,103,104,105,107,108,109,110,112,113,114,116,118,119,123,124,126,131,132,133,135,136,137]
 };
 function realPhotos(slug){
   const all=PHOTOS[slug].map(([w,h,alt],i)=>{
