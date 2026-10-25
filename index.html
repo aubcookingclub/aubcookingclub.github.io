@@ -98,7 +98,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .mobilemenu::before{content:"";position:absolute;top:-10px;left:50%;width:90px;height:22px;margin-left:-45px;background:rgba(241,218,164,.85);transform:rotate(-3deg)}
 .mobilemenu button{display:block;width:100%;text-align:left;background:none;border:0;padding:6px 0;font-family:var(--serif);font-size:30px;font-weight:700;color:#3F5545}
 .mobilemenu .hand{font-size:22px;margin-top:8px}
-@media (max-width:760px){.navlinks{display:none}.menubtn{display:inline-block}}
+@media (max-width:1100px){.navlinks{display:none}.menubtn{display:inline-block}}
 /* header spacing */
 .nav .wrap{gap:6px}
 .navlinks{margin-left:auto}
@@ -547,6 +547,134 @@ footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-
 .regdone h2{font-family:var(--serif);font-weight:900;color:#3F5545;font-size:clamp(32px,5vw,46px);margin:6px 0}
 .regdone p{max-width:38ch;margin:6px auto}
 .regtest{background:#F1DAA4;border-radius:8px;padding:10px 14px;font-size:14px;margin:0 0 22px}
+/* ---------- ABOUT US page (#about): everything from the general assembly, served in bite-size, animated pieces ---------- */
+.ab{padding-bottom:40px;overflow-x:clip}
+.ab section{padding:clamp(46px,7vw,90px) 0 0;scroll-margin-top:80px}
+.ab h2{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(34px,5vw,58px);letter-spacing:-.03em;line-height:1;margin:0 0 8px}
+.ab .kick{font-family:var(--hand);font-size:28px;color:var(--terra);display:block;margin-bottom:2px}
+.ab .intro{font-size:18px;max-width:52ch;margin:0 0 26px}
+/* reading progress: a sauce line under the menu with a little chef hat riding the end */
+.abbar{position:fixed;left:0;right:0;top:calc(68px + env(safe-area-inset-top,0px));height:5px;z-index:40;pointer-events:none}
+.abbar i{position:absolute;inset:0;background:var(--terra);transform-origin:0 50%;scale:0 1;border-radius:0 4px 4px 0}
+.abbar b{position:absolute;top:-9px;left:0;width:22px;height:22px;translate:-11px 0}
+.abbar b svg{width:100%;height:100%;display:block}
+/* hero */
+.abhero{position:relative;padding:clamp(40px,7vw,90px) 0 10px;text-align:center}
+.abhero .kick{font-size:clamp(26px,3.6vw,34px)}
+.abhero h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(46px,8.4vw,108px);line-height:.95;letter-spacing:-.04em;margin:6px auto 18px;max-width:12ch}
+.abhero h1 .w{display:inline-block;font-style:italic;color:var(--terra)}
+.abhero h1 .w span{display:inline-block;animation:abHop .9s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(.35s + var(--i)*.07s)}
+.abhero h1 .w:hover span{animation:abWave .6s ease both;animation-delay:calc(var(--i)*.05s)}
+@keyframes abHop{from{opacity:0;translate:0 .6em;rotate:-12deg}to{opacity:1;translate:0 0;rotate:0deg}}
+@keyframes abWave{0%,100%{translate:0 0}40%{translate:0 -.18em;rotate:-6deg}}
+.abhero .lede{font-size:clamp(18px,2vw,21px);max-width:44ch;margin:0 auto 26px}
+.abtoc{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:760px;margin:0 auto}
+.abtoc button{border:2px solid #463C35;background:var(--card);color:#463C35;font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;box-shadow:0 3px 0 #463C35;transition:translate .15s, box-shadow .15s, rotate .2s;rotate:var(--r,0deg)}
+.abtoc button:hover{translate:0 -3px;box-shadow:0 6px 0 #463C35;rotate:0deg}
+.abtoc button:active{translate:0 2px;box-shadow:0 1px 0 #463C35}
+.abtoc button:nth-child(3n+1){background:#F1DAA4}.abtoc button:nth-child(3n+2){background:#E8BFBE}.abtoc button:nth-child(3n){background:#B6CED5}
+.abfloat{position:absolute;inset:0;pointer-events:none;z-index:-1}
+.abfloat svg{position:absolute;width:var(--s,56px);height:var(--s,56px);color:var(--olive);opacity:.85;animation:abFloat var(--d,7s) ease-in-out infinite alternate;animation-delay:var(--dl,0s)}
+@keyframes abFloat{from{translate:0 0;rotate:var(--r0,-8deg)}to{translate:var(--dx,10px) var(--dy,-18px);rotate:var(--r1,10deg)}}
+@media (max-width:700px){ .abfloat svg:nth-child(n+5){display:none} .abfloat svg{--s:40px!important;opacity:.5} }
+/* quick bites: sticker stats */
+.abstats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2.4vw,26px);margin-top:10px}
+@media (max-width:760px){ .abstats{grid-template-columns:repeat(2,1fr)} }
+.abstat{position:relative;background:var(--card);color:#463C35;border:3px solid #463C35;border-radius:24px;padding:22px 14px 18px;text-align:center;rotate:var(--r,0deg);box-shadow:6px 6px 0 var(--c,#F1DAA4);transition:rotate .3s, translate .3s}
+.abstat:hover{rotate:0deg;translate:0 -4px}
+.abstat .n{font-family:var(--serif);font-weight:900;font-size:clamp(46px,6vw,66px);line-height:1;color:#3F5545;display:block}
+.abstat .l{display:block;font-weight:700;font-size:15px;margin-top:6px;line-height:1.3}
+/* ask the chef: a chat */
+.abchat{max-width:760px;margin:0 auto;background:var(--card);border:3px solid #463C35;border-radius:28px;overflow:hidden;box-shadow:0 18px 40px var(--shadow);color:#463C35}
+.abchat .top{display:flex;align-items:center;gap:12px;background:#3F5545;color:#F7F2E8;padding:14px 20px}
+.abchat .top svg{width:44px;height:44px;flex:none}
+.abchat .top b{display:block;font-size:18px}
+.abchat .top small{font-size:13px;opacity:.85}
+.abchat .top small::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#A5B49C;margin-right:6px;vertical-align:1px}
+.abchat .log{padding:22px clamp(14px,3vw,26px) 26px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(circle at 1px 1px,rgba(70,60,53,.07) 1px,transparent 1.5px) 0 0/18px 18px}
+.msg{position:relative;max-width:82%;padding:12px 16px;border-radius:20px;font-size:16.5px;line-height:1.45;opacity:0;translate:0 14px;scale:.92;transition:opacity .35s, translate .45s cubic-bezier(.3,1.4,.5,1), scale .45s cubic-bezier(.3,1.4,.5,1)}
+.msg.q{align-self:flex-end;background:#F1DAA4;border-bottom-right-radius:6px;font-weight:700;transform-origin:100% 100%}
+.msg.a{align-self:flex-start;background:#fff;border:2px solid #E6DCCB;border-bottom-left-radius:6px;transform-origin:0 100%}
+.msg.on{opacity:1;translate:0 0;scale:1}
+.msg .dots{position:absolute;left:0;top:0;display:none;gap:4px;background:#fff;border:2px solid #E6DCCB;border-radius:16px;padding:10px 14px}
+.msg .dots i{width:7px;height:7px;border-radius:50%;background:#A5B49C;animation:abDot 1s ease-in-out infinite}
+.msg .dots i:nth-child(2){animation-delay:.15s}.msg .dots i:nth-child(3){animation-delay:.3s}
+@keyframes abDot{0%,100%{translate:0 0;opacity:.5}40%{translate:0 -5px;opacity:1}}
+.msg.typing{opacity:1;translate:0 0;scale:1;background:transparent;border-color:transparent;color:transparent}
+.msg.typing .dots{display:flex}
+.msg b.hl{background:linear-gradient(transparent 55%,#E8BFBE 55%);font-weight:700}
+/* levels */
+.ablevels{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2.4vw,26px)}
+@media (max-width:820px){ .ablevels{grid-template-columns:1fr} }
+.ablvl{position:relative;background:var(--card);color:#463C35;border-radius:10px;padding:30px 24px 24px;box-shadow:0 14px 30px var(--shadow)}
+.ablvl .tape{top:-12px}
+.ablvl .hats{display:flex;gap:6px;height:44px;margin-bottom:10px}
+.ablvl .hats svg{width:40px;height:44px;opacity:0;scale:.3;translate:0 12px}
+.ablvl.in .hats svg{animation:abHat .5s cubic-bezier(.3,1.6,.5,1) forwards;animation-delay:calc(.25s + var(--i)*.18s)}
+@keyframes abHat{to{opacity:1;scale:1;translate:0 0}}
+.ablvl h3{font-family:var(--serif);font-weight:900;font-size:26px;color:#3F5545;margin:0 0 6px}
+.ablvl p{margin:0;font-size:16px}
+.ablvl ul{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.ablvl li{background:#F7F2E8;border-radius:999px;padding:3px 11px;font-size:14px;font-weight:700}
+/* menu board */
+.abmenu{position:relative;max-width:760px;margin:0 auto;background:#3F5545;color:#F7F2E8;border:10px solid #8A6A50;border-radius:16px;padding:34px clamp(18px,4vw,44px) 30px;box-shadow:inset 0 0 40px rgba(0,0,0,.25),0 18px 36px var(--shadow)}
+.abmenu .tape{top:-20px}
+.abmenu h3{font-family:var(--hand);font-weight:700;font-size:clamp(36px,5vw,50px);text-align:center;margin:0;color:#F1DAA4;line-height:1}
+.abmenu .sub{text-align:center;font-family:var(--hand);font-size:22px;opacity:.85;margin:0 0 18px}
+.abmenu ol{list-style:none;margin:0;padding:0;columns:2;column-gap:36px}
+@media (max-width:600px){ .abmenu ol{columns:1} }
+.abmenu li{break-inside:avoid;display:flex;align-items:baseline;gap:8px;font-family:var(--hand);font-size:25px;padding:3px 8px;border-radius:10px;transition:background .12s,color .12s,scale .12s}
+.abmenu li::after{content:"";flex:1;border-bottom:2px dotted rgba(247,242,232,.35);translate:0 -6px}
+.abmenu li span{order:-1;color:#E8BFBE}
+.abmenu li.pick{background:#F1DAA4;color:#3F5545;scale:1.04}
+.abmenu li.pick span{color:#C98975}
+.abmenu li.won{animation:abWon .6s ease 2}
+@keyframes abWon{50%{scale:1.12;rotate:-2deg}}
+.abmenu .spinrow{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:22px}
+.abmenu .btn{background:#F1DAA4;color:#3F5545;box-shadow:0 5px 0 #C98975}
+.abmenu .pickmsg{font-family:var(--hand);font-size:26px;min-height:32px;color:#F1DAA4;text-align:center}
+/* collaborations: club bubbles orbit around "20+" */
+.abcollab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+@media (max-width:820px){ .abcollab{grid-template-columns:1fr} }
+.orbit{position:relative;width:min(400px,86vw);aspect-ratio:1;margin:0 auto}
+.orbit .core{position:absolute;inset:30%;border-radius:50%;background:#E8BFBE;border:3px solid #463C35;display:grid;place-items:center;text-align:center;color:#463C35;box-shadow:0 10px 0 #C98975}
+.orbit .core b{font-family:var(--serif);font-weight:900;font-size:clamp(40px,7vw,58px);line-height:.9;display:block;color:#3F5545}
+.orbit .core small{font-weight:700;font-size:14px}
+.orbit .ring{position:absolute;inset:0;border:2px dashed var(--sage);border-radius:50%;animation:abSpin 36s linear infinite}
+.orbit .ring span{position:absolute;left:50%;top:50%;translate:-50% -50%;transform:rotate(var(--a)) translateY(calc(min(400px,86vw) * -.5)) rotate(calc(var(--a) * -1))}
+.orbit .ring span em{display:block;font-style:normal;font-weight:700;font-size:14px;background:var(--c);color:#463C35;border:2px solid #463C35;border-radius:999px;padding:7px 13px;white-space:nowrap;animation:abSpin 36s linear infinite reverse}
+@keyframes abSpin{to{rotate:360deg}}
+.orbit:hover .ring,.orbit:hover .ring span em{animation-play-state:paused}
+/* first event + get involved */
+.abduo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(16px,2.6vw,28px)}
+.abevent{position:relative;background:#FBE9EC;color:#463C35;border-radius:10px;padding:28px 26px 24px;box-shadow:0 14px 30px var(--shadow)}
+.abevent .tape{top:-12px}
+.abevent h3{font-family:var(--serif);font-weight:900;font-size:28px;color:#3F5545;margin:4px 0 8px}
+.abevent .ribbonmini{position:absolute;right:18px;top:16px;width:34px;height:52px}
+.abevent .btn{margin-top:14px}
+.flip{perspective:900px;background:none;border:0;padding:0;text-align:left;font:inherit;cursor:pointer;min-height:230px;color:#463C35}
+.flip .in{position:relative;display:block;width:100%;height:100%;min-height:230px;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.3,.5,1)}
+.flip.flipped .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;padding:26px 24px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 14px 30px var(--shadow);border:3px solid #463C35}
+.flip .f{background:var(--c,#F1DAA4)}
+.flip .b{background:var(--card);transform:rotateY(180deg)}
+.flip .f b{font-family:var(--serif);font-weight:900;font-size:30px;line-height:1.05;color:#3F5545}
+.flip .f small{margin-top:12px;font-family:var(--hand);font-size:24px;color:#463C35}
+.flip .f .big{position:absolute;right:18px;bottom:14px;width:56px;height:62px;animation:abFloat 3s ease-in-out infinite alternate;--dy:-6px;--dx:0px;--r0:-6deg;--r1:6deg}
+.flip .b p{margin:0 0 8px;font-size:17px}
+.flip .b b{color:#3F5545}
+/* finale */
+.abend{text-align:center;padding-bottom:30px}
+.abend h2{font-size:clamp(40px,7vw,86px);max-width:14ch;margin:0 auto 22px}
+.abend h2 span{display:inline-block}
+.abend.in h2 span{animation:abWave 1s ease both;animation-delay:calc(var(--i)*.06s)}
+.abend .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.abend .row a.btn{text-decoration:none}
+.abend .ig{font-family:var(--hand);font-size:28px;color:var(--terra);margin-top:16px}
+@media (prefers-reduced-motion:reduce){
+  .ab *{animation:none!important;transition:none!important}
+  .msg,.ablvl .hats svg{opacity:1;translate:none;scale:1}
+}
 /* ---------- JOIN THE CLUB page (#join-club): how to register for the club on AUBSIS ----------
    A cute computer plays the six steps on a loop (startJoinPC); the screens are simplified drawings, sized in cqw so they scale. */
 .jc{padding-top:clamp(36px,6vw,80px);padding-bottom:90px}
@@ -795,6 +923,7 @@ img.fade.ok{opacity:1}
     </button>
     <nav class="navlinks" aria-label="Main">
       <button data-go="home">HOME</button>
+      <button data-go="about">ABOUT US</button>
       <button data-go="memories">OUR MEMORIES</button>
       <button data-go="join-club">JOIN THE CLUB</button>
       <button data-go="register">SIGN UP</button>
@@ -805,6 +934,7 @@ img.fade.ok{opacity:1}
 </header>
 <div class="mobilemenu" id="mmenu" role="dialog" aria-label="Menu">
   <button data-go="home">Home</button>
+  <button data-go="about">About us</button>
   <button data-go="memories">Our memories</button>
   <button data-go="join-club">Join the club</button>
   <button data-go="register">Sign up</button>
@@ -1768,6 +1898,182 @@ function memoriesView(){
     </div></section></div>`;
 }
 
+/* ---------- About us page (#about): what the club is about, from the general assembly ---------- */
+const ABOUT = {
+  // "Ask the chef" chat, in order. q = the student's question, a = the chef's answer (may hold <b class="hl"> highlights).
+  chat: [
+    {q:"I’ve never really cooked before. Can I still join?", a:`Of course! <b class="hl">Everyone belongs here.</b> Beginners and experienced cooks from all faculties and backgrounds are welcome.`},
+    {q:"Where do the workshops happen?", a:`In the <b class="hl">FAFS pilot plant</b>, with around 20 participants per session. Days and times vary, and each activity has its own description and sign-up form.`},
+    {q:"And if a workshop fills up before I sign up?", a:`We hope to <b class="hl">repeat popular sessions</b>, so more members can take part.`},
+    {q:"Do workshops cost anything?", a:`Each workshop is paid, just <b class="hl">to cover the ingredients</b>. The fee is always announced before you sign up, so no surprises.`},
+    {q:"Is it safe to use the kitchen?", a:`Safety first! We run food and kitchen safety sessions with our advisor, <b class="hl">Dr. Christelle Iskandar</b>. Everyone reads and signs the safety expectations before practical workshops.`}
+  ],
+  menu: ["Everyday meals","Budget-friendly cooking","Meal prep","Plant-based Lebanese dishes","Less food waste","Seasonal recipes & celebrations","Mystery boxes","Cooking & baking competitions"],
+  collab: [["Culture","#F1DAA4"],["Nutrition","#B6CED5"],["Wellbeing","#A5B49C"],["Awareness","#E8BFBE"],["Community","#F1DAA4"]],
+  links: {
+    instagram:"https://www.instagram.com/aubcookingclub/",
+    whatsapp:"https://chat.whatsapp.com/BCpFWR1dVEU8bRaiC19gZl",
+    tiktok:"https://www.tiktok.com/@aubcookingclub"
+  }
+};
+const hatSVG=()=>`<svg viewBox="0 0 40 44" aria-hidden="true"><path d="M9 26c-8 0-9-13 0-13c1-9 13-10 15-3c4-7 15-4 13 4c7 1 6 12-1 12z" fill="#FFFDF8" stroke="#463C35" stroke-width="2.6" stroke-linejoin="round"/><rect x="9" y="25" width="23" height="11" rx="2.5" fill="#FFFDF8" stroke="#463C35" stroke-width="2.6"/><path d="M15 29v4M20.5 29v4M26 29v4" stroke="#C98975" stroke-width="2" stroke-linecap="round"/></svg>`;
+const chefFaceSVG=()=>`<svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="21" fill="#F7F2E8"/><circle cx="22" cy="27" r="11" fill="#E8BFBE" stroke="#463C35" stroke-width="2.2"/><circle cx="18.5" cy="26" r="1.5" fill="#463C35"/><circle cx="25.5" cy="26" r="1.5" fill="#463C35"/><path d="M19.5 30.5q2.5 2.4 5 0" fill="none" stroke="#463C35" stroke-width="1.8" stroke-linecap="round"/><path d="M13 17c-5 0-5-7 0-7c1-5 8-5 9-1c2-4 9-3 8 2c5 0 5 6 0 6z" fill="#FFFDF8" stroke="#463C35" stroke-width="2"/></svg>`;
+function aboutView(){
+  const A=ABOUT, L=A.links;
+  const letters=(w)=>[...w].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join("");
+  const toc=[["who","Who can join?"],["chat","Ask the chef"],["levels","What we learn"],["menu","What we cook"],["collabs","Collabs"],["involved","Get involved"]];
+  const lvl=(n,title,text,tags,tape)=>`<div class="ablvl reveal"><span class="tape ${tape}"></span><div class="hats">${Array.from({length:n},(_,i)=>hatSVG().replace("<svg ",`<svg style="--i:${i}" `)).join("")}</div><h3>${title}</h3><p>${text}</p>${tags?`<ul>${tags.map(t=>`<li>${t}</li>`).join("")}</ul>`:""}</div>`;
+  return `<div class="view"><div class="ab">
+    <div class="abbar" aria-hidden="true"><i></i><b>${hatSVG()}</b></div>
+    <section class="abhero"><div class="wrap" style="position:relative">
+      <div class="abfloat" aria-hidden="true">
+        ${use("i-lemon","",'left:4%;top:8%;--s:64px;--d:6s;--dx:14px;--dy:-16px')}
+        ${use("i-tomato","",'right:5%;top:4%;--s:58px;--d:7s;--dx:-12px;--dy:14px;--dl:-2s')}
+        ${use("i-whisk","",'left:8%;bottom:6%;--s:70px;--d:8s;--r0:-20deg;--r1:6deg')}
+        ${use("i-pasta","",'right:9%;bottom:12%;--s:62px;--d:6.5s;--dx:-10px;--dl:-3s')}
+        ${use("i-star","",'left:24%;top:-2%;--s:30px;--d:5s;--dy:10px')}
+        ${use("i-fork","",'right:24%;bottom:-4%;--s:44px;--d:7.5s;--r0:10deg;--r1:-14deg')}
+      </div>
+      <span class="kick">missed the general assembly? ✶</span>
+      <h1>Here’s what’s <span class="w">${letters("cooking")}</span> this year!</h1>
+      <p class="lede">Everything about the AUB Cooking Club, served in bite-size pieces. Grab a snack and scroll down.</p>
+      <nav class="abtoc" aria-label="On this page">${toc.map(([id,t],i)=>`<button type="button" data-jump="${id}" style="--r:${[-3,2,-1,3,-2,1][i]}deg">${t}</button>`).join("")}</nav>
+    </div></section>
+
+    <section id="ab-who"><div class="wrap">
+      <span class="kick reveal">quick bites</span>
+      <h2 class="reveal">The club in four numbers</h2>
+      <div class="abstats">
+        <div class="abstat reveal" style="--r:-3deg;--c:#F1DAA4"><span class="n" data-count="20">0</span><span class="l">cooks per workshop</span></div>
+        <div class="abstat reveal" style="--r:2deg;--c:#E8BFBE"><span class="n" data-count="20" data-suffix="+">0</span><span class="l">clubs want to collab</span></div>
+        <div class="abstat reveal" style="--r:-1.5deg;--c:#B6CED5"><span class="n">all</span><span class="l">faculties and backgrounds welcome</span></div>
+        <div class="abstat reveal" style="--r:3deg;--c:#A5B49C"><span class="n" data-count="1" data-suffix="st">0</span><span class="l">event was for Breast Cancer Awareness</span></div>
+      </div>
+    </div></section>
+
+    <section id="ab-chat"><div class="wrap">
+      <div style="text-align:center"><span class="kick reveal">got questions?</span><h2 class="reveal">Ask the chef</h2></div>
+      <div class="abchat reveal" style="margin-top:22px">
+        <div class="top">${chefFaceSVG()}<div><b>The Chef</b><small>AUB Cooking Club · online</small></div></div>
+        <div class="log">${A.chat.map(m=>`<div class="msg q">${m.q}</div><div class="msg a"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>${m.a}</div>`).join("")}</div>
+      </div>
+    </div></section>
+
+    <section id="ab-levels"><div class="wrap">
+      <span class="kick reveal">cooking &amp; baking</span>
+      <h2 class="reveal">From first chop to fancy plating</h2>
+      <p class="intro reveal">Workshops come in levels, so there’s always something new to try.</p>
+      <div class="ablevels">
+        ${lvl(1,"Starters","Introductory sessions to find your way around a kitchen.",["knife skills","recipes","seasoning","kitchen organisation"],"")}
+        ${lvl(2,"Main course","Advanced sessions for when you’re ready to level up.",["new techniques","plating","recipe creativity"],"pink")}
+        ${lvl(3,"Chef’s special","We also hope to welcome chefs and food professionals to cook with us.",null,"blue")}
+      </div>
+    </div></section>
+
+    <section id="ab-menu"><div class="wrap">
+      <div style="text-align:center"><span class="kick reveal">this year’s specials</span><h2 class="reveal">What’s on the menu?</h2></div>
+      <div class="abmenu reveal" style="margin-top:34px"><span class="tape"></span>
+        <h3>Today’s specials</h3><p class="sub">(well… all year)</p>
+        <ol>${A.menu.map(m=>`<li><span>✶</span>${m}</li>`).join("")}</ol>
+        <div class="spinrow"><button type="button" class="btn spinmenu">SPIN THE MENU</button><div class="pickmsg" aria-live="polite"></div></div>
+      </div>
+    </div></section>
+
+    <section id="ab-collabs"><div class="wrap abcollab">
+      <div class="orbit reveal" aria-hidden="true">
+        <div class="ring">${A.collab.map(([t,c],i)=>`<span style="--a:${i*360/A.collab.length}deg"><em style="--c:${c}">${t}</em></span>`).join("")}</div>
+        <div class="core"><div><b>20+</b><small>clubs said<br>“let’s cook!”</small></div></div>
+      </div>
+      <div>
+        <span class="kick reveal">collaborations</span>
+        <h2 class="reveal">Better together</h2>
+        <p class="intro reveal">More than 20 clubs have already reached out! We hope to explore cultural collaborations, and activities around nutrition, wellbeing, awareness and community support.</p>
+      </div>
+    </div></section>
+
+    <section id="ab-involved"><div class="wrap">
+      <span class="kick reveal">your turn</span>
+      <h2 class="reveal">Get involved</h2>
+      <p class="intro reveal">Tap a card to flip it.</p>
+      <div class="abduo">
+        <div class="abevent reveal"><span class="tape pink"></span>
+          <svg class="ribbonmini" viewBox="0 0 80 122" aria-hidden="true"><path d="M20 112C28 92 34 80 40 66C46 50 58 32 52 16C47 4 33 4 28 16" fill="none" stroke="#463C35" stroke-width="15" stroke-linecap="round"/><path d="M29 13L28 16C22 32 34 50 40 66C46 82 52 94 60 112" fill="none" stroke="#463C35" stroke-width="15" stroke-linecap="round"/><path d="M20 112C28 92 34 80 40 66C46 50 58 32 52 16C47 4 33 4 28 16" fill="none" stroke="#E8A6B4" stroke-width="9" stroke-linecap="round"/><path d="M29 13L28 16C22 32 34 50 40 66C46 82 52 94 60 112" fill="none" stroke="#E8A6B4" stroke-width="9" stroke-linecap="round"/></svg>
+          <span class="kick" style="font-size:24px">our first event</span>
+          <h3>Cake for a Cause</h3>
+          <p style="margin:0">Our very first event was a fundraising cake workshop for Breast Cancer Awareness, this October. Then we twirled into pink pasta!</p>
+          <button type="button" class="btn ghost" data-event="cake-for-a-cause">SEE THE PHOTOS</button>
+        </div>
+        <button type="button" class="flip reveal" style="--c:#F1DAA4" aria-label="Got an idea? Tap to flip"><span class="in">
+          <span class="f"><b>Got an idea for the club?</b><small>tap to flip ↻</small><svg class="big" viewBox="0 0 48 60" aria-hidden="true"><path d="M24 4a16 16 0 0 0-9 29c2 2 3 4 3 7h12c0-3 1-5 3-7A16 16 0 0 0 24 4z" fill="#FFFDF8" stroke="#463C35" stroke-width="3" stroke-linejoin="round"/><path d="M18 46h12M19 52h10" stroke="#463C35" stroke-width="3" stroke-linecap="round"/><path d="M19 22q5-6 10 0" fill="none" stroke="#C98975" stroke-width="2.6" stroke-linecap="round"/></svg></span>
+          <span class="b"><p><b>Help shape the club!</b></p><p>Share your ideas through our suggestions form.</p></span>
+        </span></button>
+        <button type="button" class="flip reveal" style="--c:#B6CED5" aria-label="Want to help organise? Tap to flip"><span class="in">
+          <span class="f"><b>Want to help organise?</b><small>tap to flip ↻</small>${hatSVG().replace("<svg ","<svg class=\"big\" ")}</span>
+          <span class="b"><p><b>Apply for the sub-cabinet!</b></p><p>Help us organise workshops and events, behind the scenes.</p></span>
+        </span></button>
+      </div>
+    </div></section>
+
+    <section class="abend"><div class="wrap">
+      <h2>${"We can’t wait to cook with you!".split(" ").map((w,i)=>`<span style="--i:${i}">${w}</span>`).join(" ")}</h2>
+      <div class="row">
+        <button type="button" class="btn" data-go="join-club">JOIN THE CLUB</button>
+        <a class="btn ghost" href="${L.whatsapp}" target="_blank" rel="noopener">WHATSAPP GROUP</a>
+        <a class="btn ghost" href="${L.tiktok}" target="_blank" rel="noopener">TIKTOK</a>
+      </div>
+      <div class="ig">follow us on Instagram: <a href="${L.instagram}" target="_blank" rel="noopener" style="color:inherit">@aubcookingclub</a></div>
+    </div></section>
+  </div></div>`;
+}
+/* About page behaviour: reading progress, jump stickers, count-ups, the chat, hats, the menu spinner and flip cards */
+let abIO=null, abScroll=null;
+function bindAbout(){
+  const root=app.querySelector(".ab"); if(!root) return;
+  const still=reduce.matches;
+  // reading progress bar under the menu
+  const bar=root.querySelector(".abbar"), fill=bar.querySelector("i"), hat=bar.querySelector("b");
+  if(abScroll) removeEventListener("scroll",abScroll);
+  let tick=false;
+  abScroll=()=>{ if(tick) return; tick=true; requestAnimationFrame(()=>{ tick=false; if(!root.isConnected){ removeEventListener("scroll",abScroll); abScroll=null; return; }
+    const max=document.documentElement.scrollHeight-innerHeight, f=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
+    fill.style.scale=`${f} 1`; hat.style.left=(f*100)+"%"; hat.style.rotate=(f*720)+"deg"; }); };
+  addEventListener("scroll",abScroll,{passive:true}); abScroll();
+  // sticker shortcuts
+  root.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{ const t=root.querySelector("#ab-"+b.dataset.jump); if(t){ SFX.play("pop"); t.scrollIntoView({behavior:still?"auto":"smooth"}); } }));
+  // count-up numbers, the chat and the hats start when they come into view
+  abIO&&abIO.disconnect();
+  const count=el=>{ const to=+el.dataset.count, suf=el.dataset.suffix||""; if(still){ el.textContent=to+suf; return; }
+    const t0=performance.now(), D=1100; const step=now=>{ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); el.textContent=Math.round(to*e)+suf; if(k<1) requestAnimationFrame(step); }; requestAnimationFrame(step); };
+  // chat: messages show in order, each once it has scrolled into view; answers "type" first
+  const msgs=[...root.querySelectorAll(".msg")], seen=new Set(); let next=0, busy=false;
+  const pump=async()=>{ if(busy) return; busy=true;
+    while(next<msgs.length && [...seen].some(i=>i>=next)){
+      const m=msgs[next];
+      if(still){ m.classList.add("on"); next++; continue; }
+      if(m.classList.contains("a")){ m.classList.add("typing"); await new Promise(r=>setTimeout(r,900)); m.classList.remove("typing"); SFX.play("plop"); }
+      else { await new Promise(r=>setTimeout(r,250)); SFX.play("tick"); }
+      m.classList.add("on"); next++;
+      await new Promise(r=>setTimeout(r,420));
+      if(!root.isConnected) return;
+    }
+    busy=false; };
+  abIO=new IntersectionObserver(es=>es.forEach(x=>{ if(!x.isIntersecting) return; const el=x.target;
+    if(el.dataset.count!==undefined){ abIO.unobserve(el); count(el); }
+    else if(el.classList.contains("msg")){ abIO.unobserve(el); seen.add(msgs.indexOf(el)); pump(); }
+    else { abIO.unobserve(el); el.classList.add("in"); }
+  }),{threshold:.6});
+  root.querySelectorAll("[data-count],.msg,.ablvl,.abend").forEach(el=>abIO.observe(el));
+  // spin the menu: the highlight races down the list, slows and lands on a chef's pick
+  const items=[...root.querySelectorAll(".abmenu li")], spin=root.querySelector(".spinmenu"), msg=root.querySelector(".pickmsg"); let spinning=false, at=-1;
+  spin&&spin.addEventListener("click",async()=>{ if(spinning) return; spinning=true; msg.textContent=""; items.forEach(li=>li.classList.remove("won"));
+    const win=Math.floor(Math.random()*items.length), steps=still?1:items.length*2+((win-at-1+items.length*3)%items.length)+1;
+    for(let s=0;s<steps;s++){ at=(at+1)%items.length; items.forEach((li,i)=>li.classList.toggle("pick",i===at)); if(!still){ SFX.play("tick"); await new Promise(r=>setTimeout(r,55+Math.pow(s/steps,3)*360)); } }
+    if(still){ at=win; items.forEach((li,i)=>li.classList.toggle("pick",i===at)); }
+    items[at].classList.add("won"); SFX.play("ding"); msg.textContent=`Chef’s pick: ${ABOUT.menu[at]}!`; spinning=false; });
+  // flip cards
+  root.querySelectorAll(".flip").forEach(f=>f.addEventListener("click",()=>{ f.classList.toggle("flipped"); SFX.play("swish"); }));
+}
+
 /* ---------- Join the club page (#join-club): how to register for the club on AUBSIS ---------- */
 const CLUB_JOIN = {
   crn: "5176",                                   // the club's CRN on AUBSIS
@@ -2051,17 +2357,18 @@ function recipeCard(e,r,k){
 let current=null;
 function render(route, opts={}){
   const ev=EVENTS.find(e=>e.slug===route);
-  const name = ev?route:(route==="memories"||route==="register"||route==="join-club"?route:"home");
+  const name = ev?route:(route==="memories"||route==="register"||route==="join-club"||route==="about"?route:"home");
   const doRender=()=>{
-    app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():name==="register"?registerView():name==="join-club"?joinView():homeView();
+    app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():name==="register"?registerView():name==="join-club"?joinView():name==="about"?aboutView():homeView();
     document.documentElement.classList.toggle("aware",!!(ev&&ev.awareness)); /* pink awareness palette */
     current=name;
-    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":name==="join-club"?"Join the club · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
+    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":name==="join-club"?"Join the club · AUB Cooking Club":name==="about"?"About us · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
     document.querySelectorAll(".navlinks button").forEach(b=>{ if(b.dataset.go===(ev?"memories":name)) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
     if(!opts.keepScroll) window.scrollTo({top:0,behavior:"instant"});
     bind(ev);
     if(name==="register") bindRegister();
     if(name==="join-club") startJoinPC();
+    if(name==="about") bindAbout();
   };
   // (a page change that interrupts a running transition skips it; that's expected, so its "skipped" rejections are ignored)
   if(document.startViewTransition && !reduce.matches && opts.animate!==false){ const vt=document.startViewTransition(doRender); [vt.ready,vt.finished,vt.updateCallbackDone].forEach(p=>p&&p.catch(()=>{})); }
@@ -2762,7 +3069,7 @@ function kitchenTimer(chip){
 
 /* ---------- Start ---------- */
 const start=location.hash.slice(1);
-render(EVENTS.some(e=>e.slug===start)||start==="memories"||start==="register"||start==="join-club"?start:"home",{push:false,animate:false});
+render(EVENTS.some(e=>e.slug===start)||start==="memories"||start==="register"||start==="join-club"||start==="about"?start:"home",{push:false,animate:false});
 try{history.replaceState({r:current},"")}catch(e){}
 </script>
 </body>
