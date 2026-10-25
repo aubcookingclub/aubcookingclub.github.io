@@ -658,7 +658,7 @@ footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-
   .ab *{animation:none!important;transition:none!important}
   .msg,.ablvl .hats svg{opacity:1;translate:none;scale:1}
 }
-/* ---------- JOIN THE CLUB page (#join-club): how to register for the club on AUBSIS ----------
+/* ---------- JOIN THE TABLE page (#join-club): how to register for the club on AUBSIS ----------
    A cute computer plays the six steps on a loop (startJoinPC); the screens are simplified drawings, sized in cqw so they scale. */
 .jc{padding-top:clamp(36px,6vw,80px);padding-bottom:90px}
 .jc h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(44px,7vw,88px);line-height:.92;letter-spacing:-.035em;margin:0 0 10px}
@@ -908,7 +908,7 @@ img.fade.ok{opacity:1}
       <button data-go="home">HOME</button>
       <button data-go="about">ABOUT US</button>
       <button data-go="memories">OUR MEMORIES</button>
-      <button data-go="join-club">JOIN THE CLUB</button>
+      <button data-go="join-club">JOIN THE TABLE</button>
       <button data-go="register">SIGN UP</button>
       <button data-go="join">STAY CONNECTED</button>
     </nav>
@@ -919,7 +919,7 @@ img.fade.ok{opacity:1}
   <button data-go="home">Home</button>
   <button data-go="about">About us</button>
   <button data-go="memories">Our memories</button>
-  <button data-go="join-club">Join the club</button>
+  <button data-go="join-club">Join the table</button>
   <button data-go="register">Sign up</button>
   <button data-go="join">Stay connected</button>
   <div class="hand">today’s special: you ✶</div>
@@ -2044,7 +2044,7 @@ function bindAbout(){
   }
 }
 
-/* ---------- Join the club page (#join-club): how to register for the club on AUBSIS ---------- */
+/* ---------- Join the table page (#join-club): how to register for the club on AUBSIS ---------- */
 const CLUB_JOIN = {
   crn: "5176",                                   // the club's CRN on AUBSIS
   term: "Clubs 2026-2027",                       // the term to pick in "Select a Term"
@@ -2074,7 +2074,7 @@ function pcSVGs(){
 function joinView(){
   const C=CLUB_JOIN, S=pcSVGs();
   return `<div class="view"><div class="wrap jc">
-    <h1>Join the club</h1>
+    <h1>Join the table</h1>
     <p class="lede">You become a member on AUBSIS, the same way you register for a class.</p>
     <div class="jcgrid">
       <div>
@@ -2332,7 +2332,7 @@ function render(route, opts={}){
     app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():name==="register"?registerView():name==="join-club"?joinView():name==="about"?aboutView():homeView();
     document.documentElement.classList.toggle("aware",!!(ev&&ev.awareness)); /* pink awareness palette */
     current=name;
-    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":name==="join-club"?"Join the club · AUB Cooking Club":name==="about"?"About us · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
+    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":name==="join-club"?"Join the table · AUB Cooking Club":name==="about"?"About us · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
     document.querySelectorAll(".navlinks button").forEach(b=>{ if(b.dataset.go===(ev?"memories":name)) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
     if(!opts.keepScroll) window.scrollTo({top:0,behavior:"instant"});
     bind(ev);
