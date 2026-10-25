@@ -547,6 +547,111 @@ footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-
 .regdone h2{font-family:var(--serif);font-weight:900;color:#3F5545;font-size:clamp(32px,5vw,46px);margin:6px 0}
 .regdone p{max-width:38ch;margin:6px auto}
 .regtest{background:#F1DAA4;border-radius:8px;padding:10px 14px;font-size:14px;margin:0 0 22px}
+/* ---------- JOIN THE CLUB page (#join-club): how to register for the club on AUBSIS ----------
+   A cute computer plays the six steps on a loop (startJoinPC); the screens are simplified drawings, sized in cqw so they scale. */
+.jc{padding-top:clamp(36px,6vw,80px);padding-bottom:90px}
+.jc h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(44px,7vw,88px);line-height:.92;letter-spacing:-.035em;margin:0 0 10px}
+.jc .lede{font-size:19px;max-width:52ch;margin:0 0 30px}
+.jcgrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,.75fr);gap:clamp(24px,4vw,48px);align-items:center}
+@media (max-width:820px){ .jcgrid{grid-template-columns:1fr} }
+/* the computer */
+.pc{position:relative;max-width:620px;margin:0 auto;padding-bottom:12px}
+.pc .mon{background:#B6CED5;border:3px solid #463C35;border-radius:22px;padding:3.2% 3.2% 0;box-shadow:0 18px 30px -14px rgba(70,60,53,.45)}
+.pc .screen{position:relative;container-type:inline-size;aspect-ratio:16/10;background:#fff;border:3px solid #463C35;border-radius:10px;overflow:hidden;font-family:"Segoe UI",system-ui,sans-serif;color:#2b2b2b}
+.pc .face{position:relative;height:clamp(34px,7.5vw,50px);display:flex;align-items:center;justify-content:center}
+.pc .face svg{height:70%;overflow:visible}
+.pc .face .grin,.pc.happy .face .smile{opacity:0}.pc.happy .face .grin{opacity:1}
+.pc .stand{width:22%;height:clamp(18px,4vw,30px);margin:0 auto;background:#A5B49C;border:3px solid #463C35;border-top:0;position:relative}
+.pc .stand::after{content:"";position:absolute;left:-40%;right:-40%;bottom:-10px;height:12px;background:#A5B49C;border:3px solid #463C35;border-radius:8px}
+.pc .mouse{position:absolute;right:3%;bottom:0;width:9%;transition:translate .9s cubic-bezier(.45,.05,.25,1)}
+.pc .mouse svg{width:100%;height:auto;display:block;overflow:visible}
+.pc .mouse .btnL{transition:translate .1s}
+.pc .mouse.press .btnL{translate:0 1.5px}
+/* browser chrome inside the screen */
+.pc .bar{position:absolute;inset:0 0 auto;height:8cqw;background:#EDE6D8;border-bottom:.4cqw solid #d8cfbf;display:flex;align-items:center;gap:1.2cqw;padding:0 2cqw;z-index:2}
+.pc .bar i{width:1.6cqw;height:1.6cqw;border-radius:50%;background:#E8BFBE}.pc .bar i:nth-child(2){background:#F1DAA4}.pc .bar i:nth-child(3){background:#A5B49C}
+.pc .url{flex:1;margin-left:1.5cqw;background:#fff;border-radius:3cqw;font-size:2.3cqw;padding:.9cqw 2.4cqw;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .scn{position:absolute;inset:8cqw 0 0;opacity:0;transition:opacity .45s ease;font-size:2.6cqw}
+.pc .screen[data-scene="0"] .s0,.pc .screen[data-scene="1"] .s1,.pc .screen[data-scene="2"] .s2,.pc .screen[data-scene="3"] .s3,.pc .screen[data-scene="4"] .s4{opacity:1}
+.pc .t{transition:transform .12s ease,box-shadow .2s}
+.pc .t.hit{transform:scale(.94)}
+/* 0: AUB Nexus */
+.pc .nx{position:absolute;inset:3cqw 5cqw;border-radius:1.5cqw;background:linear-gradient(160deg,#9fb6c4,#5d7f95 60%,#47657a);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;overflow:hidden}
+.pc .nx b{font-size:6.5cqw;color:#8a1538;line-height:1.1;background:#fff;padding:0 1.6cqw;border-radius:1cqw}
+.pc .nx strong{font-size:12cqw;letter-spacing:.02em;line-height:1;font-weight:900}
+.pc .nx-login{margin-top:2.5cqw;background:#fff;color:#2b2b2b;border:0;border-radius:4cqw;font:700 2.6cqw/1 "Segoe UI",sans-serif;padding:1.6cqw 3.4cqw}
+/* 1: All Cards */
+.pc .ex-head{height:9cqw;background:#7A1B33;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:3.4cqw}
+.pc .ex-search{margin:3cqw 5cqw 0;width:52cqw;height:6cqw;border-bottom:.4cqw solid #555;display:flex;align-items:center;gap:1cqw;font-size:2.8cqw;padding:0 1cqw}
+.pc .ex-search::before{content:"\2315";font-size:3.6cqw;color:#555}
+.pc .caret{width:.3cqw;height:3.4cqw;background:#333;animation:pcBlink 1s steps(1) infinite}
+@keyframes pcBlink{50%{opacity:0}}
+.pc .ex-card{position:absolute;left:5cqw;top:23cqw;width:40cqw;background:#fff;border-radius:1.2cqw;box-shadow:0 .6cqw 2cqw rgba(0,0,0,.18);overflow:hidden;opacity:0;translate:0 2cqw;transition:opacity .4s,translate .4s}
+.pc .screen.found .ex-card{opacity:1;translate:0 0}
+.pc .ex-card b{display:block;padding:1.6cqw 2cqw;font-size:2.8cqw}
+.pc .ex-img{height:11cqw;background:linear-gradient(135deg,#c9b8a6,#6d6259);border-bottom:.8cqw solid #7A1B33}
+.pc .ex-open{display:block;margin:1.8cqw auto 2cqw;background:#3d3d3d;color:#fff;border:0;border-radius:.6cqw;font:700 2.1cqw/1 "Segoe UI",sans-serif;letter-spacing:.04em;padding:1.4cqw 2.2cqw;text-transform:uppercase}
+/* 2-4: the Registration pages */
+.pc .bn-top{height:6cqw;background:#6F2BDB}
+.pc .bn-crumb{font-size:2.3cqw;color:#2266cc;padding:1.4cqw 4cqw 0}
+.pc .bn-title{font-size:4cqw;font-weight:600;padding:.6cqw 4cqw 2cqw}
+.pc .bn-links{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;padding:0 4cqw}
+.pc .bn-links span{border:.3cqw solid #ddd;border-radius:1cqw;padding:3cqw 2cqw;text-align:center;color:#2266cc;font-weight:600;font-size:2.9cqw;background:#fafafa}
+.pc .bn-links .bn-reg{border-color:#2266cc}
+.pc .tm-lbl{display:block;font-size:2.6cqw;padding:0 4cqw 1.2cqw}
+.pc .tm-sel{margin:0 4cqw;width:46cqw;border:.3cqw solid #999;border-radius:.8cqw;padding:1.4cqw 2cqw;font-size:2.8cqw;display:flex;justify-content:space-between;background:#fff}
+.pc .tm-list{position:absolute;left:4cqw;top:25.4cqw;width:46cqw;background:#fff;border:.3cqw solid #999;box-shadow:0 1cqw 2cqw rgba(0,0,0,.15);opacity:0;transition:opacity .2s;z-index:1}
+.pc .tm-list span{display:block;padding:1.4cqw 2cqw;font-size:2.8cqw}
+.pc .screen.open .tm-list{opacity:1}
+.pc .tm-opt{background:#e8f0fd}
+.pc .tm-go{margin:3cqw 4cqw 0;background:#6F2BDB;color:#fff;border:0;border-radius:.8cqw;font:600 2.8cqw/1 "Segoe UI",sans-serif;padding:1.6cqw 4cqw}
+.pc .cr-tabs{display:flex;gap:1cqw;padding:0 4cqw;font-size:2.5cqw;border-bottom:.5cqw solid #c6cdd6}
+.pc .cr-tabs span{padding:1.2cqw 2cqw}
+.pc .screen.crns .cr-tab{background:#2266cc;color:#fff}
+.pc .cr-row{display:flex;align-items:center;gap:1.6cqw;padding:3cqw 4cqw 0;font-size:2.6cqw}
+.pc .cr-in{width:18cqw;height:5cqw;border:.3cqw solid #888;border-radius:.6cqw;padding:0 1.2cqw;display:flex;align-items:center;font-size:2.8cqw}
+.pc .cr-name{background:#e9edf3;color:#5878a8;border-radius:.8cqw;padding:1.2cqw 2cqw;opacity:0;transition:opacity .3s}
+.pc .screen.named .cr-name{opacity:1}
+.pc .cr-add{margin:2.4cqw 0 0 13cqw;background:#666;color:#fff;border:0;border-radius:.8cqw;font:600 2.5cqw/1 "Segoe UI",sans-serif;padding:1.4cqw 3cqw}
+.pc .cr-sum{position:absolute;left:4cqw;right:26cqw;top:44.5cqw;display:grid;grid-template-columns:1.6fr 1fr 1.3fr;align-items:center;border:.3cqw solid #ddd;font-size:2.5cqw;opacity:0;transition:opacity .4s}
+.pc .cr-sum span{padding:1.4cqw 2cqw}
+.pc .cr-sum span:first-child{color:#2266cc;text-decoration:underline}
+.pc .screen.added .cr-sum{opacity:1}
+.pc .st{justify-self:start;font-style:italic;border-radius:1cqw;transition:background .3s}
+.pc .screen.done .st{background:#c9f29b}
+.pc .cr-submit{position:absolute;right:4cqw;bottom:2.4cqw;background:#bbb;color:#fff;border:0;border-radius:.8cqw;font:600 2.6cqw/1 "Segoe UI",sans-serif;padding:1.6cqw 4cqw;transition:background .3s}
+.pc .screen.added .cr-submit{background:#2266cc}
+/* cursor, click ripples and hearts */
+.pc .cursor{position:absolute;left:0;top:0;width:4.4cqw;z-index:5;translate:50cqw 40cqw;transition:translate .9s cubic-bezier(.45,.05,.25,1);filter:drop-shadow(0 .4cqw .4cqw rgba(0,0,0,.25));pointer-events:none}
+.pc .cursor svg{width:100%;height:auto;display:block;transition:scale .1s;transform-origin:0 0}
+.pc .cursor.press svg{scale:.85}
+.pc .ripple{position:absolute;width:7cqw;height:7cqw;margin:-3.5cqw 0 0 -3.5cqw;border-radius:50%;border:.5cqw solid #C98975;z-index:4;pointer-events:none;animation:pcRip .5s ease-out forwards}
+@keyframes pcRip{from{scale:.2;opacity:1}to{scale:1.3;opacity:0}}
+.pc .yay{position:absolute;z-index:4;font-size:5cqw;color:#E8BFBE;pointer-events:none;animation:pcYay 1.8s ease-out forwards;-webkit-text-stroke:.25cqw #463C35}
+@keyframes pcYay{from{translate:0 0;scale:.4;opacity:0}20%{opacity:1;scale:1}to{translate:var(--dx) -22cqw;opacity:0;scale:1.1}}
+.pccap{margin:22px auto 0;max-width:620px;display:flex;align-items:center;gap:12px;min-height:56px}
+.pccap .no{flex:none;width:40px;height:40px;border-radius:50%;background:var(--olive);color:#F7F2E8;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:20px}
+.pccap .txt{font-size:18px;font-weight:500}
+.pcdots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.pcdots button{width:12px;height:12px;border-radius:50%;border:2px solid var(--olive);background:transparent;padding:0;cursor:pointer}
+.pcdots button[aria-current="step"]{background:var(--olive)}
+/* the CRN card */
+.crncard{position:relative;background:#FFFDF8;color:#463C35;border-radius:6px;box-shadow:0 14px 34px var(--shadow);padding:34px 26px 26px;text-align:center}
+.crncard .lbl{font-family:var(--hand);font-size:28px;color:#C98975;display:block}
+.crncard .crn{font-family:var(--serif);font-weight:900;font-size:clamp(64px,9vw,96px);line-height:1;color:#3F5545;letter-spacing:.02em;margin:4px 0 14px}
+.crncard .when{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 0}
+.crncard .what{font-size:15px;margin:10px 0 0;opacity:.8}
+/* the written steps */
+.jcsteps{list-style:none;counter-reset:s;padding:0;margin:56px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.jcsteps li{counter-increment:s;position:relative;background:#FFFDF8;color:#463C35;border-radius:12px;padding:20px 20px 20px 66px;border:2px solid transparent;cursor:pointer;transition:border-color .3s, transform .3s}
+.jcsteps li::before{content:counter(s);position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:#F1DAA4;color:#463C35;display:grid;place-items:center;font-family:var(--serif);font-weight:900}
+.jcsteps li.on{border-color:#C98975;transform:translateY(-3px)}
+.jcsteps li.on::before{background:#C98975;color:#FFFDF8}
+.jcsteps b{display:block;font-family:var(--serif);font-size:20px;color:#3F5545;margin-bottom:4px}
+.jcsteps code{font:700 15px/1.4 var(--sans);background:#F1DAA4;border-radius:5px;padding:1px 6px}
+.jcgo{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:34px}
+.jcgo a.btn{text-decoration:none}
+@media (prefers-reduced-motion:reduce){ .pc *{transition:none!important;animation:none!important} }
 @media (max-width:560px){.regcard{padding:30px 20px 24px 58px;background-image:linear-gradient(90deg,transparent 38px,rgba(201,137,117,.5) 38px,rgba(201,137,117,.5) 40px,transparent 40px)}}
 /* TAP & CLICK TOUCHES */
 /* recipe checklist: tick ingredients; each one drops into the mixing bowl, and a full bowl stirs itself */
@@ -691,6 +796,7 @@ img.fade.ok{opacity:1}
     <nav class="navlinks" aria-label="Main">
       <button data-go="home">HOME</button>
       <button data-go="memories">OUR MEMORIES</button>
+      <button data-go="join-club">JOIN THE CLUB</button>
       <button data-go="register">SIGN UP</button>
       <button data-go="join">JOIN THE TABLE</button>
     </nav>
@@ -700,6 +806,7 @@ img.fade.ok{opacity:1}
 <div class="mobilemenu" id="mmenu" role="dialog" aria-label="Menu">
   <button data-go="home">Home</button>
   <button data-go="memories">Our memories</button>
+  <button data-go="join-club">Join the club</button>
   <button data-go="register">Sign up</button>
   <button data-go="join">Join the table</button>
   <div class="hand">today’s special: you ✶</div>
@@ -1661,6 +1768,136 @@ function memoriesView(){
     </div></section></div>`;
 }
 
+/* ---------- Join the club page (#join-club): how to register for the club on AUBSIS ---------- */
+const CLUB_JOIN = {
+  crn: "5176",                                   // the club's CRN on AUBSIS
+  term: "Clubs 2026-2027",                       // the term to pick in "Select a Term"
+  course: "Cooking Club ZACT 462",               // what AUBSIS shows next to the CRN
+  link: "https://www.aub.edu.lb/Pages/AUBSIS.aspx"
+};
+// one entry per step: the short caption under the computer, and the longer card text below it
+const JOIN_STEPS = [
+  {cap:"Open AUBSIS and log in to AUB Nexus", title:"Open AUBSIS", text:()=>`Go to <a href="${CLUB_JOIN.link}" target="_blank" rel="noopener">aub.edu.lb/Pages/AUBSIS.aspx</a>, press <code>Click to log in</code> and sign in to AUB Nexus.`},
+  {cap:"Search “Registration Self-Service” and open the dashboard", title:"Find Registration", text:()=>`In <b style="display:inline;font:inherit;color:inherit">All Cards</b>, search <code>Registration Self-Service</code> and press <code>Open Registration Dashboard</code>.`},
+  {cap:"Click “Register for Classes”", title:"Register for Classes", text:()=>`On the Registration page, click <code>Register for Classes</code>.`},
+  {cap:()=>`Pick the term “${CLUB_JOIN.term}” and press Continue`, title:"Pick the term", text:()=>`Choose <code>${CLUB_JOIN.term}</code> and press <code>Continue</code>.`},
+  {cap:()=>`Open “Enter CRNs”, type ${CLUB_JOIN.crn}, then Add to Summary`, title:"Enter our CRN", text:()=>`Open the <code>Enter CRNs</code> tab and type <code>${CLUB_JOIN.crn}</code>. It shows ${CLUB_JOIN.course}. Press <code>Add to Summary</code>.`},
+  {cap:"Press Submit. “Registered” means you’re in!", title:"Submit", text:()=>`Press <code>Submit</code> at the bottom right. When the status says <code>Registered</code>, you’re in. Welcome to the club!`}
+];
+const capOf=s=>typeof s.cap==="function"?s.cap():s.cap;
+function pcSVGs(){
+  return {
+    face:`<svg viewBox="0 0 60 20" aria-hidden="true"><circle cx="20" cy="8" r="2.6" fill="#463C35"/><circle cx="40" cy="8" r="2.6" fill="#463C35"/><circle cx="13" cy="13" r="3" fill="#E8BFBE"/><circle cx="47" cy="13" r="3" fill="#E8BFBE"/>
+      <path class="smile" d="M26 12q4 4 8 0" fill="none" stroke="#463C35" stroke-width="2.4" stroke-linecap="round"/><path class="grin" d="M25 11.5q5 7 10 0z" fill="#463C35" stroke="#463C35" stroke-width="2" stroke-linejoin="round"/></svg>`,
+    mouse:`<svg viewBox="0 0 40 56" aria-hidden="true"><path d="M20 4q-10-6-26 4" fill="none" stroke="#463C35" stroke-width="2.4" stroke-linecap="round" transform="translate(0 2)"/>
+      <rect x="4" y="8" width="32" height="46" rx="16" fill="#FFFDF8" stroke="#463C35" stroke-width="3"/><path class="btnL" d="M5.5 24h14.5V9.6Q8 10 5.5 22z" fill="#F1DAA4"/><path d="M20 9v15M5 24h30" stroke="#463C35" stroke-width="2.4"/>
+      <circle cx="14" cy="37" r="2" fill="#E8BFBE"/><circle cx="26" cy="37" r="2" fill="#E8BFBE"/></svg>`,
+    cursor:`<svg viewBox="0 0 20 28" aria-hidden="true"><path d="M2 2v21l5.5-5 3.6 8 3.6-1.6-3.6-7.8H18z" fill="#fff" stroke="#463C35" stroke-width="2" stroke-linejoin="round"/></svg>`
+  };
+}
+function joinView(){
+  const C=CLUB_JOIN, S=pcSVGs();
+  return `<div class="view"><div class="wrap jc">
+    <span class="hand" style="font-size:26px">membership, the AUBSIS way ✶</span>
+    <h1>Join the club</h1>
+    <p class="lede">You become a member on AUBSIS, the same way you register for a class. It’s free and counts for 0 credits. Watch the little computer, then do the same!</p>
+    <div class="jcgrid">
+      <div>
+        <div class="pc" aria-hidden="true">
+          <div class="mon">
+            <div class="screen" data-scene="0">
+              <div class="bar"><i></i><i></i><i></i><span class="url">aub.edu.lb/Pages/AUBSIS.aspx</span></div>
+              <div class="scn s0"><div class="nx"><b>AUB</b><strong>NEXUS</strong><button class="t nx-login" tabindex="-1">Click to log in</button></div></div>
+              <div class="scn s1"><div class="ex-head">All Cards</div><div class="t ex-search"><span class="ex-q"></span><i class="caret"></i></div>
+                <div class="ex-card"><div class="ex-img"></div><b>Registration Self-Service</b><button class="t ex-open" tabindex="-1">Open Registration Dashboard</button></div></div>
+              <div class="scn s2"><div class="bn-top"></div><div class="bn-crumb">Student · Registration</div><div class="bn-title">Registration</div>
+                <div class="bn-links"><span>Prepare for Registration</span><span class="t bn-reg">Register for Classes</span><span>Plan Ahead</span><span>Browse Classes</span></div></div>
+              <div class="scn s3"><div class="bn-top"></div><div class="bn-crumb">Student · Registration · Select a Term</div><div class="bn-title">Select a Term</div>
+                <span class="tm-lbl">Terms Open for Registration</span><div class="t tm-sel"><span class="tm-val">Select a term…</span><span>▾</span></div>
+                <div class="tm-list"><span>Fall 2026-2027</span><span class="t tm-opt">${C.term}</span></div><button class="t tm-go" tabindex="-1">Continue</button></div>
+              <div class="scn s4"><div class="bn-top"></div><div class="bn-crumb">Student · Registration · Select a Term · Register for Classes</div><div class="bn-title">Register for Classes</div>
+                <div class="cr-tabs"><span>Find Classes</span><span class="t cr-tab">Enter CRNs</span><span>Schedule and Options</span></div>
+                <div class="cr-row">CRN <span class="t cr-in"></span><span class="cr-name">${C.course}</span></div><button class="t cr-add" tabindex="-1">Add to Summary</button>
+                <div class="cr-sum"><span>Cooking Club</span><span>${C.crn}</span><span class="st">Pending</span></div><button class="t cr-submit" tabindex="-1">Submit</button></div>
+              <div class="cursor">${S.cursor}</div>
+            </div>
+            <div class="face">${S.face}</div>
+          </div>
+          <div class="stand"></div>
+          <div class="mouse">${S.mouse}</div>
+        </div>
+        <div class="pccap" aria-live="polite"><span class="no">1</span><span class="txt">${capOf(JOIN_STEPS[0])}</span></div>
+        <div class="pcdots">${JOIN_STEPS.map((s,i)=>`<button aria-label="Show step ${i+1}"${i===0?' aria-current="step"':""}></button>`).join("")}</div>
+      </div>
+      <div class="crncard"><span class="tape pink"></span>
+        <span class="lbl">our CRN is</span>
+        <div class="crn">${C.crn}</div>
+        <button class="btn copycrn" type="button">COPY CRN</button>
+        <div class="when"><span class="chip">${C.term}</span><span class="chip alt">0 credits</span></div>
+        <p class="what">It shows up as “${C.course}”.</p>
+      </div>
+    </div>
+    <ol class="jcsteps">${JOIN_STEPS.map((s,i)=>`<li data-step="${i}"${i===0?' class="on"':""}><b>${s.title}</b>${s.text()}</li>`).join("")}</ol>
+    <div class="jcgo"><a class="btn" href="${C.link}" target="_blank" rel="noopener">OPEN AUBSIS</a><span class="regnote">Stuck on a step? Ask us in the club’s WhatsApp group.</span></div>
+  </div></div>`;
+}
+/* The computer's walkthrough. Each step moves the cursor to a part of the drawn screen and clicks or types there.
+   Plays on a loop while on screen; the dots and the step cards jump to a step. With reduced motion it only shows the screens. */
+function startJoinPC(){
+  const pc=app.querySelector(".pc"); if(!pc) return;
+  const scr=pc.querySelector(".screen"), cur=pc.querySelector(".cursor"), mouse=pc.querySelector(".mouse"), url=pc.querySelector(".url");
+  const cap=app.querySelector(".pccap"), dots=[...app.querySelectorAll(".pcdots button")], cards=[...app.querySelectorAll(".jcsteps li")];
+  const q=s=>scr.querySelector(s), STOP={};
+  const URLS=["aub.edu.lb/Pages/AUBSIS.aspx","experience.elluciancloud.ie/auob/discover","sturegss.aub.edu.lb/StudentRegistrationSsb/registration","sturegss.aub.edu.lb/StudentRegistrationSsb/term","sturegss.aub.edu.lb/StudentRegistrationSsb/classRegistration","sturegss.aub.edu.lb/StudentRegistrationSsb/classRegistration"];
+  const SCENE=[0,1,2,3,4,4];
+  let token=0, visible=true;
+  // put the screen in the state it has at the start of step k
+  const prep=k=>{
+    scr.dataset.scene=SCENE[k]; url.textContent=URLS[k];
+    scr.classList.remove("found","open","crns","named","added","done"); pc.classList.remove("happy");
+    q(".ex-q").textContent=""; q(".cr-in").textContent=""; q(".tm-val").textContent="Select a term…"; q(".st").textContent="Pending";
+    if(k===5){ scr.classList.add("crns","named","added"); q(".cr-in").textContent=CLUB_JOIN.crn; }
+    cap.querySelector(".no").textContent=k+1; cap.querySelector(".txt").textContent=capOf(JOIN_STEPS[k]);
+    dots.forEach((d,i)=>i===k?d.setAttribute("aria-current","step"):d.removeAttribute("aria-current"));
+    cards.forEach((c,i)=>c.classList.toggle("on",i===k));
+  };
+  const run=async from=>{
+    const my=++token;
+    const W=async ms=>{ while(ms>0){ await new Promise(r=>setTimeout(r,50)); if(my!==token||!pc.isConnected) throw STOP; if(visible&&!document.hidden) ms-=50; } };
+    const at=el=>{ const r=el.getBoundingClientRect(), s=scr.getBoundingClientRect(); return [r.left-s.left+r.width*.5, r.top-s.top+r.height*.55, s]; };
+    const move=async sel=>{ const [x,y,s]=at(q(sel)); cur.style.translate=`${x}px ${y}px`; mouse.style.translate=`${(x/s.width-.5)*18}px ${(y/s.height-.5)*8}px`; await W(950); };
+    const click=async sel=>{ const el=q(sel), [x,y]=at(el); cur.classList.add("press"); mouse.classList.add("press"); el.classList.add("hit");
+      const rp=document.createElement("span"); rp.className="ripple"; rp.style.left=x+"px"; rp.style.top=y+"px"; scr.appendChild(rp); setTimeout(()=>rp.remove(),600);
+      await W(180); cur.classList.remove("press"); mouse.classList.remove("press"); el.classList.remove("hit"); await W(260); };
+    const type=async(sel,text)=>{ const el=q(sel); el.textContent=""; for(const ch of text){ el.textContent+=ch; await W(70); } };
+    const yay=()=>{ for(let i=0;i<6;i++){ const h=document.createElement("span"); h.className="yay"; h.textContent="♥";
+      h.style.left=(30+i*8)+"%"; h.style.top="72%"; h.style.setProperty("--dx",((i-2.5)*4)+"cqw"); h.style.animationDelay=(i*.12)+"s"; scr.appendChild(h); setTimeout(()=>h.remove(),2600); } };
+    const STEPS=[
+      async()=>{ await W(700); await move(".nx-login"); await click(".nx-login"); await W(400); },
+      async()=>{ await W(500); await move(".ex-search"); await click(".ex-search"); await type(".ex-q","Registration Self-Service"); scr.classList.add("found"); await W(700); await move(".ex-open"); await click(".ex-open"); await W(300); },
+      async()=>{ await W(600); await move(".bn-reg"); await click(".bn-reg"); await W(300); },
+      async()=>{ await W(500); await move(".tm-sel"); await click(".tm-sel"); scr.classList.add("open"); await W(400); await move(".tm-opt"); await click(".tm-opt");
+        scr.classList.remove("open"); q(".tm-val").textContent=CLUB_JOIN.term; await W(400); await move(".tm-go"); await click(".tm-go"); await W(300); },
+      async()=>{ await W(500); await move(".cr-tab"); await click(".cr-tab"); scr.classList.add("crns"); await move(".cr-in"); await click(".cr-in"); await type(".cr-in",CLUB_JOIN.crn);
+        scr.classList.add("named"); await W(700); await move(".cr-add"); await click(".cr-add"); scr.classList.add("added"); await W(900); },
+      async()=>{ await W(300); await move(".cr-submit"); await click(".cr-submit"); scr.classList.add("done"); q(".st").textContent="Registered"; pc.classList.add("happy"); yay(); await W(3200); }
+    ];
+    try{ for(let k=from;;k=(k+1)%STEPS.length){ prep(k); await STEPS[k](); } }catch(e){ if(e!==STOP) throw e; }
+  };
+  const jump=k=>{ if(reduce.matches){ token++; prep(k); if(k===5){ scr.classList.add("done"); q(".st").textContent="Registered"; pc.classList.add("happy"); } } else run(k); };
+  dots.forEach((d,i)=>d.addEventListener("click",()=>jump(i)));
+  cards.forEach((c,i)=>c.addEventListener("click",e=>{ if(!e.target.closest("a")) jump(i); }));
+  new IntersectionObserver(es=>es.forEach(x=>visible=x.isIntersecting)).observe(pc);
+  jump(0);
+  // copy the CRN
+  const cp=app.querySelector(".copycrn");
+  if(cp) cp.addEventListener("click",()=>{
+    const done=()=>{ cp.textContent="COPIED ✓"; SFX.play("ding"); setTimeout(()=>cp.textContent="COPY CRN",1800); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(CLUB_JOIN.crn).then(done,()=>{ cp.textContent=CLUB_JOIN.crn; });
+    else cp.textContent=CLUB_JOIN.crn;
+  });
+}
+
 /* ---------- Sign-up page (questions come from REGISTRATION) ---------- */
 const escH=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function registerView(){
@@ -1815,16 +2052,17 @@ function recipeCard(e,r,k){
 let current=null;
 function render(route, opts={}){
   const ev=EVENTS.find(e=>e.slug===route);
-  const name = ev?route:(route==="memories"||route==="register"?route:"home");
+  const name = ev?route:(route==="memories"||route==="register"||route==="join-club"?route:"home");
   const doRender=()=>{
-    app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():name==="register"?registerView():homeView();
+    app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():name==="register"?registerView():name==="join-club"?joinView():homeView();
     document.documentElement.classList.toggle("aware",!!(ev&&ev.awareness)); /* pink awareness palette */
     current=name;
-    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
+    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":name==="join-club"?"Join the club · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
     document.querySelectorAll(".navlinks button").forEach(b=>{ if(b.dataset.go===(ev?"memories":name)) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
     if(!opts.keepScroll) window.scrollTo({top:0,behavior:"instant"});
     bind(ev);
     if(name==="register") bindRegister();
+    if(name==="join-club") startJoinPC();
   };
   // (a page change that interrupts a running transition skips it; that's expected, so its "skipped" rejections are ignored)
   if(document.startViewTransition && !reduce.matches && opts.animate!==false){ const vt=document.startViewTransition(doRender); [vt.ready,vt.finished,vt.updateCallbackDone].forEach(p=>p&&p.catch(()=>{})); }
@@ -2525,7 +2763,7 @@ function kitchenTimer(chip){
 
 /* ---------- Start ---------- */
 const start=location.hash.slice(1);
-render(EVENTS.some(e=>e.slug===start)||start==="memories"||start==="register"?start:"home",{push:false,animate:false});
+render(EVENTS.some(e=>e.slug===start)||start==="memories"||start==="register"||start==="join-club"?start:"home",{push:false,animate:false});
 try{history.replaceState({r:current},"")}catch(e){}
 </script>
 </body>
