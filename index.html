@@ -488,6 +488,32 @@ footer .plate .serving{transform-origin:50% 100%}
 footer .plate .heart{opacity:0;transform-origin:50% 50%}
 footer .plate.empty .serving{opacity:0}
 footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-radius:8px}
+/* SIGN-UP PAGE: members register for the next workshop; answers go to the club's Google Sheet (see tools/registration) */
+.reg{padding-top:clamp(36px,6vw,80px);padding-bottom:90px}
+.reg h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(44px,7vw,88px);line-height:.92;letter-spacing:-.035em;margin:0 0 10px}
+.reg .lede{font-size:19px;max-width:46ch;margin:0 0 8px}
+.reg .when{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 30px}
+.regcard{position:relative;max-width:640px;background:#FFFDF8;color:#463C35;border-radius:6px;box-shadow:0 14px 34px var(--shadow);padding:34px 30px 30px 70px;
+  background-image:linear-gradient(90deg,transparent 46px,rgba(201,137,117,.5) 46px,rgba(201,137,117,.5) 48px,transparent 48px)}
+.regcard .tape{top:-12px}
+.regfield{display:block;margin:0 0 20px}
+.regfield .lbl{display:block;font-family:var(--serif);font-weight:800;font-size:20px;color:#3F5545;margin-bottom:6px}
+.regfield .lbl em{font-style:normal;color:#C98975}
+.regfield .hint{display:block;font-size:14px;opacity:.75;margin-top:5px}
+.regfield input,.regfield select,.regfield textarea{width:100%;font:inherit;font-size:17px;color:#463C35;background:#F7F2E8;border:2px solid #CBBFA9;border-radius:10px;padding:11px 14px;transition:border-color .2s,box-shadow .2s}
+.regfield textarea{min-height:90px;resize:vertical}
+.regfield input:focus,.regfield select:focus,.regfield textarea:focus{outline:none;border-color:#C98975;box-shadow:0 0 0 3px rgba(201,137,117,.25)}
+.regfield.bad input,.regfield.bad select,.regfield.bad textarea{border-color:#C0504D}
+.regfield .err{display:none;color:#B2443F;font-size:14px;font-weight:700;margin-top:5px}
+.regfield.bad .err{display:block}
+.reghp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+.regrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.regnote{font-size:14px;opacity:.8;max-width:40ch}
+.regdone{text-align:center;padding:10px 0}
+.regdone h2{font-family:var(--serif);font-weight:900;color:#3F5545;font-size:clamp(32px,5vw,46px);margin:6px 0}
+.regdone p{max-width:38ch;margin:6px auto}
+.regtest{background:#F1DAA4;border-radius:8px;padding:10px 14px;font-size:14px;margin:0 0 22px}
+@media (max-width:560px){.regcard{padding:30px 20px 24px 58px;background-image:linear-gradient(90deg,transparent 38px,rgba(201,137,117,.5) 38px,rgba(201,137,117,.5) 40px,transparent 40px)}}
 /* TAP & CLICK TOUCHES */
 /* recipe checklist: tick ingredients; each one drops into the mixing bowl, and a full bowl stirs itself */
 .rcard .inner{position:relative}
@@ -607,6 +633,7 @@ img.fade.ok{opacity:1}
     <nav class="navlinks" aria-label="Main">
       <button data-go="home">HOME</button>
       <button data-go="memories">OUR MEMORIES</button>
+      <button data-go="register">SIGN UP</button>
       <button data-go="join">JOIN THE TABLE</button>
     </nav>
     <button class="menubtn" aria-expanded="false" aria-controls="mmenu">Menu</button>
@@ -615,6 +642,7 @@ img.fade.ok{opacity:1}
 <div class="mobilemenu" id="mmenu" role="dialog" aria-label="Menu">
   <button data-go="home">Home</button>
   <button data-go="memories">Our memories</button>
+  <button data-go="register">Sign up</button>
   <button data-go="join">Join the table</button>
   <div class="hand">today’s special: you ✶</div>
 </div>
@@ -1063,6 +1091,28 @@ EVENTS.forEach((e,i)=>e.chapter=String(i+1).padStart(2,"0"));
 const recipesOf=e=>e.recipes||(e.recipe?[e.recipe]:[]);
 const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
 
+/* ---------- Workshop sign-up (edit this for each workshop) ----------
+   endpoint: the Google Apps Script web-app URL from tools/registration/SETUP.md ("" = test mode, nothing is sent).
+   fields:   the questions, in order. Keep the "name" and "phone" keys: the sheet uses them for the WhatsApp message.
+             type: "text" | "tel" | "email" | "textarea" | "select" (with options:[...]) | "radio" (with options:[...]).
+   To ask something workshop-specific, add a field, e.g.
+     {key:"pasta", label:"Pasta shape", type:"select", required:true, options:["Farfalle (bow ties)","Penne","Fusilli"]}  */
+const REGISTRATION = {
+  open: true,
+  endpoint: "",
+  workshop: "Our next workshop",
+  when: "Date coming soon",
+  where: "AUB campus",
+  blurb: "Save your seat! Fill this in and we'll message you on WhatsApp once you're confirmed.",
+  fields: [
+    {key:"name",      label:"Full name",       type:"text",  required:true,  autocomplete:"name"},
+    {key:"phone",     label:"WhatsApp number", type:"tel",   required:true,  autocomplete:"tel", placeholder:"+961 70 123 456", hint:"We'll send your confirmation here."},
+    {key:"email",     label:"Email",           type:"email", required:true,  autocomplete:"email", placeholder:"you@mail.aub.edu"},
+    {key:"aubid",     label:"AUB ID",          type:"text",  required:false, placeholder:"e.g. 202412345"},
+    {key:"allergies", label:"Allergies or dietary needs", type:"textarea", required:false, hint:"Anything we should know so you can cook safely."}
+  ]
+};
+
 /* ---------- Helpers ---------- */
 const $=(s,el=document)=>el.querySelector(s);
 const app=$("#app");
@@ -1418,8 +1468,82 @@ function memoriesView(){
       <div class="chapter soon reveal"><div class="sheet">
         ${potSVG()}
         <span class="num">Chapter ${next}</span><h2>Still simmering…</h2><span class="cap">Our next workshop lands here. Save a seat!</span>
+        ${REGISTRATION.open?`<button class="btn ghost" data-go="register" style="margin-top:16px">SAVE A SEAT</button>`:""}
       </div></div>
     </div></section></div>`;
+}
+
+/* ---------- Sign-up page (questions come from REGISTRATION) ---------- */
+const escH=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function registerView(){
+  const R=REGISTRATION;
+  const field=f=>{
+    const id="rf-"+f.key, req=f.required?" required":"", ph=f.placeholder?` placeholder="${escH(f.placeholder)}"`:"", ac=f.autocomplete?` autocomplete="${f.autocomplete}"`:"";
+    let input;
+    if(f.type==="textarea") input=`<textarea id="${id}" name="${f.key}"${req}${ph}></textarea>`;
+    else if(f.type==="select") input=`<select id="${id}" name="${f.key}"${req}><option value="">Choose…</option>${(f.options||[]).map(o=>`<option>${escH(o)}</option>`).join("")}</select>`;
+    else if(f.type==="radio") input=(f.options||[]).map((o,i)=>`<label style="display:block;margin:4px 0"><input type="radio" name="${f.key}" value="${escH(o)}"${i===0&&f.required?" required":""} style="width:auto;margin-right:8px">${escH(o)}</label>`).join("");
+    else input=`<input id="${id}" name="${f.key}" type="${f.type||"text"}"${req}${ph}${ac}${f.type==="tel"?' inputmode="tel"':""}>`;
+    return `<label class="regfield" data-key="${f.key}"${f.type==="radio"?"":` for="${id}"`}><span class="lbl">${escH(f.label)}${f.required?" <em>*</em>":""}</span>${input}${f.hint?`<span class="hint">${escH(f.hint)}</span>`:""}<span class="err">Please fill this in.</span></label>`;
+  };
+  return `<div class="view"><div class="wrap reg">
+    <span class="hand" style="font-size:26px">save your seat ✶</span>
+    <h1>Sign up</h1>
+    <p class="lede">${escH(R.blurb)}</p>
+    <div class="when"><span class="chip">${escH(R.workshop)}</span><span class="chip alt">${escH(R.when)}</span>${R.where?`<span class="chip alt">${escH(R.where)}</span>`:""}</div>
+    <div class="regcard"><span class="tape pink"></span>
+      ${R.open?`
+      ${R.endpoint?"":`<p class="regtest"><b>Test mode:</b> this form isn't connected to the club's sheet yet, so nothing you type is sent.</p>`}
+      <form id="regform" novalidate>
+        ${R.fields.map(field).join("")}
+        <label class="reghp" aria-hidden="true">Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="regrow"><button class="btn" type="submit">SAVE MY SEAT</button><span class="regnote">You'll get a WhatsApp message once the club confirms your place.</span></div>
+      </form>`:`<div class="regdone"><h2>Sign-ups are closed</h2><p>Keep an eye on our WhatsApp group for the next workshop!</p></div>`}
+    </div>
+  </div></div>`;
+}
+/* "70 123 456", "070123456", "+961 70 123456", "0096170123456" -> "96170123456" (Lebanon assumed when there's no country code) */
+function normPhone(v){
+  let d=String(v).replace(/[^\d+]/g,""); const plus=d.startsWith("+"); d=d.replace(/\D/g,"");
+  if(d.startsWith("00")) d=d.slice(2);
+  else if(!plus){ if(d.startsWith("0")) d=d.slice(1); if(d.length<=8) d="961"+d; }
+  return d;
+}
+function bindRegister(){
+  const form=app.querySelector("#regform"); if(!form) return;
+  const t0=Date.now();
+  const bad=(key,msg)=>{ const w=form.querySelector(`.regfield[data-key="${key}"]`); if(!w) return; w.classList.add("bad"); if(msg) w.querySelector(".err").textContent=msg; };
+  form.addEventListener("input",e=>{ const w=e.target.closest(".regfield"); if(w) w.classList.remove("bad"); });
+  form.addEventListener("submit",async e=>{
+    e.preventDefault();
+    form.querySelectorAll(".regfield").forEach(w=>{w.classList.remove("bad"); w.querySelector(".err").textContent="Please fill this in.";});
+    const fd=new FormData(form), answers={}; let ok=true, first=null;
+    for(const f of REGISTRATION.fields){
+      const v=String(fd.get(f.key)||"").trim(); if(f.key!=="name"&&f.key!=="phone") answers[f.label]=v; // name/phone have their own sheet columns
+      let msg=null;
+      if(f.required&&!v) msg="Please fill this in.";
+      else if(v&&f.type==="email"&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) msg="That email doesn't look right.";
+      else if(v&&f.key==="phone"&&normPhone(v).length<10) msg="Please include the full number, e.g. +961 70 123 456.";
+      if(msg){ ok=false; bad(f.key,msg); first=first||f.key; }
+    }
+    if(!ok){ const el=form.querySelector(`.regfield[data-key="${first}"] input,.regfield[data-key="${first}"] select,.regfield[data-key="${first}"] textarea`); el&&el.focus(); return; }
+    if(fd.get("website")) return;                     // spam trap: bots fill hidden fields
+    const btn=form.querySelector('button[type="submit"]'); btn.disabled=true; btn.textContent="SAVING…";
+    const payload={workshop:REGISTRATION.workshop, name:String(fd.get("name")||"").trim(),
+      phone:normPhone(fd.get("phone")||""), answers, secondsOnPage:Math.round((Date.now()-t0)/1000)};
+    const done=(title,text)=>{ form.outerHTML=`<div class="regdone">${use("i-star","","width:64px;height:64px")}<h2>${title}</h2><p>${text}</p></div>`; };
+    if(!REGISTRATION.endpoint){ done("Looks good!","Test mode: nothing was sent. Once the club connects its sheet, this is where members will land."); return; }
+    try{
+      const res=await fetch(REGISTRATION.endpoint,{method:"POST",body:JSON.stringify(payload)}); // plain-text body, so no CORS preflight
+      const out=await res.json();
+      if(!out.ok) throw new Error(out.error||"not saved");
+      done("You're on the list! 🎉",`Thanks, ${escH(payload.name.split(" ")[0])}! We'll message you on WhatsApp at +${escH(payload.phone)} once your seat is confirmed.`);
+      SFX.play("pop");
+    }catch(err){
+      btn.disabled=false; btn.textContent="SAVE MY SEAT";
+      toast("That didn't go through. Please try again, or message us on WhatsApp.");
+    }
+  });
 }
 
 function eventView(e){
@@ -1498,15 +1622,16 @@ function recipeCard(e,r,k){
 let current=null;
 function render(route, opts={}){
   const ev=EVENTS.find(e=>e.slug===route);
-  const name = ev?route:(route==="memories"?"memories":"home");
+  const name = ev?route:(route==="memories"||route==="register"?route:"home");
   const doRender=()=>{
-    app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():homeView();
+    app.innerHTML = ev?eventView(ev):name==="memories"?memoriesView():name==="register"?registerView():homeView();
     document.documentElement.classList.toggle("aware",!!(ev&&ev.awareness)); /* pink awareness palette */
     current=name;
-    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
+    document.title = ev?`${ev.title} · AUB Cooking Club`:name==="memories"?"Our memories · AUB Cooking Club":name==="register"?"Sign up · AUB Cooking Club":"AUB Cooking Club · Our Recipe for Memories";
     document.querySelectorAll(".navlinks button").forEach(b=>{ if(b.dataset.go===(ev?"memories":name)) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
     if(!opts.keepScroll) window.scrollTo({top:0,behavior:"instant"});
     bind(ev);
+    if(name==="register") bindRegister();
   };
   // (a page change that interrupts a running transition skips it; that's expected, so its "skipped" rejections are ignored)
   if(document.startViewTransition && !reduce.matches && opts.animate!==false){ const vt=document.startViewTransition(doRender); [vt.ready,vt.finished,vt.updateCallbackDone].forEach(p=>p&&p.catch(()=>{})); }
@@ -2192,7 +2317,7 @@ function kitchenTimer(chip){
 
 /* ---------- Start ---------- */
 const start=location.hash.slice(1);
-render(EVENTS.some(e=>e.slug===start)||start==="memories"?start:"home",{push:false,animate:false});
+render(EVENTS.some(e=>e.slug===start)||start==="memories"||start==="register"?start:"home",{push:false,animate:false});
 try{history.replaceState({r:current},"")}catch(e){}
 </script>
 </body>
