@@ -787,7 +787,7 @@ footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-
 .rcard li.stp{position:relative;cursor:pointer;transition:opacity .3s}
 .spoonstir{position:absolute;left:-50px;top:-2px;width:20px;height:42px;pointer-events:none;transform-origin:50% 85%;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 42'%3E%3Cpath d='M10 16v23' stroke='%23463C35' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M10 16v23' stroke='%23E9C9A0' stroke-width='3' stroke-linecap='round'/%3E%3Cellipse cx='10' cy='10' rx='7.5' ry='9' fill='%23E9C9A0' stroke='%23463C35' stroke-width='2.2'/%3E%3C/svg%3E") center/contain no-repeat}
-/* "Join the table" toaster, sitting just right of the WhatsApp button (beside it, so it never covers the footer text) */
+/* "Stay connected" toaster, sitting just right of the WhatsApp button (beside it, so it never covers the footer text) */
 .socials{position:relative}
 .toaster{position:absolute;bottom:-4px;left:calc(50% + 125px);width:96px;opacity:0;pointer-events:none;z-index:2;transform-origin:50% 100%}
 /* small screens: the buttons slide left while the toaster is out, to make room for it */
@@ -910,7 +910,7 @@ img.fade.ok{opacity:1}
       <button data-go="memories">OUR MEMORIES</button>
       <button data-go="join-club">JOIN THE CLUB</button>
       <button data-go="register">SIGN UP</button>
-      <button data-go="join">JOIN THE TABLE</button>
+      <button data-go="join">STAY CONNECTED</button>
     </nav>
     <button class="menubtn" aria-expanded="false" aria-controls="mmenu">Menu</button>
   </div>
@@ -921,7 +921,7 @@ img.fade.ok{opacity:1}
   <button data-go="memories">Our memories</button>
   <button data-go="join-club">Join the club</button>
   <button data-go="register">Sign up</button>
-  <button data-go="join">Join the table</button>
+  <button data-go="join">Stay connected</button>
   <div class="hand">today’s special: you ✶</div>
 </div>
 
@@ -2912,7 +2912,7 @@ function flick(parent,x,y,{cls="drop",color="#F1DAA4",w,h,spread=60,up=40,fall=6
 }
 const mk=html=>{const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild;};
 
-/* "Join the table": a toaster pops a slice of toast that says "save a seat!" beside the WhatsApp button */
+/* "Stay connected": a toaster pops a slice of toast that says "save a seat!" beside the WhatsApp button */
 function popToaster(){
   const t=$(".toaster"); if(!t||t._busy||reduce.matches) return; t._busy=true; t.classList.add("on"); t.parentNode.classList.add("toasting");
   const slice=t.querySelector(".slice"), ding=t.querySelector(".ding"), body=t.querySelector(".body"), T=4200;
