@@ -500,7 +500,13 @@ footer .plate{display:block;width:min(170px,46vw);height:auto;margin:-30px auto 
 footer .plate *{transform-box:fill-box}
 footer .plate .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 footer .plate .serving{transform-origin:50% 100%}
+footer .plate .meal{display:none}
+footer .plate .meal [transform]{transform-box:view-box} /* SVG rotate(a x y) attributes must use the drawing's own coordinates */
+footer .plate[data-meal="burger"] .m-burger,footer .plate[data-meal="pasta"] .m-pasta{display:inline}
 footer .plate .heart{opacity:0;transform-origin:50% 50%}
+footer .plate .steamw path{opacity:0;animation:fsteam 2.4s ease-out infinite}
+footer .plate .steamw path:nth-child(2){animation-delay:.8s}footer .plate .steamw path:nth-child(3){animation-delay:1.6s}
+@keyframes fsteam{0%{opacity:0;transform:translateY(6px)}30%{opacity:.85}100%{opacity:0;transform:translateY(-8px)}}
 footer .plate.empty .serving{opacity:0}
 footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-radius:8px}
 /* SIGN-UP PAGE: members register for the next workshop; each sign-up is emailed to the club (see REGISTRATION) */
@@ -684,18 +690,45 @@ img.fade.ok{opacity:1}
 
 <footer id="join">
   <div class="wrap">
-    <svg class="plate" viewBox="0 0 160 96" role="img" aria-label="A plate being served. Tap for seconds." tabindex="0">
+    <svg class="plate" data-meal="burger" viewBox="0 0 160 96" role="img" aria-label="A plate being served: a burger, or spaghetti and meatballs. Tap for seconds." tabindex="0">
       <g class="heart" fill="#E8BFBE" stroke="#463C35" stroke-width="2"><path d="M50 30c-3-5-10-2-8 3 1 3 8 8 8 8s7-5 8-8c2-5-5-8-8-3z"/></g>
       <g class="heart" fill="#F1DAA4" stroke="#463C35" stroke-width="2"><path d="M80 18c-3-5-10-2-8 3 1 3 8 8 8 8s7-5 8-8c2-5-5-8-8-3z"/></g>
       <g class="heart" fill="#E8BFBE" stroke="#463C35" stroke-width="2"><path d="M110 30c-3-5-10-2-8 3 1 3 8 8 8 8s7-5 8-8c2-5-5-8-8-3z"/></g>
       <ellipse class="ln" cx="80" cy="78" rx="64" ry="14" fill="#F7F2E8"/>
       <ellipse cx="80" cy="77" rx="44" ry="8.5" fill="none" stroke="#E3D9C6" stroke-width="2.5"/>
       <g class="serving">
-        <path class="ln" fill="#E8BFBE" d="M48 77q2-26 32-28t32 28z"/>
-        <path class="ln" stroke-width="2" fill="#D98CA0" d="M60 62q3 1 6 3q3-2 6-3q-1 3 0 6q-3-1-6-3q-3 2-6 3q1-3 0-6zM88 58q3 1 6 3q3-2 6-3q-1 3 0 6q-3-1-6-3q-3 2-6 3q1-3 0-6z"/>
-        <path class="ln" stroke-width="2" fill="#A5B49C" d="M74 52q6-7 12 0q-6 7-12 0z"/>
-        <circle cx="72" cy="69" r="2.4" fill="#463C35"/><circle cx="88" cy="69" r="2.4" fill="#463C35"/>
-        <path class="ln" fill="none" stroke-width="2.2" d="M77 73q3 3 6 0"/>
+        <!-- MEAL 1: a burger (bottom to top: bun, patty, cheese, tomato, lettuce, sesame top bun) -->
+        <g class="meal m-burger">
+          <path class="ln" fill="#E9C9A0" d="M55 76q0-9 9-9h32q9 0 9 9z"/>
+          <rect class="ln" x="52" y="58" width="56" height="10" rx="5" fill="#8A5A44"/>
+          <path class="ln" stroke-width="2" fill="#F1DAA4" d="M51 56h58v3l-5 5-5-4-5 5-5-4-5 5-5-4-5 5-5-4-5 5-5-4-5 4-3-3z"/>
+          <ellipse class="ln" stroke-width="2" cx="67" cy="54" rx="10" ry="3.2" fill="#C98975"/>
+          <ellipse class="ln" stroke-width="2" cx="93" cy="54" rx="10" ry="3.2" fill="#C98975"/>
+          <path d="M49 52q3.5-4 7 0t7 0t7 0t7 0t7 0t7 0t7 0t7 0t7 0" fill="none" stroke="#463C35" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M49 52q3.5-4 7 0t7 0t7 0t7 0t7 0t7 0t7 0t7 0t7 0" fill="none" stroke="#A5B49C" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="ln" fill="#E9C9A0" d="M52 51q0-23 28-23t28 23z"/>
+          <path d="M60 44q4-9 14-11" fill="none" stroke="#FFFDF8" stroke-width="2.6" stroke-linecap="round" opacity=".7"/>
+          <g fill="#FFFDF8" stroke="#463C35" stroke-width=".9"><ellipse cx="70" cy="40" rx="2.2" ry="1.2"/><ellipse cx="81" cy="35" rx="2.2" ry="1.2"/><ellipse cx="92" cy="40" rx="2.2" ry="1.2"/><ellipse cx="76" cy="46" rx="2.2" ry="1.2"/><ellipse cx="88" cy="46" rx="2.2" ry="1.2"/></g>
+        </g>
+        <!-- MEAL 2: spaghetti and meatballs with red sauce and basil -->
+        <g class="meal m-pasta">
+          <!-- a nest of noodles: the mound, then loose strands curling over it and spilling onto the plate -->
+          <path class="ln" fill="#F1DAA4" d="M45 76q1-25 35-27t35 27z"/>
+          <g fill="none" stroke="#C9A25E" stroke-width="1.7" stroke-linecap="round">
+            <path d="M50 73q8-9 16-2t16-3t16 2t14-3"/><path d="M53 66q7-8 14-1t15-4t14 3t11-2"/><path d="M59 59q6-6 12 0t12-2t12 1"/>
+            <path d="M48 75q-4 2-7 0"/><path d="M112 75q4 2 6-1"/><path d="M66 74q3 3 7 1"/>
+          </g>
+          <!-- a pool of red sauce with three meatballs clustered in it -->
+          <path class="ln" stroke-width="2.3" fill="#C98975" d="M57 60q4-11 18-12q14-3 22 4q7 5 1 11q-5 4-11 2q-6 5-13 2q-8 3-14-1q-5-1-3-6z"/>
+          <circle class="ln" stroke-width="2.3" cx="69" cy="55" r="5.5" fill="#8A5A44"/>
+          <circle class="ln" stroke-width="2.3" cx="84" cy="50" r="6" fill="#8A5A44"/>
+          <circle class="ln" stroke-width="2.3" cx="88" cy="61" r="5" fill="#8A5A44"/>
+          <path d="M76 44q-2-8 5-11q4 7-5 11z" fill="#A5B49C" stroke="#463C35" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M95 52q5-6 11 0q-5 5-11 0z" fill="#A5B49C" stroke="#463C35" stroke-width="1.6" stroke-linejoin="round"/>
+          <g fill="#FFFDF8" stroke="#463C35" stroke-width=".7"><rect x="61" y="61" width="2.6" height="1.8" rx=".5" transform="rotate(20 62 62)"/><rect x="77" y="57" width="2.4" height="1.7" rx=".5"/><rect x="94" y="58" width="2.6" height="1.8" rx=".5" transform="rotate(-25 95 59)"/><rect x="73" y="63" width="2.2" height="1.6" rx=".5"/></g>
+          <!-- steam rising off the hot pasta -->
+          <g class="steamw" fill="none" stroke="#F7F2E8" stroke-width="2.4" stroke-linecap="round"><path d="M70 42q-4-5 0-10t0-10"/><path d="M82 38q-4-5 0-10t0-10"/><path d="M94 42q-4-5 0-10t0-10"/></g>
+        </g>
       </g>
     </svg>
     <h2>What’s cooking next?</h2>
@@ -2349,6 +2382,7 @@ function kitchenTimer(chip){
   const serve=()=>{
     if(busy) return; busy=true;
     const drop=()=>{
+      if(served) plate.dataset.meal = plate.dataset.meal==="burger" ? "pasta" : "burger"; // seconds alternate burger <-> spaghetti
       plate.classList.remove("empty");
       serving.animate([{transform:"translateY(-70px) scale(.9,1.1)",opacity:1,easing:"cubic-bezier(.5,0,1,.6)"},
         {transform:"translateY(0) scale(1.18,.78)",offset:.5,easing:"ease-out"},{transform:"translateY(-6px) scale(.94,1.08)",offset:.72,easing:"ease-in"},
