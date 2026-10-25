@@ -488,7 +488,7 @@ footer .plate .serving{transform-origin:50% 100%}
 footer .plate .heart{opacity:0;transform-origin:50% 50%}
 footer .plate.empty .serving{opacity:0}
 footer .plate:focus-visible{outline:3px solid #F1DAA4;outline-offset:4px;border-radius:8px}
-/* SIGN-UP PAGE: members register for the next workshop; answers go to the club's Google Sheet (see tools/registration) */
+/* SIGN-UP PAGE: members register for the next workshop; each sign-up is emailed to the club (see REGISTRATION) */
 .reg{padding-top:clamp(36px,6vw,80px);padding-bottom:90px}
 .reg h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(44px,7vw,88px);line-height:.92;letter-spacing:-.035em;margin:0 0 10px}
 .reg .lede{font-size:19px;max-width:46ch;margin:0 0 8px}
@@ -1092,14 +1092,16 @@ const recipesOf=e=>e.recipes||(e.recipe?[e.recipe]:[]);
 const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
 
 /* ---------- Workshop sign-up (edit this for each workshop) ----------
-   endpoint: the Google Apps Script web-app URL from tools/registration/SETUP.md ("" = test mode, nothing is sent).
+   sendTo:   where sign-ups are emailed, via FormSubmit (formsubmit.co, free, no account; "" = test mode, nothing is sent).
+             The first sign-up to a new address makes FormSubmit email an "Activate Form" link; click it once.
+             After that, the address can be swapped for the random alias FormSubmit gives you, to hide it from spammers.
    fields:   the questions, in order. Keep the "name" and "phone" keys: the sheet uses them for the WhatsApp message.
              type: "text" | "tel" | "email" | "textarea" | "select" (with options:[...]) | "radio" (with options:[...]).
    To ask something workshop-specific, add a field, e.g.
      {key:"pasta", label:"Pasta shape", type:"select", required:true, options:["Farfalle (bow ties)","Penne","Fusilli"]}  */
 const REGISTRATION = {
   open: true,
-  endpoint: "",
+  sendTo: "mariammansour308@gmail.com",
   workshop: "Our next workshop",
   when: "Date coming soon",
   where: "AUB campus",
@@ -1493,7 +1495,7 @@ function registerView(){
     <div class="when"><span class="chip">${escH(R.workshop)}</span><span class="chip alt">${escH(R.when)}</span>${R.where?`<span class="chip alt">${escH(R.where)}</span>`:""}</div>
     <div class="regcard"><span class="tape pink"></span>
       ${R.open?`
-      ${R.endpoint?"":`<p class="regtest"><b>Test mode:</b> this form isn't connected to the club's sheet yet, so nothing you type is sent.</p>`}
+      ${R.sendTo?"":`<p class="regtest"><b>Test mode:</b> this form has no email address yet, so nothing you type is sent.</p>`}
       <form id="regform" novalidate>
         ${R.fields.map(field).join("")}
         <label class="reghp" aria-hidden="true">Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
@@ -1532,11 +1534,16 @@ function bindRegister(){
     const payload={workshop:REGISTRATION.workshop, name:String(fd.get("name")||"").trim(),
       phone:normPhone(fd.get("phone")||""), answers, secondsOnPage:Math.round((Date.now()-t0)/1000)};
     const done=(title,text)=>{ form.outerHTML=`<div class="regdone">${use("i-star","","width:64px;height:64px")}<h2>${title}</h2><p>${text}</p></div>`; };
-    if(!REGISTRATION.endpoint){ done("Looks good!","Test mode: nothing was sent. Once the club connects its sheet, this is where members will land."); return; }
+    if(!REGISTRATION.sendTo){ done("Looks good!","Test mode: nothing was sent. Once the club adds its email address, this is where members will land."); return; }
+    if(payload.secondsOnPage<3){ done("You're on the list! 🎉","Thanks!"); return; } // filled in instantly: almost certainly a bot, so quietly drop it
     try{
-      const res=await fetch(REGISTRATION.endpoint,{method:"POST",body:JSON.stringify(payload)}); // plain-text body, so no CORS preflight
+      // FormSubmit (formsubmit.co) emails each sign-up as a table; the subject tag makes them easy to find in Gmail.
+      const res=await fetch("https://formsubmit.co/ajax/"+encodeURIComponent(REGISTRATION.sendTo),{method:"POST",
+        headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({_subject:`[AUB Cooking Club sign-up] ${payload.name} – ${payload.workshop}`, _template:"table", _captcha:"false",
+          "Workshop":payload.workshop, "Name":payload.name, "WhatsApp number":"+"+payload.phone, ...answers})});
       const out=await res.json();
-      if(!out.ok) throw new Error(out.error||"not saved");
+      if(String(out.success)!=="true") throw new Error(out.message||"not sent");
       done("You're on the list! 🎉",`Thanks, ${escH(payload.name.split(" ")[0])}! We'll message you on WhatsApp at +${escH(payload.phone)} once your seat is confirmed.`);
       SFX.play("pop");
     }catch(err){
