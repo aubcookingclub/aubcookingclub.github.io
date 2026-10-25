@@ -326,28 +326,18 @@ main{min-height:60vh}
   .pot .bub{transform:scale(1)}
 }
 
-/* TOMATO KITCHEN TIMER (sign-up page while sign-ups are closed). Numbers count down past the pointer; hover or tap makes it ring. */
-.tomtimer{width:150px;height:auto;display:block;margin:-6px auto 4px;overflow:visible;cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* TOMATO KITCHEN TIMER (sign-up page while sign-ups are closed). A 12-second story played by startTomTimer():
+   counts down tick-tock, gets nervous, rings ("DING!"), the dial whirls back (dizzy), then happy hearts. Tap = ring now. */
+.tomtimer{width:190px;height:auto;display:block;margin:-10px auto 2px;overflow:visible;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .tomtimer .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .tomtimer .dial{font:800 9px/1 system-ui,-apple-system,"Segoe UI",sans-serif;fill:#463C35;text-anchor:middle}
-.tomtimer .row{animation:ktCount 30s linear infinite}
-@keyframes ktCount{from{transform:translateX(-240px)}to{transform:translateX(0)}}
-.tomtimer .tbody,.tomtimer .eyes,.tomtimer .rl{transform-box:fill-box}
-.tomtimer .tbody{transform-origin:50% 100%;animation:ktTick 1s steps(1) infinite}
-@keyframes ktTick{0%{rotate:0deg}50%{rotate:.8deg}}
-.tomtimer .eyes{transform-origin:50% 50%;animation:ktBlink 4.5s ease-in-out infinite}
-@keyframes ktBlink{0%,92%,100%{scale:1 1}95%{scale:1 .1}}
-.tomtimer .rl{opacity:0}.tomtimer .rl.l{transform-origin:100% 50%}.tomtimer .rl.r{transform-origin:0 50%}
-.tomtimer .m-o{opacity:0}
-/* ringing */
-.tomtimer.ring .tbody{animation:ktShake 1.1s ease-in-out}
-@keyframes ktShake{0%,100%{rotate:0deg;translate:0 0}8%{rotate:-7deg;translate:0 -4px}16%{rotate:7deg}24%{rotate:-6deg}32%{rotate:6deg}40%{rotate:-5deg}48%{rotate:5deg}56%{rotate:-3deg}64%{rotate:3deg}76%{rotate:-1deg;translate:0 0}}
-.tomtimer.ring .rl{animation:ktRing .55s ease-out 2}
-@keyframes ktRing{0%{opacity:0;scale:.7}30%{opacity:1}100%{opacity:0;scale:1.25}}
-.tomtimer.ring .m-smile{opacity:0}.tomtimer.ring .m-o{opacity:1}
-.tomtimer.ring .eyes{animation:none;scale:1.25}
-.tomtimer:not(.on) *{animation-play-state:paused}
-@media (prefers-reduced-motion:reduce){ .tomtimer *{animation:none!important} }
+.tomtimer .bubble text{font:900 11px/1 var(--serif,Georgia),serif;fill:#463C35;text-anchor:middle;letter-spacing:.04em}
+.tomtimer :is(.tbody,.tshadow,.calyx,.eyes,.sw,.rl,.bubble,.sp,.sweat,.mouth,.cheek){transform-box:fill-box;transform-origin:50% 50%}
+.tomtimer :is(.tbody,.calyx){transform-origin:50% 100%}
+.tomtimer .bubble{transform-origin:0 100%}
+.tomtimer .rl.l{transform-origin:100% 50%}.tomtimer .rl.r{transform-origin:0 50%}
+/* hidden until the story shows them */
+.tomtimer :is(.rl,.bubble,.sp,.sweat,.dizzy,.m-o,.m-grin,.m-wavy){opacity:0}
 
 /* AWARENESS RIBBON (next to the chapter number on .aware workshop pages). Draws itself in, then sways; hover or tap makes it wiggle. */
 /* ribbon sits centred beside "Chapter 0X" with its own room, instead of being pulled up toward the back link */
@@ -1409,14 +1399,22 @@ function grinderSVG(){
     <circle class="nozzle" cx="40" cy="152" r="1" fill="none"/>
   </svg>`;
 }
-/* Tomato kitchen timer (see .tomtimer styles). The number band is a strip of 0-55 (twice) that slides right, so the time under the pointer counts down. */
+/* Tomato kitchen timer (see .tomtimer styles; the story is in startTomTimer). The number band is a strip of 0-55 (three times round)
+   that slides sideways, so the time under the pointer counts down. */
 function timerSVG(){
   let nums="";
-  for(let i=0;i<24;i++){ const x=i*20; nums+=`<path d="M${x} 82v4M${x+10} 82v2.5" stroke="#463C35" stroke-width="1.6" stroke-linecap="round"/><text class="dial" x="${x}" y="95">${(i%12)*5}</text>`; }
-  return `<svg class="tomtimer" viewBox="0 18 160 134" aria-hidden="true">
-    <g class="rl l ln" fill="none"><path d="M16 80q-6 12 0 24M8 74q-9 18 0 36"/></g>
-    <g class="rl r ln" fill="none"><path d="M144 80q6 12 0 24M152 74q9 18 0 36"/></g>
+  for(let i=-12;i<24;i++){ const x=i*20; nums+=`<path d="M${x} 82v4M${x+10} 82v2.5" stroke="#463C35" stroke-width="1.6" stroke-linecap="round"/><text class="dial" x="${x}" y="95">${(((i%12)+12)%12)*5}</text>`; }
+  const heart=`<path class="ln" stroke-width="2" fill="#E8BFBE" d="M0 3c-4-3-6-5-6-7.5a3 3 0 0 1 6-1a3 3 0 0 1 6 1c0 2.5-2 4.5-6 7.5z"/>`;
+  const swirl=(x,y)=>`<path class="sw ln" stroke-width="1.8" fill="none" d="M${x} ${y}m-.8 0a.8 .8 0 1 1 1.6 0a2 2 0 1 1-4 0a3.2 3.2 0 1 1 6.4 0a4.4 4.4 0 1 1-8.8 0"/>`;
+  return `<svg class="tomtimer" viewBox="-14 2 188 150" aria-hidden="true">
+    <ellipse class="tshadow" cx="80" cy="142" rx="44" ry="5" fill="#463C35" opacity=".13"/>
+    <g transform="translate(30 66)"><g class="sp">${heart}</g></g>
+    <g transform="translate(132 60)"><g class="sp">${heart}</g></g>
+    <g transform="translate(58 30)"><g class="sp">${heart}</g></g>
+    <g class="bubble"><path class="ln" stroke-width="2.4" fill="#F1DAA4" d="M120 12h38q8 0 8 8v4q0 8-8 8h-30l-9 8 2-8q-9 0-9-8v-4q0-8 8-8z"/><text x="140" y="26">DING!</text></g>
     <g class="tbody">
+      <g class="rl l ln" fill="none"><path d="M16 80q-6 12 0 24M8 74q-9 18 0 36"/></g>
+      <g class="rl r ln" fill="none"><path d="M144 80q6 12 0 24M152 74q9 18 0 36"/></g>
       <defs><clipPath id="ktClip"><ellipse cx="80" cy="92" rx="56" ry="48"/></clipPath></defs>
       <ellipse class="ln" cx="80" cy="92" rx="56" ry="48" fill="#C98975"/>
       <g clip-path="url(#ktClip)">
@@ -1427,14 +1425,67 @@ function timerSVG(){
       <ellipse class="ln" cx="80" cy="92" rx="56" ry="48" fill="none"/>
       <path d="M75 73h10l-5 7z" fill="#463C35" stroke="#463C35" stroke-width="1.5" stroke-linejoin="round"/>
       <path d="M44 66q8-14 22-19" fill="none" stroke="#F7F2E8" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
-      <circle cx="58" cy="118" r="4.5" fill="#E8BFBE"/><circle cx="102" cy="118" r="4.5" fill="#E8BFBE"/>
+      <circle class="cheek" cx="58" cy="118" r="4.5" fill="#E8BFBE"/><circle class="cheek" cx="102" cy="118" r="4.5" fill="#E8BFBE"/>
       <g class="eyes" fill="#463C35"><circle cx="68" cy="111" r="3.2"/><circle cx="92" cy="111" r="3.2"/></g>
-      <path class="ln m-smile" fill="none" d="M75 119q5 5 10 0"/>
-      <ellipse class="m-o" cx="80" cy="121" rx="3.4" ry="4" fill="#463C35"/>
-      <path class="ln" fill="#A5B49C" d="M80 48L63 44Q70 38 75 40L69 31Q77 31 80 38Q83 31 91 31L85 40Q90 38 97 44Z"/>
-      <rect class="ln" x="76.5" y="24" width="7" height="15" rx="2.5" fill="#A5B49C"/>
+      <g class="dizzy">${swirl(68,111)}${swirl(92,111)}</g>
+      <path class="mouth m-smile ln" fill="none" d="M75 119q5 5 10 0"/>
+      <ellipse class="mouth m-o" cx="80" cy="121" rx="3.6" ry="4.4" fill="#463C35"/>
+      <path class="mouth m-grin ln" stroke-width="2.4" fill="#463C35" d="M73 117.5q7 9 14 0z"/>
+      <path class="mouth m-wavy ln" stroke-width="2.2" fill="none" d="M73 121q1.75-2.5 3.5 0t3.5 0t3.5 0t3.5 0"/>
+      <path class="sweat ln" stroke-width="2" fill="#B6CED5" d="M121 58q-4.5 6.5 0 9q4.5-2.5 0-9z"/>
+      <g class="calyx"><path class="ln" fill="#A5B49C" d="M80 48L63 44Q70 38 75 40L69 31Q77 31 80 38Q83 31 91 31L85 40Q90 38 97 44Z"/>
+      <rect class="ln" x="76.5" y="24" width="7" height="15" rx="2.5" fill="#A5B49C"/></g>
     </g>
   </svg>`;
+}
+
+/* The tomato timer's story, as fractions of one 12-second loop:
+   0-.50 counts down 15 minutes tick-tock (nervous from .40: wide eyes, wobbly mouth, sweat drop)
+   .50-.64 rings: hops, shakes, "DING!" bubble, ring lines, leaves wiggle
+   .64-.80 the dial whirls back round to 15 and it goes dizzy
+   .80-1 happy grin, hearts float up, a blink, then it starts again. */
+function startTomTimer(kt){
+  const D=12000, anims=[];
+  const A=(sel,frames)=>kt.querySelectorAll(sel).forEach((el,i)=>anims.push(el.animate(typeof frames==="function"?frames(i):frames,{duration:D,iterations:Infinity})));
+  const ease="ease-in-out";
+  // opacity that is `on` inside the given [from,to] windows and `off` elsewhere
+  const windows=(ranges,on=1,off=0)=>{ const f=[{offset:0,opacity:off}]; ranges.forEach(([a,b])=>f.push({offset:a,opacity:off},{offset:a+.004,opacity:on},{offset:b,opacity:on},{offset:b+.004,opacity:off})); f.push({offset:1,opacity:off}); return f; };
+  // dial: 15 one-second-ish ticks down to 0, hold while ringing, then a full whirl back round to 15
+  A(".row",[{offset:0,transform:"translateX(10px)",easing:"steps(15,end)"},{offset:.5,transform:"translateX(70px)"},{offset:.64,transform:"translateX(70px)",easing:"cubic-bezier(.45,0,.2,1)"},{offset:.8,transform:"translateX(-230px)"},{offset:1,transform:"translateX(-230px)"}]);
+  // body: tick-tock, then hop and shake, a dizzy squash, and a happy hop
+  const body=[{offset:0,rotate:"0deg",translate:"0 0",scale:"1 1"}];
+  for(let k=1;k<15;k++){ const o=k*.4/12, r=(k>=12?3.2:1.6)*(k%2?1:-1); body.push({offset:o,rotate:"0deg",easing:"ease-out"},{offset:o+.006,rotate:r+"deg"}); }
+  body.push({offset:.5,rotate:"0deg",translate:"0 0",easing:"ease-out"},{offset:.512,translate:"0 -12px",rotate:"-8deg"},{offset:.526,translate:"0 -8px",rotate:"8deg"},{offset:.54,rotate:"-7deg"},{offset:.554,rotate:"7deg"},{offset:.568,translate:"0 -3px",rotate:"-5deg"},{offset:.582,rotate:"5deg"},{offset:.596,translate:"0 0",rotate:"-3deg"},{offset:.61,rotate:"2deg"},{offset:.625,rotate:"0deg",scale:"1 1"},
+    {offset:.68,rotate:"-4deg",scale:"1.05 .95",easing:ease},{offset:.72,rotate:"4deg",scale:"1 1",easing:ease},{offset:.76,rotate:"-2deg",easing:ease},{offset:.8,rotate:"0deg",translate:"0 0",scale:"1 1"},
+    {offset:.83,translate:"0 0",scale:"1.06 .94",easing:"ease-out"},{offset:.855,translate:"0 -10px",scale:".96 1.05",easing:"ease-in"},{offset:.88,translate:"0 0",scale:"1.07 .93",easing:ease},{offset:.9,scale:"1 1"},{offset:1,rotate:"0deg",translate:"0 0",scale:"1 1"});
+  A(".tbody",body);
+  A(".tshadow",[{offset:0,scale:"1 1"},{offset:.5,scale:"1 1"},{offset:.512,scale:".72 .72"},{offset:.568,scale:".9 .9"},{offset:.596,scale:"1 1"},{offset:.83,scale:"1.04 1"},{offset:.855,scale:".74 .74"},{offset:.88,scale:"1.06 1"},{offset:.9,scale:"1 1"},{offset:1,scale:"1 1"}]);
+  A(".calyx",[{offset:0,rotate:"0deg"},{offset:.5,rotate:"0deg"},{offset:.515,rotate:"-28deg"},{offset:.535,rotate:"24deg"},{offset:.555,rotate:"-18deg"},{offset:.575,rotate:"13deg"},{offset:.595,rotate:"-7deg"},{offset:.615,rotate:"0deg"},{offset:.85,rotate:"0deg"},{offset:.87,rotate:"-12deg"},{offset:.89,rotate:"8deg"},{offset:.91,rotate:"0deg"},{offset:1,rotate:"0deg"}]);
+  // eyes: look up at the pointer, blink, go wide when nervous and ringing, hide while dizzy
+  A(".eyes",[{offset:0,translate:"0 0",scale:"1 1",opacity:1},{offset:.03,translate:"0 -1.6px"},{offset:.2,scale:"1 1"},{offset:.207,scale:"1 .1"},{offset:.214,scale:"1 1"},{offset:.4,scale:"1 1"},{offset:.44,scale:"1.25 1.25"},
+    {offset:.5,translate:"0 -1.6px",scale:"1.25 1.25"},{offset:.51,translate:"0 0",scale:"1.4 1.4"},{offset:.638,opacity:1},{offset:.642,opacity:0},{offset:.796,opacity:0,scale:"1.4 1.4"},{offset:.8,opacity:1,scale:"1 1"},
+    {offset:.93,scale:"1 1"},{offset:.937,scale:"1 .1"},{offset:.944,scale:"1 1"},{offset:1,translate:"0 0",scale:"1 1",opacity:1}]);
+  A(".dizzy",windows([[.64,.796]]));
+  A(".sw",[{offset:0,rotate:"0deg"},{offset:.64,rotate:"0deg"},{offset:.8,rotate:"-1080deg"},{offset:1,rotate:"-1080deg"}]);
+  A(".m-smile",windows([[.4,.97]],0,1)); // the plain smile steps aside for the other mouths
+  A(".m-wavy",windows([[.4,.5],[.64,.8]]));
+  A(".m-o",windows([[.5,.64]]));
+  A(".m-grin",windows([[.8,.97]]));
+  A(".cheek",[{offset:0,scale:"1 1"},{offset:.5,scale:"1 1"},{offset:.52,scale:"1.35 1.35"},{offset:.64,scale:"1.35 1.35"},{offset:.68,scale:"1 1"},{offset:.82,scale:"1 1"},{offset:.85,scale:"1.25 1.25"},{offset:.95,scale:"1.25 1.25"},{offset:1,scale:"1 1"}]);
+  A(".sweat",[{offset:0,opacity:0,translate:"0 0"},{offset:.4,opacity:0,translate:"0 0"},{offset:.41,opacity:1},{offset:.49,opacity:1,translate:"0 10px"},{offset:.5,opacity:0,translate:"0 12px"},{offset:1,opacity:0,translate:"0 12px"}]);
+  const pulse=[{offset:0,opacity:0,scale:".7 .7"}]; [.5,.545,.59].forEach(a=>pulse.push({offset:a,opacity:0,scale:".7 .7"},{offset:a+.012,opacity:1},{offset:a+.044,opacity:0,scale:"1.3 1.3"})); pulse.push({offset:1,opacity:0,scale:".7 .7"});
+  A(".rl",pulse);
+  A(".bubble",[{offset:0,opacity:0,scale:".2 .2",rotate:"0deg"},{offset:.5,opacity:0,scale:".2 .2"},{offset:.515,opacity:1,scale:"1.15 1.15",easing:"ease-out"},{offset:.53,scale:"1 1",rotate:"0deg"},{offset:.56,rotate:"-6deg"},{offset:.59,rotate:"6deg"},{offset:.62,rotate:"0deg",opacity:1,scale:"1 1"},{offset:.64,opacity:0,scale:".8 .8"},{offset:1,opacity:0,scale:".2 .2",rotate:"0deg"}]);
+  A(".sp",i=>{ const a=.8+i*.035; return [{offset:0,opacity:0,translate:"0 0",scale:".4 .4"},{offset:a,opacity:0,translate:"0 0",scale:".4 .4"},{offset:a+.02,opacity:1,scale:"1 1",easing:"ease-out"},{offset:a+.13,opacity:0,translate:"0 -28px",scale:"1.1 1.1"},{offset:1,opacity:0,translate:"0 -28px",scale:"1.1 1.1"}]; });
+  // play only while on screen
+  ktIO=new IntersectionObserver(es=>es.forEach(x=>anims.forEach(a=>x.isIntersecting?a.play():a.pause())));
+  ktIO.observe(kt);
+  // tap: skip straight to the ring (with sound), unless it's already ringing or whirling back
+  kt.addEventListener("click",()=>{
+    const t=(anims[0].currentTime||0)%D/D; if(t>.49&&t<.8) return;
+    anims.forEach(a=>{ a.currentTime=Math.floor((a.currentTime||0)/D)*D+D*.5-30; });
+    SFX.play("ding"); SFX.play("ding",.3);
+  });
 }
 
 /* Simmering pot drawing (see .pot styles). Steam puffs are one cloud shape reused. */
@@ -2206,17 +2257,10 @@ function bind(ev){
     pot.addEventListener("click",boil);
     pot.addEventListener("animationend",e=>{ if(e.animationName==="lidPop") pot.classList.remove("boil"); });
   }
-  // tomato kitchen timer (sign-up page): animate only while on screen; mouse hover or tap makes it ring
+  // tomato kitchen timer (sign-up page): a 12 s looping story, played only while on screen; tap makes it ring right away
   ktIO&&ktIO.disconnect(); ktIO=null;
   const kt=app.querySelector(".tomtimer");
-  if(kt){
-    ktIO=new IntersectionObserver(es=>es.forEach(x=>kt.classList.toggle("on",x.isIntersecting)));
-    ktIO.observe(kt);
-    const ring=()=>{ if(reduce.matches||kt.classList.contains("ring")) return; kt.classList.add("ring"); SFX.play("ding"); SFX.play("ding",.32); };
-    kt.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") ring(); });
-    kt.addEventListener("click",ring);
-    kt.addEventListener("animationend",e=>{ if(e.animationName==="ktShake") kt.classList.remove("ring"); });
-  }
+  if(kt&&!reduce.matches&&kt.animate) startTomTimer(kt);
   // cookbook
   const book=$("#book");
   if(book){
