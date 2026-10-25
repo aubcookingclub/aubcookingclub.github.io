@@ -1099,7 +1099,7 @@ const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long
    To ask something workshop-specific, add a field, e.g.
      {key:"pasta", label:"Pasta shape", type:"select", required:true, options:["Farfalle (bow ties)","Penne","Fusilli"]}  */
 const REGISTRATION = {
-  open: true,
+  open: false, // false = "Coming soon" page, nobody can sign up. Set to true when the next workshop's sign-ups open.
   sendTo: "mariammansour308@gmail.com", // FormSubmit's AJAX endpoint only accepts a real address (its random alias is rejected)
   workshop: "Our next workshop",
   when: "Date coming soon",
@@ -1490,8 +1490,8 @@ function registerView(){
   return `<div class="view"><div class="wrap reg">
     <span class="hand" style="font-size:26px">save your seat ✶</span>
     <h1>Sign up</h1>
-    <p class="lede">${escH(R.blurb)}</p>
-    <div class="when"><span class="chip">${escH(R.workshop)}</span><span class="chip alt">${escH(R.when)}</span>${R.where?`<span class="chip alt">${escH(R.where)}</span>`:""}</div>
+    <p class="lede">${R.open?escH(R.blurb):"Sign-ups for our next workshop open soon. Stay tuned!"}</p>
+    ${R.open?`<div class="when"><span class="chip">${escH(R.workshop)}</span><span class="chip alt">${escH(R.when)}</span>${R.where?`<span class="chip alt">${escH(R.where)}</span>`:""}</div>`:`<div class="when"><span class="chip">Coming soon</span></div>`}
     <div class="regcard"><span class="tape pink"></span>
       ${R.open?`
       ${R.sendTo?"":`<p class="regtest"><b>Test mode:</b> this form has no email address yet, so nothing you type is sent.</p>`}
@@ -1499,7 +1499,7 @@ function registerView(){
         ${R.fields.map(field).join("")}
         <label class="reghp" aria-hidden="true">Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="regrow"><button class="btn" type="submit">SAVE MY SEAT</button><span class="regnote">You'll get a WhatsApp message once the club confirms your place.</span></div>
-      </form>`:`<div class="regdone"><h2>Sign-ups are closed</h2><p>Keep an eye on our WhatsApp group for the next workshop!</p></div>`}
+      </form>`:`<div class="regdone">${potSVG()}<h2>Coming soon!</h2><p>We're still cooking up the next workshop. Sign-ups will open right here. Keep an eye on our WhatsApp group so you don't miss it!</p></div>`}
     </div>
   </div></div>`;
 }
