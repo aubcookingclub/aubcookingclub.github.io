@@ -1093,15 +1093,14 @@ const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long
 
 /* ---------- Workshop sign-up (edit this for each workshop) ----------
    sendTo:   where sign-ups are emailed, via FormSubmit (formsubmit.co, free, no account; "" = test mode, nothing is sent).
-             The first sign-up to a new address makes FormSubmit email an "Activate Form" link; click it once.
-             After that, the address can be swapped for the random alias FormSubmit gives you, to hide it from spammers.
+             The first sign-up from a new page address (e.g. the live site) makes FormSubmit email an "Activate Form" link; click it once.
    fields:   the questions, in order. Keep the "name" and "phone" keys: the sheet uses them for the WhatsApp message.
              type: "text" | "tel" | "email" | "textarea" | "select" (with options:[...]) | "radio" (with options:[...]).
    To ask something workshop-specific, add a field, e.g.
      {key:"pasta", label:"Pasta shape", type:"select", required:true, options:["Farfalle (bow ties)","Penne","Fusilli"]}  */
 const REGISTRATION = {
   open: true,
-  sendTo: "mariammansour308@gmail.com",
+  sendTo: "mariammansour308@gmail.com", // FormSubmit's AJAX endpoint only accepts a real address (its random alias is rejected)
   workshop: "Our next workshop",
   when: "Date coming soon",
   where: "AUB campus",
