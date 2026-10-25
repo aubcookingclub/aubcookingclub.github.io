@@ -296,6 +296,13 @@ main{min-height:60vh}
 @media (max-width:860px){.spread{grid-template-columns:1fr}.herophoto{order:-1;margin:10px 8px 40px}.herophoto .mini{left:-4px;width:34%}}
 
 .notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border-left:4px solid var(--terra);padding:12px 16px;border-radius:0 6px 6px 0;font-size:15px;margin:0 0 26px}
+/* PAN TOSS (pasta workshop page): tosses bow-tie pasta, beets and basil when it scrolls into view; tap to toss again. */
+.pantoss{display:block;width:min(240px,64vw);height:auto;margin:0 auto 18px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pantoss .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.pantoss .pan{transform-box:view-box;transform-origin:206px 118px}
+.pantoss .fd{transform-box:view-box;transform-origin:0 0}
+.pantoss .whoosh{opacity:0}
+.pantoss:focus-visible{outline:3px solid var(--terra);outline-offset:4px;border-radius:8px}
 /* CUPCAKE (cake workshop page): a piping bag frosts it when it scrolls into view; tap to frost a fresh one. */
 .cupcake{display:block;width:min(190px,52vw);height:auto;margin:6px auto 22px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .cupcake *{transform-box:fill-box}
@@ -615,6 +622,32 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* Pan toss drawing (see .pantoss styles). Each food piece sits at its resting spot via an inline transform. */
+const PAN_FOOD=[ // [kind, x, y, rotation]
+  ["bow",78,111,-15],["bow",98,107,10],["bow",119,111,25],["bow",89,116,-30],["bow",109,117,5],
+  ["beet",69,116,10],["beet",127,115,-20],["beet",100,114,30],["leaf",84,108,-20],["leaf",116,107,30]];
+function panSVG(){
+  const shape={
+    bow:c=>`<path class="ln" stroke-width="2" fill="${c}" d="M-9-5q4 1 9 5q5-4 9-5q-1 5 0 10q-4-1-9-5q-5 4-9 5q1-5 0-10z"/><circle cx="0" cy="0" r="1.8" fill="#463C35"/>`,
+    beet:()=>`<rect class="ln" stroke-width="2" x="-4" y="-4" width="8" height="8" rx="2" fill="#C26A86"/>`,
+    leaf:()=>`<path class="ln" stroke-width="2" fill="#A5B49C" d="M-7 0q7-8 14 0q-7 8-14 0z"/><path d="M-5 0h10" stroke="#3F5545" stroke-width="1.4" stroke-linecap="round"/>`};
+  const food=PAN_FOOD.map(([k,x,y,r],i)=>`<g class="fd" style="transform:translate(${x}px,${y}px) rotate(${r}deg)">${shape[k](i%2?"#D98CA0":"#E8BFBE")}</g>`).join("");
+  return `<svg class="pantoss" viewBox="0 0 220 160" role="img" aria-label="A pan tossing bow-tie pasta, beets and basil. Tap to toss again." tabindex="0">
+    <path class="whoosh ln" fill="none" stroke-width="2.5" d="M40 70q-8 14-2 28M160 66q8 14 2 28M52 52q-6 10-2 20"/>
+    <g class="pan">
+      <ellipse class="ln" cx="98" cy="118" rx="50" ry="9" fill="#2F4235"/>
+    </g>
+    ${food}
+    <g class="pan">
+      <path class="ln" fill="#3F5545" d="M146 115h40v7h-40z"/>
+      <path class="ln" fill="#C98975" d="M184 113h22q5 0 5 5.5t-5 5.5h-22z"/>
+      <path class="ln" fill="#3F5545" d="M48 118q2 22 26 24h48q24-2 26-24a50 9 0 0 1-100 0z"/>
+      <path d="M58 126q4 8 14 10" fill="none" stroke="#F7F2E8" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+      <circle cx="80" cy="134" r="3.4" fill="#E8BFBE"/><circle cx="116" cy="134" r="3.4" fill="#E8BFBE"/>
+      <path fill="none" stroke="#F7F2E8" stroke-width="2.5" stroke-linecap="round" d="M84 128q3-4 6 0M106 128q3-4 6 0M95 133q3 3 6 0"/>
+    </g>
+  </svg>`;
+}
 /* Cupcake drawing (see .cupcake styles). Frosting layers, cherry and sprinkles are drawn finished; JS hides and pipes them. */
 function cupcakeSVG(){
   const sprinkles=[[72,104,20,"#F1DAA4"],[88,99,-30,"#B6CED5"],[112,100,40,"#FFFDF8"],[128,104,-15,"#A5B49C"],[100,107,70,"#C98975"],[64,101,60,"#B6CED5"],
@@ -840,7 +873,7 @@ function eventView(e){
         <button class="grinder" data-kind="${e.theme==="cake"?"sprinkles":"spice"}" aria-label="${e.theme==="cake"?"Add some sprinkles":"Add a pinch of spice"}">${grinderSVG()}</button>
       </div>
     </section>
-    ${e.theme==="cake"?cupcakeSVG():""}
+    ${e.theme==="cake"?cupcakeSVG():e.theme==="pasta"?panSVG():""}
     <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
     <div class="gallery">${tiles}</div>
   </div>
@@ -910,7 +943,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io, potIO, grIO, rollIO, cakeIO;
+let io, potIO, grIO, rollIO, cakeIO, panIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -929,6 +962,32 @@ function bind(ev){
   // tappable stickers
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
   // cupcake: a piping bag frosts it once when it comes into view; tap / click / Enter to frost a fresh one
+  // pan toss: tosses the food once when it comes into view; tap / click / Enter to toss again
+  panIO&&panIO.disconnect(); panIO=null;
+  const pt=app.querySelector(".pantoss");
+  if(pt&&!reduce.matches){
+    const pans=[...pt.querySelectorAll(".pan")], fds=[...pt.querySelectorAll(".fd")], wh=pt.querySelector(".whoosh");
+    let busy=false; const T=2200, Rn=(a,b)=>a+Math.random()*(b-a);
+    const toss=()=>{
+      if(busy) return; busy=true;
+      const pk=[["0,0",0,0],["0,4",3,.18],["-4,-8",-9,.3],["0,-2",-3,.42],["0,0",0,.72],["0,5",2,.8],["0,-1",-1,.9],["0,0",0,1]]
+        .map(([t,r,o])=>({transform:`translate(${t.replace(",","px,")}px) rotate(${r}deg)`,offset:o,easing:"ease-in-out"}));
+      pans.forEach(p=>p.animate(pk,{duration:T}));
+      wh.animate([{opacity:0},{opacity:0,offset:.3},{opacity:.6,offset:.38},{opacity:0,offset:.55},{opacity:0}],{duration:T});
+      fds.forEach((f,i)=>{
+        const [,x,y,r]=PAN_FOOD[i], dx=Rn(-16,16), up=Rn(55,95), spin=(Math.random()<.5?-1:1)*360*Math.ceil(Rn(0,2));
+        const at=(X,Y,R,o,e="ease-in-out")=>({transform:`translate(${X}px,${Y}px) rotate(${R}deg)`,offset:o,easing:e});
+        // flight: fast launch that slows near the top, then falls faster (like gravity)
+        f.animate([at(x,y,r,0),at(x,y+3,r,.18),at(x-2,y-6,r,.3,"cubic-bezier(.2,.7,.4,1)"),at(x+dx,y-up,r+spin/2,.55,"cubic-bezier(.6,0,.8,.4)"),
+          at(x,y+3,r+spin,.8),at(x,y+4,r+spin,.88),at(x,y,r+spin,1)],{duration:T,delay:i*25});
+      });
+      setTimeout(()=>{busy=false;},T+fds.length*25);
+    };
+    panIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ panIO.disconnect(); setTimeout(toss,250); } }),{threshold:.6});
+    panIO.observe(pt);
+    pt.addEventListener("click",toss);
+    pt.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toss(); } });
+  }
   cakeIO&&cakeIO.disconnect(); cakeIO=null;
   const cup=app.querySelector(".cupcake");
   if(cup&&!reduce.matches){
