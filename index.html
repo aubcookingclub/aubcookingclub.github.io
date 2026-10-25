@@ -84,16 +84,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .mobilemenu button{display:block;width:100%;text-align:left;background:none;border:0;padding:6px 0;font-family:var(--serif);font-size:30px;font-weight:700;color:#3F5545}
 .mobilemenu .hand{font-size:22px;margin-top:8px}
 @media (max-width:760px){.navlinks{display:none}.menubtn{display:inline-block}}
-/* sound effects on/off (off by default) */
+/* header spacing */
 .nav .wrap{gap:6px}
 .navlinks{margin-left:auto}
-.sndbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:none;color:var(--olive);display:grid;place-items:center;transition:background .2s}
-.sndbtn:hover{background:var(--paper-2)}
-.sndbtn svg{width:23px;height:23px}
-.sndbtn .waves,.sndbtn[aria-pressed="true"] .mute{display:none}
-.sndbtn[aria-pressed="true"] .waves{display:inline}
-@media (max-width:760px){.sndbtn{margin-left:auto}}
-@media (prefers-reduced-motion:reduce){.sndbtn{display:none}}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:10px;background:var(--olive);color:var(--paper);border:0;border-radius:999px;padding:15px 26px;font-weight:700;font-size:14px;letter-spacing:.1em;
@@ -616,9 +609,6 @@ img.fade.ok{opacity:1}
       <button data-go="memories">OUR MEMORIES</button>
       <button data-go="join">JOIN THE TABLE</button>
     </nav>
-    <button class="sndbtn" aria-pressed="false" aria-label="Sound effects" title="Sound effects: off">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor" fill-opacity=".15"/><g class="waves"><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M18 7a7 7 0 0 1 0 10"/></g><g class="mute"><path d="M16 9.5l5 5M21 9.5l-5 5"/></g></svg>
-    </button>
     <button class="menubtn" aria-expanded="false" aria-controls="mmenu">Menu</button>
   </div>
 </header>
@@ -1078,12 +1068,11 @@ const $=(s,el=document)=>el.querySelector(s);
 const app=$("#app");
 const reduce=matchMedia("(prefers-reduced-motion: reduce)");
 /* ---------- Sound effects ----------
-   Off by default: the speaker button in the header turns them on (remembered on this device only).
+   Always on: there is no on/off switch (the club asked for that).
    Every sound is synthesised in the browser with the Web Audio API, so there are no sound files.
-   Sounds only ever play in response to something on the page, and never for reduced-motion visitors. */
+   Sounds only ever play in response to something on the page; browsers stay silent until the visitor's first tap or click. */
 const SFX=(()=>{
-  let ac=null, master=null, on=false;
-  try{ on=localStorage.getItem("aubcc-sound")==="on"; }catch(e){}
+  let ac=null, master=null; // sound effects are always on (the club asked for no on/off switch)
   function ctx(){
     if(!ac){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null; ac=new AC(); master=ac.createGain(); master.gain.value=.5; master.connect(ac.destination); }
     if(ac.state==="suspended") ac.resume(); return ac;
@@ -1129,11 +1118,8 @@ const SFX=(()=>{
     shutter:t=>{ noise(t,{dur:.04,f0:3400,q:.9,vol:.75,attack:.001}); noise(t+.085,{dur:.07,f0:1700,q:.9,vol:.55,attack:.001}); } // camera
   };
   return {
-    play(name,delay=0){ if(!on||reduce.matches||!S[name]) return; try{ if(ctx()) S[name](ac.currentTime+.01+delay); }catch(e){} },
-    // plays even when the speaker button is off; only for sounds the club asked to always hear (the download shutter)
-    always(name,delay=0){ if(!S[name]) return; try{ if(ctx()) S[name](ac.currentTime+.01+delay); }catch(e){} },
-    get on(){ return on; },
-    set(v){ on=!!v; try{ localStorage.setItem("aubcc-sound",on?"on":"off"); }catch(e){} if(on) ctx(); }
+    play(name,delay=0){ if(!S[name]) return; try{ if(ctx()) S[name](ac.currentTime+.01+delay); }catch(e){} },
+    always(name,delay=0){ this.play(name,delay); } // kept for the download shutter; every sound is always on now
   };
 })();
 let downloads=true; /* standard browser downloads */
@@ -2119,15 +2105,8 @@ let lbLastTap=0;
 lbImg.addEventListener("touchend",e=>{const t=Date.now(),c=e.changedTouches[0]; if(t-lbLastTap<300){heartAt(c.clientX,c.clientY);lbLastTap=0}else lbLastTap=t},{passive:true});
 
 /* photo viewer: downloading packs the photo into a little takeaway box, "to go!" */
-/* speaker button: turns the sound effects on/off; the choice is remembered on this device */
-(()=>{
-  const b=$(".sndbtn"); if(!b) return;
-  const show=()=>{ b.setAttribute("aria-pressed",SFX.on); b.title="Sound effects: "+(SFX.on?"on":"off"); };
-  show();
-  b.addEventListener("click",()=>{ SFX.set(!SFX.on); show(); toast(SFX.on?"Sound effects on":"Sound effects off"); SFX.play("pop"); });
-})();
-/* camera shutter "ka-chick" when a photo is downloaded (part of the site's sound effects, so it follows the speaker button) */
-function shutterSound(){ SFX.always("shutter"); } /* downloads always click, even with the speaker button off */
+/* camera shutter "ka-chick" when a photo is downloaded */
+function shutterSound(){ SFX.play("shutter"); }
 function toGo(p){
   if(reduce.matches) return;
   const g=mk(`<svg class="togo" viewBox="0 0 130 130" aria-hidden="true"><g class="all">
