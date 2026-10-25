@@ -853,6 +853,8 @@ const SFX=(()=>{
   };
   return {
     play(name,delay=0){ if(!on||reduce.matches||!S[name]) return; try{ if(ctx()) S[name](ac.currentTime+.01+delay); }catch(e){} },
+    // plays even when the speaker button is off; only for sounds the club asked to always hear (the download shutter)
+    always(name,delay=0){ if(!S[name]) return; try{ if(ctx()) S[name](ac.currentTime+.01+delay); }catch(e){} },
     get on(){ return on; },
     set(v){ on=!!v; try{ localStorage.setItem("aubcc-sound",on?"on":"off"); }catch(e){} if(on) ctx(); }
   };
@@ -1848,7 +1850,7 @@ lbImg.addEventListener("touchend",e=>{const t=Date.now(),c=e.changedTouches[0]; 
   b.addEventListener("click",()=>{ SFX.set(!SFX.on); show(); toast(SFX.on?"Sound effects on":"Sound effects off"); SFX.play("pop"); });
 })();
 /* camera shutter "ka-chick" when a photo is downloaded (part of the site's sound effects, so it follows the speaker button) */
-function shutterSound(){ SFX.play("shutter"); }
+function shutterSound(){ SFX.always("shutter"); } /* downloads always click, even with the speaker button off */
 function toGo(p){
   if(reduce.matches) return;
   const g=mk(`<svg class="togo" viewBox="0 0 130 130" aria-hidden="true"><g class="all">
