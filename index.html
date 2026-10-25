@@ -1058,12 +1058,22 @@ const PHOTOS = {
     [1600,1067,"The busy kitchen full of cooks"]
   ]
 };
+/* Which photos each workshop album shows, and in what order (photo numbers = the NN in <slug>-NN.jpg; the first is the cover).
+   null = show every photo in number order. Made with the photo picker (.claude/photo-picker.html in the preview). */
+const PHOTO_PICKS = {
+  "cake-for-a-cause": null,
+  "twirl-in-pink": null
+};
 function realPhotos(slug){
-  return PHOTOS[slug].map(([w,h,alt],i)=>{
-    const file=`${slug}-${String(i+1).padStart(2,"0")}.jpg`;
-    return {url:`photos/${slug}/${file}`, thumb:`photos/${slug}/thumb/${file}`, file, w, h, alt};
+  const all=PHOTOS[slug].map(([w,h,alt],i)=>{
+    const n=i+1, file=`${slug}-${String(n).padStart(2,"0")}.jpg`;
+    return {n, url:`photos/${slug}/${file}`, thumb:`photos/${slug}/thumb/${file}`, file, w, h, alt};
   });
+  const pick=PHOTO_PICKS[slug];
+  return pick&&pick.length ? pick.map(n=>all[n-1]).filter(Boolean) : all;
 }
+/* a specific photo by its number (e.g. for the home collage); falls back to the cover if that photo is hidden */
+const photoNo=(slug,n)=>{ const ps=EVENTS.find(e=>e.slug===slug).photos; return ps.find(p=>p.n===n)||ps[0]; };
 
 /* ---------- Content (editable starter data; an admin dashboard would replace this) ---------- */
 const EVENTS = [
@@ -1076,7 +1086,7 @@ const EVENTS = [
     date:"2026-10-23", organizers:null,
     desc:"Things got a little pink in the kitchen! From making pasta to mixing up pink lemonade, this workshop brought creativity, good food, and great company together.",
     theme:"pasta", awareness:true, variant:"v-clip", tape:"blue", stick:"i-pasta",
-    photos:realPhotos("twirl-in-pink"), recipePhotos:[17,16],
+    photos:realPhotos("twirl-in-pink"), recipePhotos:[18,17], // photo numbers for each recipe card
     recipes:[
       { label:"Pink Pasta", name:"Creamy Pink Pasta", time:"30 min", serves:"4",
         ingredients:["400 g pasta: farfalle, fusilli or penne","200 g crème fraîche","3 tbsp tomato paste","2 tbsp olive oil","2 garlic cloves","50 g Parmesan, grated","1 tsp Italian seasoning","Salt and black pepper","Up to ½ cup pasta cooking water","Optional: cooked chicken and cooked onions, to serve"],
@@ -1387,8 +1397,7 @@ const CHEF_ITEMS=[ // things he tosses out of the pot when tapped
 
 /* ---------- Views ---------- */
 function homeView(){
-  const ph=(slug,i)=>EVENTS.find(e=>e.slug===slug).photos[i];
-  const ph1=ph("twirl-in-pink",10), ph2=ph("cake-for-a-cause",23), pk1=ph("twirl-in-pink",3), pk2=ph("cake-for-a-cause",19);
+  const ph1=photoNo("twirl-in-pink",11), ph2=photoNo("cake-for-a-cause",24), pk1=photoNo("twirl-in-pink",4), pk2=photoNo("cake-for-a-cause",20); // collage + cookbook peeks, by photo number
   return `
   <section class="hero view">
     <div class="wrap">
@@ -1594,7 +1603,7 @@ function recipeBlock(e){
   </div></section>`;
 }
 function recipeCard(e,r,k){
-  const rp=r.photo?{url:r.photo,alt:r.name}:(e.photos[(e.recipePhotos||[])[k]]||e.photos[0]);
+  const rp=r.photo?{url:r.photo,alt:r.name}:((e.recipePhotos||[])[k]?photoNo(e.slug,e.recipePhotos[k]):e.photos[0]);
   return `<div class="rcard reveal" data-recipe="${k}">
       <button class="closed" aria-expanded="false" aria-controls="rbody${k}">
         <h3>${r.label||"The Recipe"}</h3><span>Open for something delicious.</span>
