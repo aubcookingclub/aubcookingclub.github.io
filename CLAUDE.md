@@ -12,6 +12,7 @@ Photos are the club's real workshop photos (see the photos note below). Events h
 - **Keep all memory for this project inside the AUB COOKING WEBSITE folder.** Save project notes in the "Notes" section of this CLAUDE.md, never in the user-profile memory folder (`~/.claude/projects/.../memory`).
 
 ## Notes
+- Preview while working (user's request, 2026-10-26): keep the site open in the Browser pane beside the chat while making changes, so the user can watch them. Start it with the `site-live-preview` entry in `.claude/launch.json` (serves this folder at http://localhost:8090 via `.claude/serve.ps1`), show the preview pane, and reload it after each change.
 - GitHub: public repo https://github.com/aubcookingclub/aubcookingclub.github.io (owned by the free `aubcookingclub` organization; `mariammansour308` is its admin), remote `origin`, branch `main`. Signed in with GitHub CLI as `mariammansour308`.
 - Live site (GitHub Pages, free, from `main` / root): https://aubcookingclub.com/ (HTTPS enforced). Every push to `main` goes live, so a push is a publish. `www.aubcookingclub.com` and `aubcookingclub.github.io` redirect to it.
 - Custom domain `aubcookingclub.com` is registered at GoDaddy (the user manages it; no API access). DNS set 2026-10-24: four A records for `@` → 185.199.108.153 / .109 / .110 / .111, and CNAME `www` → aubcookingclub.github.io. The repo's `CNAME` file (created by GitHub) must stay.
