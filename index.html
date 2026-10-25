@@ -67,13 +67,13 @@ button{font:inherit;color:inherit;cursor:pointer}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* NAV */
-.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1.5px dashed var(--line)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-weight:800;color:var(--olive);font-size:19px;letter-spacing:-.01em;background:none;border:0;padding:0}
 .logo img{width:44px;height:44px;display:block;flex:none}
 .navlinks{display:flex;gap:6px}
 .navlinks button{background:none;border:0;padding:8px 14px;font-weight:700;font-size:14px;letter-spacing:.08em;color:var(--olive);border-radius:999px;position:relative}
-.navlinks button[aria-current="page"]::after{content:"";position:absolute;left:14px;right:14px;bottom:2px;height:6px;background:var(--butter);z-index:-1;border-radius:3px;transform:rotate(-1deg)}
+.navlinks button[aria-current="page"]::after{content:"";position:absolute;left:14px;right:14px;bottom:2px;height:6px;background:var(--butter);z-index:-1;border-radius:3px}
 .navlinks button:hover{background:var(--paper-2)}
 .menubtn{display:none;background:var(--olive);color:var(--paper);border:0;border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px}
 .mobilemenu{position:fixed;top:calc(env(safe-area-inset-top,0px) + 76px);right:14px;left:14px;z-index:70;background:var(--card);color:var(--card-ink);border-radius:6px;padding:26px 24px 18px;
@@ -99,9 +99,12 @@ main{min-height:60vh}
 /* HERO */
 .hero{position:relative;padding:clamp(36px,7vw,90px) 0 40px}
 .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center}
-.hero h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(50px,9vw,118px);line-height:.88;letter-spacing:-.035em;margin:0;font-variation-settings:"SOFT" 100}
+/* Headline stays on exactly three lines: the size follows the text column's width
+   (longest line, "Great memories.", is ~6.9em wide). */
+.hero h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(38px,calc(12.8vw - 4px),100px);line-height:.88;letter-spacing:-.035em;margin:0;font-variation-settings:"SOFT" 100}
+@media (min-width:861px){.hero h1{font-size:min(calc(7.3vw - 6px),90px)}}
 .hero h1 span{display:block;overflow:hidden;padding-bottom:.06em}
-.hero h1 span i{display:block;font-style:normal;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 span i{display:block;font-style:normal;white-space:nowrap;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
 .hero h1 span:nth-child(2) i{animation-delay:.08s;padding-left:.6em}
 .hero h1 span:nth-child(3) i{animation-delay:.16s}
 .hero h1 em{font-style:italic;font-weight:600;position:relative;white-space:nowrap}
@@ -119,13 +122,15 @@ main{min-height:60vh}
 .tape.pink{background:rgba(232,191,190,.88)}
 /* `backwards` (not `both`) so the finished drop-in doesn't keep overriding the hover transform. */
 .p1{width:62%;height:68%;right:4%;top:2%;--r:5deg;transform:rotate(var(--r));animation:drop .6s .3s backwards}
-.p2{width:50%;height:52%;left:0;bottom:4%;--r:-7deg;transform:rotate(var(--r));animation:drop .6s .42s backwards}
+.p2{width:45%;height:48%;left:0;bottom:0;--r:-7deg;transform:rotate(var(--r));animation:drop .6s .42s backwards}
+/* keep "pasta night!" readable: sit it on the right of its photo, clear of the second photo */
+.p1 figcaption{text-align:right;padding-right:16px}
 .collage .polaroid:hover{transform:rotate(0) scale(1.02);z-index:3}
 @keyframes drop{from{opacity:0;transform:translateY(-30px) rotate(calc(var(--r) * -2)) scale(1.05)}to{opacity:1;transform:rotate(var(--r))}}
 .sticker{position:absolute;transition:transform .3s cubic-bezier(.3,1.6,.5,1);animation:settle .6s both}
 .sticker:hover{transform:rotate(14deg) scale(1.08)}
 @keyframes settle{from{opacity:0;transform:scale(.4) rotate(-30deg)}to{opacity:1}}
-.badge{width:118px;height:118px;right:-2%;bottom:6%;animation-delay:.65s}
+.badge{width:118px;height:118px;right:-2%;bottom:-5%;animation-delay:.65s}
 .badge .ring{animation:spin 30s linear infinite;transform-origin:50% 50%}
 @keyframes spin{to{transform:rotate(360deg)}}
 .fork{width:64px;left:44%;top:-4%;animation-delay:.72s}
@@ -180,7 +185,9 @@ main{min-height:60vh}
 .pagehead p{font-size:19px;margin:22px 0 0;max-width:40ch}
 .pagehead .doodle{position:absolute;right:4%;top:28%;width:clamp(80px,12vw,140px);transform:rotate(12deg)}
 .chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:clamp(34px,4vw,52px) clamp(24px,3vw,40px);padding:30px 0 110px}
-.chapter{position:relative;background:none;border:0;padding:0;text-align:left;display:block;width:100%;transition:transform .25s ease}
+/* cards in a row share one height (the sheet stretches), so their bottoms line up */
+.chapter{position:relative;background:none;border:0;padding:0;text-align:left;display:flex;flex-direction:column;width:100%;transition:transform .25s ease}
+.chapter .sheet{flex:1}
 .chapter .sheet{position:relative;background:var(--card);color:var(--card-ink);padding:16px 16px 22px;box-shadow:0 6px 16px var(--shadow);transition:box-shadow .25s ease}
 .chapter .photo{position:relative;overflow:hidden;aspect-ratio:4/3.3;transition:transform .25s ease}
 .chapter .photo img{width:100%;height:100%;object-fit:cover}
@@ -193,16 +200,19 @@ main{min-height:60vh}
 .chapter .stick{position:absolute;top:-16px;right:-12px;width:70px;transform:scale(.6) rotate(-20deg);opacity:0;transition:all .25s cubic-bezier(.3,1.6,.5,1);z-index:2}
 .chapter:hover,.chapter:focus-visible{transform:translateY(-8px)}
 .chapter:hover .sheet{box-shadow:0 16px 30px var(--shadow)}
-.chapter:hover .photo{transform:rotate(2deg)}
+/* hover: photo stays straight and zooms gently inside its frame (no tilt) */
+.chapter .photo img{transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.chapter:hover .photo img{transform:scale(1.05)}
 .chapter:hover .look,.chapter:focus-visible .look{opacity:1;transform:none}
 .chapter:hover .stick,.chapter:focus-visible .stick{opacity:1;transform:scale(1) rotate(-8deg)}
 @media (hover:none){.chapter .look{opacity:1;transform:none}}
 /* variants */
-.chapter.v-clip .sheet{clip-path:polygon(0 1.5%,6% 0,14% 1.2%,22% 0,31% 1%,40% 0,52% 1.4%,63% .2%,72% 1.3%,84% 0,93% 1%,100% .3%,100% 100%,0 100%);background:var(--paper-2);padding-top:22px}
+/* neat scalloped top edge (even half-circle bites every 20px) instead of a jagged torn edge */
+.chapter.v-clip .sheet{-webkit-mask:radial-gradient(circle at 10px 0,transparent 5.5px,#000 6px) 0 0/20px 100% repeat-x;mask:radial-gradient(circle at 10px 0,transparent 5.5px,#000 6px) 0 0/20px 100% repeat-x;background:var(--paper-2);padding-top:22px}
 .chapter.v-clip .sheet{background:#F1DAA4}
 .chapter.v-clip .num{color:#7a3f30}
 .chapter.v-pol{margin-top:22px}
-.chapter.v-pol .sheet{transform:rotate(-1.2deg)}
+.chapter.v-pol .sheet{transform:rotate(-.6deg)}
 .chapter.v-pol .tape{top:-12px}
 .chapter.v-blue .sheet{background:#DCE8EB}
 .chapter.soon{cursor:default}
@@ -243,8 +253,9 @@ main{min-height:60vh}
 }
 
 /* AWARENESS RIBBON (next to the chapter number on .aware workshop pages). Draws itself in, then sways; hover or tap makes it wiggle. */
-.numrow{display:flex;align-items:flex-end;gap:12px}
-.ribbon{position:relative;width:64px;flex:none;margin:-30px 0 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* ribbon sits centred beside "Chapter 0X" with its own room, instead of being pulled up toward the back link */
+.numrow{display:flex;align-items:center;gap:10px;margin-top:8px}
+.ribbon{position:relative;width:52px;flex:none;margin:-14px 0 -14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ribbon svg{width:100%;height:auto;display:block;overflow:visible}
 .ribbon .sway{transform-box:view-box;transform-origin:40px 8px;animation:ribSway 4s 1.4s ease-in-out infinite}
 .ribbon .band{fill:none;stroke-dasharray:1;stroke-dashoffset:1;animation:ribDraw .6s cubic-bezier(.5,0,.3,1) forwards}
@@ -261,7 +272,7 @@ main{min-height:60vh}
 @keyframes ribFade{to{opacity:.9}}
 @keyframes ribSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 @keyframes ribWiggle{0%,100%{transform:none}20%{transform:rotate(-12deg) scale(1.06)}45%{transform:rotate(10deg) scale(1.06)}70%{transform:rotate(-5deg)}}
-@media (max-width:860px){.ribbon{width:50px;margin-top:-26px}}
+@media (max-width:860px){.ribbon{width:44px;margin:-10px 0 -10px}}
 @media (prefers-reduced-motion:reduce){
   .ribbon *{animation:none!important}
   .ribbon .band{stroke-dashoffset:0}
@@ -269,7 +280,7 @@ main{min-height:60vh}
 }
 
 /* EVENT PAGE */
-.back{background:none;border:0;padding:8px 0;font-weight:700;font-size:14px;letter-spacing:.08em;color:var(--olive);display:inline-flex;gap:8px;align-items:center;margin-top:26px}
+.back{background:none;border:0;padding:12px 0;min-height:44px;font-weight:700;font-size:14px;letter-spacing:.08em;color:var(--olive);display:inline-flex;gap:8px;align-items:center;margin-top:34px}
 .spread{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(24px,5vw,70px);align-items:center;padding:24px 0 60px}
 .spread .num{font-family:var(--hand);font-size:30px;color:var(--terra)}
 .spread h1{font-family:var(--serif);font-weight:900;color:var(--olive);font-size:clamp(44px,6.6vw,88px);line-height:.92;letter-spacing:-.035em;margin:4px 0 6px}
@@ -336,6 +347,12 @@ main{min-height:60vh}
 .tile.taped{overflow:visible}
 .tile.taped .tape{z-index:2;width:70px;margin-left:-35px}
 @media (max-width:560px){.gallery{columns:2;column-gap:10px}.tile{margin-bottom:10px}.tile .zoom{display:none}.tile.framed{padding:6px 6px 22px}}
+/* Balanced album: JS deals each photo into the shortest column so the columns end at nearly the same height.
+   Without JS the plain CSS columns above still work. */
+.gallery.balanced{columns:auto;display:flex;align-items:flex-start;gap:16px}
+.gallery.balanced .gcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:16px}
+.gallery.balanced .tile{margin:0}
+@media (max-width:560px){.gallery.balanced,.gallery.balanced .gcol{gap:10px}}
 
 /* RECIPE */
 .recipe-sec{padding:70px 0 110px;text-align:center}
@@ -381,7 +398,10 @@ main{min-height:60vh}
 footer{background:var(--olive);color:var(--paper);position:relative;margin-top:30px;padding:90px 0 calc(40px + env(safe-area-inset-bottom,0px))}
 :root[data-theme="dark"] footer{background:#1F2B23;color:#F7F2E8}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) footer{background:#1F2B23;color:#F7F2E8}}
-footer::before{content:"";position:absolute;left:0;right:0;top:-22px;height:24px;background:inherit;clip-path:polygon(0 60%,3% 30%,7% 55%,11% 20%,15% 50%,20% 25%,25% 60%,30% 30%,35% 55%,40% 15%,45% 50%,50% 30%,55% 60%,60% 20%,65% 50%,70% 30%,75% 60%,80% 25%,85% 55%,90% 20%,95% 50%,100% 30%,100% 100%,0 100%)}
+/* smooth wave on the footer's top edge, same rhythm as the sage wavy divider (80px per wave) */
+footer::before{content:"";position:absolute;left:0;right:0;top:-22px;height:24px;background:inherit;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='24'%3E%3Cpath d='M0 24V13Q20 3 40 13T80 13V24Z'/%3E%3C/svg%3E") 0 0/80px 24px repeat-x;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='24'%3E%3Cpath d='M0 24V13Q20 3 40 13T80 13V24Z'/%3E%3C/svg%3E") 0 0/80px 24px repeat-x}
 footer .wrap{text-align:center}
 footer h2{font-family:var(--serif);font-size:clamp(44px,8vw,96px);font-weight:900;margin:0;letter-spacing:-.035em;line-height:.95;color:#F1DAA4}
 footer p{margin:14px auto 34px;max-width:40ch;font-size:18px}
@@ -881,7 +901,7 @@ function memoriesView(){
 function eventView(e){
   const cover=e.photos[0], mini=e.photos[3];
   const tiles=e.photos.map((p,i)=>{
-    const deco = i%7===2?"framed": (i%9===5?"taped":"");
+    const deco = ""; /* every photo gets the same clean look (no random frames/tape) */
     return `<button class="tile ${deco}" data-idx="${i}" aria-label="Open photo ${i+1} of ${e.photos.length}">
       ${deco==="taped"?`<span class="tape ${i%2?"blue":""}"></span>`:""}
       <img class="fade" ${FADE} src="${p.thumb}" alt="${p.alt}, ${e.subtitle}" width="${p.w}" height="${p.h}" loading="lazy" decoding="async">
@@ -973,6 +993,19 @@ document.addEventListener("click",e=>{
 
 /* ---------- Bindings per view ---------- */
 let io, potIO, grIO, rollIO, cakeIO, panIO, snapIO;
+/* Balanced photo album: deal photos, in order, into whichever column is currently shortest (heights come from
+   each photo's known width/height, so it works before images load). Re-deals only when the column count changes. */
+function balanceGallery(g){
+  const w=g.clientWidth, n=w<=560?2:Math.max(2,Math.min(4,Math.floor((w+16)/(220+16))));
+  if(g.dataset.cols==String(n)) return;
+  const tiles=[...g.querySelectorAll(".tile")].sort((a,b)=>a.dataset.idx-b.dataset.idx);
+  const cols=Array.from({length:n},()=>{const c=document.createElement("div");c.className="gcol";return c}), h=new Array(n).fill(0);
+  tiles.forEach(t=>{const im=t.querySelector("img"), r=(+im.getAttribute("height")||1)/(+im.getAttribute("width")||1);
+    let k=0; for(let i=1;i<n;i++) if(h[i]<h[k]-1e-6) k=i;
+    cols[k].appendChild(t); h[k]+=r+.07; /* .07 ≈ the gap between photos, in column widths */ });
+  g.replaceChildren(...cols); g.classList.add("balanced"); g.dataset.cols=n;
+}
+let galT; addEventListener("resize",()=>{clearTimeout(galT); galT=setTimeout(()=>{const g=app.querySelector(".gallery"); if(g) balanceGallery(g)},150)});
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -1183,6 +1216,7 @@ function bind(ev){
   }
   if(ev){
     app.querySelectorAll(".tile").forEach(t=>t.addEventListener("click",()=>openLB(ev,+t.dataset.idx)));
+    const gal=app.querySelector(".gallery"); if(gal) balanceGallery(gal);
     app.querySelectorAll(".rcard").forEach(rc=>{
       const btn=rc.querySelector(".closed"), r=recipesOf(ev)[+rc.dataset.recipe];
       btn.addEventListener("click",()=>{const o=rc.classList.toggle("open");btn.setAttribute("aria-expanded",o)});
