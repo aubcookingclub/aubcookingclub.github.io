@@ -296,6 +296,14 @@ main{min-height:60vh}
 @media (max-width:860px){.spread{grid-template-columns:1fr}.herophoto{order:-1;margin:10px 8px 40px}.herophoto .mini{left:-4px;width:34%}}
 
 .notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border-left:4px solid var(--terra);padding:12px 16px;border-radius:0 6px 6px 0;font-size:15px;margin:0 0 26px}
+/* "PHONE EATS FIRST" (photo album heading): the phone lines up a shot, snaps it with a flash, and a tiny photo drops toward the album. */
+.snapcam{flex:none;align-self:center;width:min(132px,34vw);height:auto;overflow:visible;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.snapcam *{transform-box:fill-box}
+.snapcam .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.snapcam .ph{transform-origin:50% 100%}
+.snapcam .brk,.snapcam .btn,.snapcam .flash,.snapcam .snap{transform-origin:50% 50%}
+.snapcam .flash,.snapcam .sflash,.snapcam .snap,.snapcam .thumb{opacity:0}
+.snapcam:focus-visible{outline:3px solid var(--terra);outline-offset:4px;border-radius:8px}
 /* PAN TOSS (pasta workshop page): tosses bow-tie pasta, beets and basil when it scrolls into view; tap to toss again. */
 .pantoss{display:block;width:min(240px,64vw);height:auto;margin:0 auto 18px;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .pantoss .ln{stroke:#463C35;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -622,6 +630,27 @@ function saveFile(filename,data){
 }
 const use=(id,cls="",style="")=>`<svg class="${cls}" style="${style}" aria-hidden="true"><use href="#${id}"/></svg>`;
 const FADE=`onload="this.classList.add('ok')" onerror="this.classList.add('ok')"`; /* pairs with class="fade" */
+/* "Phone eats first" drawing (see .snapcam styles): a phone framing a plate, with a flash, a "snap!" and a tiny photo. */
+function snapSVG(){
+  const rays=Array.from({length:8},(_,i)=>{const a=i*Math.PI/4,c=Math.cos(a),s=Math.sin(a);return `M${(46+c*13).toFixed(1)} ${(20+s*13).toFixed(1)}L${(46+c*22).toFixed(1)} ${(20+s*22).toFixed(1)}`}).join("");
+  return `<svg class="snapcam" viewBox="0 0 150 116" role="img" aria-label="A phone taking a photo of food. Tap to snap again." tabindex="0">
+    <g class="ph">
+      <rect class="ln" x="22" y="10" width="48" height="92" rx="9" fill="#E8BFBE"/>
+      <rect class="ln" x="27" y="19" width="38" height="66" rx="4" fill="#FBEFD5" stroke-width="2.5"/>
+      <path d="M40 19v66M52 19v66M27 41h38M27 63h38" stroke="#FFFDF8" stroke-width="1.4" opacity=".9"/>
+      <circle class="ln" cx="46" cy="53" r="12" fill="#FFFDF8" stroke-width="2.5"/>
+      <path class="ln" stroke-width="1.8" fill="#D98CA0" d="M39 50q3 1 7 3q4-2 7-3q-1 3 0 6q-3-1-7-3q-4 2-7 3q1-3 0-6z"/>
+      <circle cx="46" cy="53" r="1.4" fill="#463C35"/>
+      <g class="brk" fill="none" stroke="#C98975" stroke-width="2.5" stroke-linecap="round"><path d="M32 36v-6h6M54 30h6v6M60 70v6h-6M38 76h-6v-6"/></g>
+      <rect class="sflash" x="27" y="19" width="38" height="66" rx="4" fill="#FFFFFF"/>
+      <circle cx="46" cy="14.5" r="1.6" fill="#463C35"/>
+      <circle class="ln btn" cx="46" cy="93.5" r="4.5" fill="#FFFDF8" stroke-width="2.5"/>
+    </g>
+    <g class="flash"><path d="${rays}" stroke="#F1DAA4" stroke-width="3.5" stroke-linecap="round"/><circle cx="46" cy="20" r="9" fill="#FFFDF8"/></g>
+    <text class="snap" x="112" y="30" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="24" fill="#C98975">snap!</text>
+    <g class="thumb"><rect class="ln" x="36" y="42" width="20" height="23" rx="1.5" fill="#FFFDF8" stroke-width="2"/><rect x="39" y="45" width="14" height="12" fill="#E8BFBE"/><circle cx="46" cy="51" r="3.4" fill="#FFFDF8"/></g>
+  </svg>`;
+}
 /* Pan toss drawing (see .pantoss styles). Each food piece sits at its resting spot via an inline transform. */
 const PAN_FOOD=[ // [kind, x, y, rotation]
   ["bow",78,111,-15],["bow",98,107,10],["bow",119,111,25],["bow",89,116,-30],["bow",109,117,5],
@@ -874,7 +903,7 @@ function eventView(e){
       </div>
     </section>
     ${e.theme==="cake"?cupcakeSVG():e.theme==="pasta"?panSVG():""}
-    <div class="galhead"><h2>The photo album</h2><span class="hand">spot yourself? tap to download ↓</span></div>
+    <div class="galhead"><h2>The photo album</h2>${snapSVG()}<span class="hand">spot yourself? tap to download ↓</span></div>
     <div class="gallery">${tiles}</div>
   </div>
   ${recipesOf(e).length?recipeBlock(e):""}
@@ -943,7 +972,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Bindings per view ---------- */
-let io, potIO, grIO, rollIO, cakeIO, panIO;
+let io, potIO, grIO, rollIO, cakeIO, panIO, snapIO;
 function bind(ev){
   // reveal on scroll
   io&&io.disconnect();
@@ -963,6 +992,30 @@ function bind(ev){
   app.querySelectorAll(".tapsay").forEach(s=>s.addEventListener("click",()=>{s.classList.add("said");setTimeout(()=>s.classList.remove("said"),1100)}));
   // cupcake: a piping bag frosts it once when it comes into view; tap / click / Enter to frost a fresh one
   // pan toss: tosses the food once when it comes into view; tap / click / Enter to toss again
+  // "phone eats first": lines up the shot, snaps with a flash, and a tiny photo drops toward the album; tap / hover / Enter to snap again
+  snapIO&&snapIO.disconnect(); snapIO=null;
+  const cam=app.querySelector(".snapcam");
+  if(cam&&!reduce.matches){
+    const q=s=>cam.querySelector(s); let busy=false; const T=2400;
+    const K=(list)=>list.map(([o,v])=>({offset:o,...v}));
+    const snap=()=>{
+      if(busy) return; busy=true;
+      q(".ph").animate(K([[0,{transform:"rotate(0)"}],[.12,{transform:"rotate(-6deg)"}],[.26,{transform:"rotate(5deg)"}],[.38,{transform:"rotate(-3deg)"}],
+        [.5,{transform:"rotate(0)"}],[.58,{transform:"scale(.96)"}],[.64,{transform:"scale(1.02)"}],[.72,{transform:"scale(1)"}],[1,{transform:"rotate(0)"}]]).map(k=>({...k,easing:"ease-in-out"})),{duration:T});
+      q(".brk").animate(K([[0,{transform:"scale(1)"}],[.4,{transform:"scale(1.35)",opacity:.5}],[.54,{transform:"scale(.94)",opacity:1}],[.6,{transform:"scale(1)"}],[1,{transform:"scale(1)"}]]),{duration:T});
+      q(".btn").animate(K([[0,{transform:"scale(1)"}],[.55,{transform:"scale(1)"}],[.58,{transform:"scale(.65)"}],[.64,{transform:"scale(1)"}],[1,{transform:"scale(1)"}]]),{duration:T});
+      q(".sflash").animate(K([[0,{opacity:0}],[.57,{opacity:0}],[.59,{opacity:1}],[.72,{opacity:0}],[1,{opacity:0}]]),{duration:T});
+      q(".flash").animate(K([[0,{opacity:0,transform:"scale(.3)"}],[.57,{opacity:0,transform:"scale(.3)"}],[.62,{opacity:1,transform:"scale(1.15)"}],[.78,{opacity:0,transform:"scale(1.5)"}],[1,{opacity:0}]]),{duration:T});
+      q(".snap").animate(K([[0,{opacity:0}],[.58,{opacity:0,transform:"scale(.4) rotate(-12deg)"}],[.66,{opacity:1,transform:"scale(1.15) rotate(-4deg)"}],[.74,{opacity:1,transform:"scale(1) rotate(-6deg)"}],[.9,{opacity:1,transform:"scale(1) rotate(-6deg)"}],[1,{opacity:0,transform:"scale(.9) rotate(-6deg)"}]]),{duration:T});
+      q(".thumb").animate(K([[0,{opacity:0}],[.6,{opacity:0,transform:"translate(0,0) scale(.5)"}],[.68,{opacity:1,transform:"translate(14px,-16px) scale(1) rotate(-8deg)",easing:"ease-in"}],
+        [.97,{opacity:1,transform:"translate(70px,58px) scale(.9) rotate(20deg)"}],[1,{opacity:0,transform:"translate(72px,62px) scale(.9) rotate(22deg)"}]]),{duration:T}).onfinish=()=>{busy=false};
+    };
+    snapIO=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ snapIO.disconnect(); setTimeout(snap,300); } }),{threshold:.8});
+    snapIO.observe(cam);
+    cam.addEventListener("click",snap);
+    cam.addEventListener("pointerenter",e=>{ if(e.pointerType==="mouse") snap(); });
+    cam.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); snap(); } });
+  }
   panIO&&panIO.disconnect(); panIO=null;
   const pt=app.querySelector(".pantoss");
   if(pt&&!reduce.matches){
