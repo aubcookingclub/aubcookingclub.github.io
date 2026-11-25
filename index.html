@@ -474,9 +474,6 @@ main{min-height:60vh}
 .rcard .facts{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 20px}
 .rcard h4{font-family:var(--serif);font-size:24px;color:#3F5545;margin:20px 0 6px;font-weight:800}
 .rcard h5.subhead{font-family:var(--hand);font-size:24px;color:#a3604c;margin:14px 0 2px;font-weight:700}
-/* "On every table" utensils note above a workshop's recipes */
-.recipe-sec > .wrap > p.kit{max-width:640px;margin:-22px auto 34px;padding:12px 18px;font-size:15.5px;line-height:1.6;background:var(--card);color:var(--card-ink);border:2px dashed var(--sage);border-radius:10px}
-.recipe-sec > .wrap > p.kit b{color:#3F5545}
 .rcard ul,.rcard ol{margin:0;padding-left:20px;line-height:30px}
 .rcard li{opacity:0;transform:translateY(6px);transition:all .35s ease}
 .rcard.open li{opacity:1;transform:none}
@@ -1443,7 +1440,9 @@ const PHOTO_PICKS = { // chosen 2026-10-26 with the photo picker (80 of 203 cake
   "cake-for-a-cause": [1,2,4,5,6,7,8,10,11,12,13,14,16,17,18,19,20,21,22,23,24,26,30,31,32,33,35,37,39,40,45,48,50,53,54,63,67,68,69,71,
     75,79,80,85,88,95,97,100,104,105,106,112,113,117,119,120,121,122,125,126,128,136,141,143,144,145,149,151,154,162,167,170,171,173,174,178,184,186,187,189],
   "twirl-in-pink": [1,2,3,4,9,10,11,12,14,15,16,17,18,20,21,22,24,25,26,27,28,29,30,31,32,52,55,61,62,65,66,70,72,75,77,80,82,83,86,87,
-    93,99,103,104,105,107,108,109,110,112,113,114,116,118,119,123,124,126,131,132,133,135,136,137]
+    93,99,103,104,105,107,108,109,110,112,113,114,116,118,119,123,124,126,131,132,133,135,136,137],
+  // 2026-11-25: 45 of 66; the user removed the pointing / feeding photos (9, 10, 11) and every shot that repeats another
+  "sahtein": [1,2,4,5,6,7,12,13,15,16,19,20,22,23,24,25,28,29,30,33,34,36,37,38,39,41,42,43,44,45,47,48,49,52,53,54,55,56,58,59,60,61,62,64,65]
 };
 function realPhotos(slug){
   const all=PHOTOS[slug].map(([w,h,alt],i)=>{
@@ -1481,7 +1480,6 @@ const EVENTS = [
     desc:"To celebrate Lebanese Independence Day, we teamed up with the Nutrition Student Society and cooked a homemade Lebanese spread in the pilot plant: creamy hummus, crunchy fattoush, tawouk and kafta, all made from scratch and shared around the table. Sahtein!",
     theme:"lebanese", variant:"v-blue", tape:"blue", stick:"i-tomato",
     photos:realPhotos("sahtein"), recipePhotos:[15,6,20,23], // photo numbers for each recipe card (hummus, fattoush, tawouk, kafta)
-    kit:["1 blender or food processor","2 knives","1 small bowl (for the hummus)","2 big bowls (for the fattoush and the protein)","1 green cutting board"], // utensils on every table
     recipes:[ // from the workshop's recipe cards; they give no cooking time or servings, so those chips are left out
       { label:"Hummus", name:"Hummus",
         ingredients:["1 can chickpeas, drained and rinsed","2 tablespoons tahini","2 tablespoons lemon juice","1 small garlic clove","2 tablespoons olive oil","2 to 4 tablespoons cold water","½ teaspoon salt"],
@@ -2382,7 +2380,6 @@ function recipeBlock(e){
     ${rollerSVG()}
     <h2 class="reveal">Psst… want the recipe${rs.length>1?"s":""}?</h2>
     <p class="reveal">Because good food deserves a second round.</p>
-    ${e.kit?`<p class="kit reveal"><b>On every table:</b> ${e.kit.join(" · ")}</p>`:""}
     ${rs.map((r,k)=>recipeCard(e,r,k)).join("")}
   </div></section>`;
 }
