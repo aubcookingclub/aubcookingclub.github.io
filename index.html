@@ -1465,6 +1465,43 @@ const PHOTOS = {
     [1600,1067,"Blowing up an orange balloon"],
     [1600,1067,"Showing off a sandwich in the courtyard"],
     [1600,1067,"Holding a rose and a plate of knefeh"]
+  ],
+  "cookies-for-cats":[ // Cookies × Pets (2026-11-20); one shot per moment, blurry ones left out; the cover is set in PHOTO_PICKS
+    [1600,1200,"Checking the cookies in the oven with a big oven mitt"],
+    [1600,1200,"Whisks, bowls and a rolling pin ready on the table"],
+    [1600,1200,"Kneading the cookie dough"],
+    [1600,1200,"Mixing the dough by hand"],
+    [1600,1200,"Bowls of icing and colours being mixed"],
+    [1600,1200,"Rolling out the dough between pet-shaped cookies"],
+    [1600,1200,"Cutting pet shapes out of the dough"],
+    [1600,1200,"Carrying a sheet of cut-out cookies to the tray"],
+    [1600,1200,"Baked cat, dog, heart and star cookies"],
+    [1600,1200,"Piping orange icing onto a cat cookie"],
+    [1600,1200,"Decorating the cookies with piping bags"],
+    [1600,1200,"A tray of decorated cat and dog cookies"],
+    [1600,1200,"Cookies iced in black, white and orange"],
+    [1600,1200,"A finished dog cookie next to its tray-mates"],
+    [1600,1200,"A husky on a phone beside the cookie made of it"],
+    [1600,1200,"A Siamese cat on a phone beside its cookie"],
+    [1600,1200,"A cat cookie held up next to the real cat"],
+    [1600,1200,"A fluffy dog on a phone next to its cookie twin"],
+    [1600,1200,"A golden puppy on a phone beside its cookie"],
+    [1600,1200,"A box of finished pet cookies"],
+    [1600,1200,"Adding a paw to the pet name board"],
+    [1600,1200,"The board: write down your pet’s name and one weird thing they do"],
+    [1600,1200,"Pointing to a paw on the pet name board"],
+    [1600,1200,"Writing a pet’s name on a paper paw"],
+    [1200,1600,"The door decorated with orange balloons"],
+    [1600,1200,"Cat cut-outs decorating the baking table"],
+    [1600,1200,"Thumbs up from the team in hairnets"],
+    [1600,1200,"The pilot plant full of bakers"],
+    [1600,1200,"Tables of bakers across the kitchen"],
+    [1600,1200,"Three bakers smiling by the mixer"],
+    [1600,1200,"A table team posing with their bowls"],
+    [1600,1200,"Two bakers with their cookie tray"],
+    [1600,1200,"Rolling and cutting at the pink table"],
+    [1600,1200,"Making heart hands over the dough"],
+    [1600,1200,"Posing in the Cookies × Pets, Cooking Club × SETA photo frame"]
   ]
 };
 /* Which photos each workshop album shows, and in what order (photo numbers = the NN in <slug>-NN.jpg; the first is the cover).
@@ -1477,7 +1514,9 @@ const PHOTO_PICKS = { // chosen 2026-10-26 with the photo picker (80 of 203 cake
   // 2026-11-25: 45 of 66; the user removed the pointing / feeding photos (9, 10, 11) and every shot that repeats another
   "sahtein": [1,2,4,5,6,7,12,13,15,16,19,20,22,23,24,25,28,29,30,33,34,36,37,38,39,41,42,43,44,45,47,48,49,52,53,54,55,56,58,59,60,61,62,64,65],
   // 28 of 31: 4 (a second cheese pull, like 5) and 14 (manakish on the saj, like 15) hidden; 3 removed by the user
-  "courtyard": [1,2,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  "courtyard": [1,2,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+  // all 35, with the photo frame (35) as the cover
+  "cookies-for-cats": [35,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
 };
 function realPhotos(slug){
   const all=PHOTOS[slug].map(([w,h,alt],i)=>{
@@ -1534,7 +1573,18 @@ const EVENTS = [
     date:"2026-11-24", organizers:"With more than 10 AUB clubs", // same day as Sahtein; listed after it, so it is the next chapter
     desc:"We took it back to our roots in the courtyard, with more than 10 clubs joining in. Lekmet Em Ali made fresh saj and manakish right in front of us, Al Daouk brought the knefeh, and interactive games kept everyone playing between bites.",
     theme:"courtyard", variant:"v-pol", tape:"blue", stick:"i-star",
-    photos:realPhotos("courtyard"), recipe:null }
+    photos:realPhotos("courtyard"), recipe:null },
+  { slug:"cookies-for-cats", title:"Cookies × Pets", subtitle:"Baking for the Campus Cats",
+    date:"2026-11-20", organizers:"With SETA and Flavors by Aya",
+    desc:"A fundraiser for the cats on campus! Together with SETA, the club that looks after AUB’s cats, we baked sugar cookies and decorated them to look like our own pets, with flavors from Aya Doughan’s Flavors by Aya. Every cookie helped raise money so the campus cats can be taken care of.",
+    theme:"cookies",variant:"v-clip", tape:"pink", stick:"i-star",
+    photos:realPhotos("cookies-for-cats"), recipePhotos:[12], // photo number for the recipe card
+    recipes:[ // from the workshop's table sheets; they give no time or servings, so those chips are left out
+      { label:"Sugar Cookies", name:"Sugar Cookies",
+        ingredients:["5 cups all-purpose flour, plus extra for rolling","1 tsp baking powder","1 tsp kosher salt","1¼ cups unsalted butter, softened","1¼ cups granulated sugar","85 g cream cheese, softened","1 large egg, at room temperature","1 tsp vanilla extract"],
+        extra:{title:"For the icing", items:["4 cups powdered sugar, sifted","Food coloring, to taste","Water, added gradually"]},
+        steps:["Mix the dry ingredients: Whisk the flour, baking powder and salt together. In a separate large bowl, beat the butter and sugar until pale and fluffy. Blend in the cream cheese.","Add egg and vanilla: Mix in the egg and vanilla. Scrape the bowl, then add the flour mixture on low speed until a dough comes together.","Chill the dough: Knead the dough briefly on the counter. Split it into two portions, wrap and chill for at least 15 minutes (or refrigerate overnight).","Roll and cut: Heat the oven to 165 °C and line two baking sheets. Roll one portion on a lightly floured surface to about 8 mm (⅓ inch) thick. Cut into shapes and arrange on the trays. Gather and reroll the scraps.","Bake and cool: Bake for around 15 minutes, turning the trays halfway through, until the edges are faintly golden. Cool on the tray, then move to a rack. Repeat with the remaining dough.","Make the icing: Put the sifted powdered sugar in a large bowl and add water a little at a time, mixing, until the icing is thin and smooth enough to decorate with. Don’t add too much water at once.","Add colour: Divide the icing into separate bowls and stir in food coloring until the colours are even.","Decorate: Ice your cookies to look like your pets. Ask a team member for help with the oven, hot trays and the electric mixer."] }
+    ] }
 ];
 EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
 EVENTS.forEach((e,i)=>e.chapter=String(i+1).padStart(2,"0"));
@@ -2403,7 +2453,7 @@ function eventView(e){
       <div class="herophoto">
         <div class="main" style="view-transition-name:photo-${e.slug}"><img class="fade" ${FADE} src="${cover.url}" alt="${cover.alt}, ${e.subtitle}" fetchpriority="high"></div>
         <div class="mini"><span class="tape ${e.tape}"></span><img class="fade" ${FADE} src="${mini.thumb}" alt=""></div>
-        <button class="grinder" data-kind="${e.theme==="cake"?"sprinkles":"spice"}" aria-label="${e.theme==="cake"?"Add some sprinkles":"Add a pinch of spice"}">${grinderSVG()}</button>
+        <button class="grinder" data-kind="${e.theme==="cake"||e.theme==="cookies"?"sprinkles":"spice"}" aria-label="${e.theme==="cake"||e.theme==="cookies"?"Add some sprinkles":"Add a pinch of spice"}">${grinderSVG()}</button>
       </div>
     </section>
     ${e.theme==="cake"?cupcakeSVG():e.theme==="pasta"?panSVG():""}
