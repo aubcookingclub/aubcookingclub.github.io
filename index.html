@@ -289,6 +289,12 @@ main{min-height:60vh}
 .chapter.v-pol .sheet{transform:rotate(-.6deg)}
 .chapter.v-pol .tape{top:-12px}
 .chapter.v-blue .sheet{background:#DCE8EB}
+/* memories page: chapters grouped by month */
+.monthhead{display:flex;align-items:baseline;gap:14px;margin:34px 0 0;font-family:var(--hand);font-weight:700;font-size:clamp(34px,4.4vw,46px);color:#a3604c;line-height:1}
+.monthhead::after{content:"";flex:1;border-top:2.5px dashed var(--sage);transform:translateY(-8px)}
+.monthhead small{font-family:var(--hand);font-size:.55em;color:var(--olive);font-weight:600}
+.chapters.month-group{padding-bottom:30px}
+.chapters.month-group:last-child{padding-bottom:110px}
 .chapter.soon{cursor:default}
 .chapter.soon .sheet{background:transparent;box-shadow:none;border:2.5px dashed var(--sage);min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:50px 24px;color:var(--espresso)}
 .chapter.soon h2{color:var(--olive)}
@@ -1502,6 +1508,24 @@ const PHOTOS = {
     [1600,1200,"Rolling and cutting at the pink table"],
     [1600,1200,"Making heart hands over the dough"],
     [1600,1200,"Posing in the Cookies × Pets, Cooking Club × SETA photo frame"]
+  ],
+  "knefe-stand":[ // AIChE × Cooking Club Knefe Stand (2026-11-04); one shot per moment, blurry ones left out; 01 is the cover
+    [1600,1067,"Chefs serving from a big tray of knefe"],
+    [1600,1067,"The Knefe Stand sign outside Oxy and Bechtel"],
+    [1600,1067,"A crowd lining up at the knefe stand"],
+    [1600,1067,"Serving knefe sandwiches to the line"],
+    [1600,1067,"Cutting the knefe while students wait"],
+    [1600,1067,"A board linking cooking to chemical engineering"],
+    [1600,1067,"The distillation pot next to the “How cheesy is your pull?” chart"],
+    [1600,1067,"Science of Knafeh question cards on the table"],
+    [1600,1067,"A Science of Knafeh question card up close"],
+    [1600,1067,"Holding a knefe sandwich up to the camera"],
+    [1600,1067,"Smiling at the stand"],
+    [1600,1067,"Enjoying a knefe sandwich"],
+    [1600,1067,"Two friends at the knefe stand"],
+    [1600,1067,"Smiling in the crowd"],
+    [1600,1067,"Four friends with their knefe in front of the board"],
+    [1600,1067,"A group photo in the sunshine"]
   ]
 };
 /* Which photos each workshop album shows, and in what order (photo numbers = the NN in <slug>-NN.jpg; the first is the cover).
@@ -1574,6 +1598,11 @@ const EVENTS = [
     desc:"We took it back to our roots in the courtyard, with more than 10 clubs joining in. Lekmet Em Ali made fresh saj and manakish right in front of us, Al Daouk brought the knefeh, and interactive games kept everyone playing between bites.",
     theme:"courtyard", variant:"v-pol", tape:"blue", stick:"i-star",
     photos:realPhotos("courtyard"), recipe:null },
+  { slug:"knefe-stand", title:"Knefe Stand", subtitle:"Knefe Meets Chemistry",
+    date:"2026-11-04", organizers:"With AIChE AUB",
+    desc:"Come for the knefe, stay for the science! Together with AIChE, we set up a knefe stand outside Oxy and Bechtel, with warm knefe, Science of Knafeh challenge cards with prizes, and a live rosemary distillation experiment.",
+    theme:"knefe", variant:"v-blue", tape:"blue", stick:"i-star",
+    photos:realPhotos("knefe-stand"), recipe:null },
   { slug:"cookies-for-cats", title:"Cookies × Pets", subtitle:"Baking for the Campus Cats",
     date:"2026-11-20", organizers:"With SETA and Flavors by Aya",
     desc:"A fundraiser for the cats on campus! Together with SETA, the club that looks after AUB’s cats, we baked sugar cookies and decorated them to look like our own pets, with flavors from Aya Doughan’s Flavors by Aya. Every cookie helped raise money so the campus cats can be taken care of.",
@@ -2031,7 +2060,7 @@ function homeView(){
 }
 
 function memoriesView(){
-  const cards=EVENTS.map(e=>{
+  const card=e=>{
     const cover=e.photos[0];
     return `<button class="chapter ${e.variant} reveal" data-event="${e.slug}" aria-label="Open chapter ${e.chapter}: ${e.title}, ${e.subtitle}">
       <div class="sheet">
@@ -2044,7 +2073,11 @@ function memoriesView(){
         <span class="look">take a look ${use("i-arrow","","width:34px;height:20px;color:currentColor")}</span>
       </div>
       ${use(e.stick,"stick")}
-    </button>`}).join("");
+    </button>`};
+  // group the chapters by the month they happened in (EVENTS is already sorted by date)
+  const months=[];
+  for(const e of EVENTS){ const m=e.date.slice(0,7); if(!months.length||months[months.length-1].m!==m) months.push({m,list:[]}); months[months.length-1].list.push(e); }
+  const monthName=m=>new Date(m+"-15T12:00:00").toLocaleDateString("en-US",{month:"long",year:"numeric"});
   const next=String(EVENTS.length+1).padStart(2,"0");
   return `<div class="view">
     <section class="pagehead"><div class="wrap">
@@ -2052,8 +2085,10 @@ function memoriesView(){
       <p>Every workshop has a story. Here’s ours.</p>
       ${use("i-whisk","doodle reveal","height:160px")}
     </div></section>
-    <section class="wrap"><div class="chapters">
-      ${cards}
+    <section class="wrap">${months.map((g,i)=>`
+      <h3 class="monthhead reveal">${monthName(g.m)} <small>${g.list.length} ${g.list.length===1?"chapter":"chapters"}</small></h3>
+      <div class="chapters month-group">
+      ${g.list.map(card).join("")}${i<months.length-1?"</div>":""}`).join("")}
       <div class="chapter soon reveal"><div class="sheet">
         ${potSVG()}
         <span class="num">Chapter ${next}</span><h2>Still simmering…</h2><span class="cap">Our next workshop lands here. Save a seat!</span>
