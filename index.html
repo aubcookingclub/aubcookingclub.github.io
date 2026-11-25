@@ -473,6 +473,10 @@ main{min-height:60vh}
 .rcard .inner{padding:0 30px 34px 70px}
 .rcard .facts{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 20px}
 .rcard h4{font-family:var(--serif);font-size:24px;color:#3F5545;margin:20px 0 6px;font-weight:800}
+.rcard h5.subhead{font-family:var(--hand);font-size:24px;color:#a3604c;margin:14px 0 2px;font-weight:700}
+/* "On every table" utensils note above a workshop's recipes */
+.recipe-sec > .wrap > p.kit{max-width:640px;margin:-22px auto 34px;padding:12px 18px;font-size:15.5px;line-height:1.6;background:var(--card);color:var(--card-ink);border:2px dashed var(--sage);border-radius:10px}
+.recipe-sec > .wrap > p.kit b{color:#3F5545}
 .rcard ul,.rcard ol{margin:0;padding-left:20px;line-height:30px}
 .rcard li{opacity:0;transform:translateY(6px);transition:all .35s ease}
 .rcard.open li{opacity:1;transform:none}
@@ -1363,6 +1367,74 @@ const PHOTOS = {
     [1600,1067,"An empty cooking station ready for the workshop"],
     [1600,1067,"Pouring pink lemonade at the counter"],
     [1600,1067,"The busy kitchen full of cooks"]
+  ],
+  "sahtein":[ // kitchen photos only (no outdoor knefeh/saj), duplicates and blurry shots left out; 01 is the cover
+    [1200,1600,"A full plate of tawouk, hummus and fattoush seen from above"],
+    [1200,1600,"Chopping parsley and mint next to a bowl of fattoush"],
+    [1600,1067,"A bowl of crispy pita next to hummus and tawouk"],
+    [1600,1067,"Fattoush, hummus and tawouk ready on the table"],
+    [1600,1067,"Sliding the tawouk out of the pan onto a plate"],
+    [1600,1067,"A big bowl of fattoush with crispy pita"],
+    [1600,1067,"Everyone reaching in for a taste with green forks"],
+    [1600,1067,"Sharing plates of fattoush and hummus across the table"],
+    [1600,1067,"Two friends showing off their hummus and fattoush"],
+    [1600,1067,"Feeding a friend a bite of fattoush"],
+    [1600,1067,"A forkful of fattoush for a laughing friend"],
+    [1600,1067,"Two cooks with their bowl of fattoush and plate of tawouk"],
+    [1600,1067,"Four cooks holding up their finished plates"],
+    [1600,1067,"Tawouk, hummus and fattoush laid out on the table"],
+    [1600,1067,"Creamy hummus drizzled with olive oil"],
+    [1600,1067,"Four pans of tawouk sizzling on the stove"],
+    [1600,1067,"Stirring tawouk with a wooden spoon"],
+    [1600,1066,"Pans of tawouk and kafta on the stove"],
+    [1600,1067,"Cooks smiling at the stoves"],
+    [1600,1067,"Golden tawouk in a pan"],
+    [1600,1067,"A row of pans cooking on the stove"],
+    [1600,1067,"A group cooking side by side at the stoves"],
+    [1600,1067,"Turning kafta with tongs next to pans of tawouk"],
+    [1600,1067,"Many hands stirring the pans at once"],
+    [1600,1067,"Tawouk in its marinade, just starting to cook"],
+    [1067,1600,"Three cooks stirring their pans"],
+    [1600,1067,"Wooden spoons stirring pans of tawouk"],
+    [1600,1067,"Adding lemon juice to the chickpeas for hummus"],
+    [1600,1067,"Two cooks smiling over their pans"],
+    [1600,1067,"Mixing the fattoush by hand"],
+    [1600,1067,"Pouring olive oil over the fattoush"],
+    [1600,1067,"Chickpeas waiting in the blender"],
+    [1600,1067,"Getting the fattoush station ready"],
+    [1600,1067,"Pouring pomegranate molasses into the dressing"],
+    [1600,1067,"A bowl of freshly mixed fattoush"],
+    [1600,1067,"Drizzling the dressing over the fattoush"],
+    [1600,1067,"Two friends posing in their aprons"],
+    [1600,1067,"A big bowl of chopped lettuce"],
+    [1600,1067,"Two friends smiling by the window"],
+    [1600,1067,"Bowls of chopped vegetables and green pepper"],
+    [1600,1067,"Fried pita ready for the fattoush"],
+    [1600,1067,"Two cooks mixing their salad"],
+    [1600,1067,"Chopped lettuce, cucumber and tomato on the board"],
+    [1600,1067,"Tossing the fattoush at the station"],
+    [1600,1067,"Chopped tomatoes, cucumbers, mint and green pepper"],
+    [1600,1067,"Chopping herbs on the cutting board"],
+    [1600,1067,"Prepping vegetables at a busy table"],
+    [1600,1067,"Slicing green pepper on the cutting board"],
+    [1600,1067,"Two friends chopping tomatoes and cucumbers"],
+    [1600,1067,"Diced cucumbers and tomatoes on the board"],
+    [1600,1067,"Toasting pita in the pans"],
+    [1600,1067,"A pan full of crispy pita"],
+    [1600,1067,"Three cooks frying pita for the fattoush"],
+    [1600,1067,"Striking a pose in the kitchen"],
+    [1600,1067,"Washing lettuce for the salad"],
+    [1600,1067,"The pilot plant kitchen in full swing"],
+    [1600,1067,"Pita and cucumbers on the cutting board"],
+    [1600,1067,"Two friends posing in the kitchen"],
+    [1600,1067,"Two cooks cutting pita at their station"],
+    [1600,1067,"Cutting pita next to tomato and green pepper"],
+    [1600,1067,"The team posing together in the kitchen"],
+    [1600,1067,"Cutting pita next to bowls and vegetables"],
+    [1600,1067,"Bowls, vegetables and herbs ready to go"],
+    [1600,1067,"The recipe cards for hummus, tawouk and fattoush"],
+    [1600,1067,"Holding up a takeaway box with a smile"],
+    [1600,1067,"The pilot plant kitchen after the workshop"]
   ]
 };
 /* Which photos each workshop album shows, and in what order (photo numbers = the NN in <slug>-NN.jpg; the first is the cover).
@@ -1403,6 +1475,27 @@ const EVENTS = [
       { label:"Beetroot Pasta", name:"Creamy Beetroot Pasta", time:"30 min", serves:"5",
         ingredients:["500 g farfalle","500 g cooked beetroot","190 g cream cheese","125 g feta","2 garlic cloves, peeled","2½ tbsp olive oil","Salt and black pepper","Up to ¾ cup pasta cooking water","Optional: cooked chicken and cooked onions, to serve"],
         steps:["Get ready: Wash your hands and clear your work area.","Boil the water: Fill a large pot about two-thirds full of water and bring it to a rolling boil. Add a generous pinch of salt.","Cook the pasta: Add the farfalle and stir right away so it doesn’t stick. Cook for the time on the packet, usually 10 to 13 minutes, until cooked but still slightly firm.","Save water, then drain: Scoop out ¾ cup of the pasta cooking water and set it aside. Drain the pasta in a colander.","Blend the sauce: Put the beetroot, cream cheese, feta, garlic and olive oil in a blender. Add 2 tbsp of the saved pasta water and blend until completely smooth.","Warm it gently: Pour the sauce into a pan over low heat and stir for 1 to 2 minutes. If it’s too thick, add pasta water one spoonful at a time. Don’t let it boil hard.","Coat the pasta: Add the pasta to the sauce and toss until every piece is coated. Season with salt and pepper to taste.","Plate it up: Divide between 5 plates. Add chicken and onions only to the plates that want them, never to the sauce pan, so everyone gets their favourite."] }
+    ] },
+  { slug:"sahtein", title:"Sahtein", subtitle:"Lebanese Independence Day Workshop",
+    date:"2026-11-24", organizers:"With NSS, the Nutrition Student Society",
+    desc:"To celebrate Lebanese Independence Day, we teamed up with the Nutrition Student Society and cooked a homemade Lebanese spread in the pilot plant: creamy hummus, crunchy fattoush, tawouk and kafta, all made from scratch and shared around the table. Sahtein!",
+    theme:"lebanese", variant:"v-blue", tape:"blue", stick:"i-tomato",
+    photos:realPhotos("sahtein"), recipePhotos:[15,6,20,23], // photo numbers for each recipe card (hummus, fattoush, tawouk, kafta)
+    kit:["1 blender or food processor","2 knives","1 small bowl (for the hummus)","2 big bowls (for the fattoush and the protein)","1 green cutting board"], // utensils on every table
+    recipes:[ // from the workshop's recipe cards; they give no cooking time or servings, so those chips are left out
+      { label:"Hummus", name:"Hummus",
+        ingredients:["1 can chickpeas, drained and rinsed","2 tablespoons tahini","2 tablespoons lemon juice","1 small garlic clove","2 tablespoons olive oil","2 to 4 tablespoons cold water","½ teaspoon salt"],
+        steps:["Add everything except the water to a blender or food processor.","Blend until smooth, adding the water gradually until you reach your preferred consistency.","Taste and adjust the salt or lemon juice."] },
+      { label:"Fattoush", name:"Fattoush",
+        ingredients:["1 to 2 pieces of pita bread","2 tomatoes, chopped","1 cucumber, chopped","½ onion, sliced","1 bell pepper, chopped","A handful of parsley, chopped","A few mint leaves, chopped","Lettuce, chopped (optional)"],
+        extra:{title:"For the dressing", items:["3 tablespoons olive oil","2 tablespoons lemon juice","1 tablespoon pomegranate molasses","1 small garlic clove, crushed","Salt and pepper, to taste","½ teaspoon sumac"]},
+        steps:["Toast or fry the pita until crisp, then break it into pieces.","Combine the vegetables, parsley and mint in a bowl.","Mix the dressing ingredients separately.","Pour the dressing over the salad and toss well.","Add the crispy pita just before serving."] },
+      { label:"Tawouk", name:"Tawouk",
+        ingredients:["500 g ready-seasoned tawouk chicken, already cut into cubes","1 to 2 tablespoons olive oil, if needed"],
+        steps:["Heat a pan over medium heat.","Add a little olive oil if needed.","Add the seasoned chicken pieces in a single layer.","Cook for about 10 to 12 minutes, turning occasionally, until fully cooked (74 °C inside).","Serve with pita bread and salad."] },
+      { label:"Kafta", name:"Kafta",
+        ingredients:["500 g ready-seasoned kafta, already shaped and prepared","1 to 2 tablespoons olive oil, if needed"],
+        steps:["Heat a pan over medium heat.","Add a little olive oil if needed.","Place the prepared kafta pieces in the pan.","Cook for about 4 to 5 minutes on each side, turning occasionally, until fully cooked.","Serve hot with pita bread, hummus or salad."] }
     ] }
 ];
 EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
@@ -2289,9 +2382,12 @@ function recipeBlock(e){
     ${rollerSVG()}
     <h2 class="reveal">Psst… want the recipe${rs.length>1?"s":""}?</h2>
     <p class="reveal">Because good food deserves a second round.</p>
+    ${e.kit?`<p class="kit reveal"><b>On every table:</b> ${e.kit.join(" · ")}</p>`:""}
     ${rs.map((r,k)=>recipeCard(e,r,k)).join("")}
   </div></section>`;
 }
+/* one tickable ingredient line (shared by the main list and an optional second list such as a dressing) */
+const ingLi=(x,i)=>`<li class="ing" role="checkbox" aria-checked="false" tabindex="0" style="transition-delay:${150+i*40}ms"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4"/></svg></span><span class="txt">${x}</span></li>`;
 function recipeCard(e,r,k){
   const rp=r.photo?{url:r.photo,alt:r.name}:((e.recipePhotos||[])[k]?photoNo(e.slug,e.recipePhotos[k]):e.photos[0]);
   return `<div class="rcard reveal" data-recipe="${k}">
@@ -2304,10 +2400,11 @@ function recipeCard(e,r,k){
       <div class="body" id="rbody${k}"><div><div class="inner">
         ${r.sample?`<p class="sample">Sample recipe for the prototype. The club will swap in its own.</p>`:""}
         <h4 style="font-size:32px;margin-top:10px">${r.name}</h4>
-        <div class="facts"><span class="chip">⏱ ${r.time}</span><span class="chip alt">Serves ${r.serves}</span></div>
+        ${r.time||r.serves?`<div class="facts">${r.time?`<span class="chip">⏱ ${r.time}</span>`:""}${r.serves?`<span class="chip alt">Serves ${r.serves}</span>`:""}</div>`:""}
         <img class="rphoto fade" ${FADE} src="${rp.url}" alt="${rp.alt}" loading="lazy">
         <h4>You’ll need</h4>
-        <ul class="checklist">${r.ingredients.map((x,i)=>`<li class="ing" role="checkbox" aria-checked="false" tabindex="0" style="transition-delay:${150+i*40}ms"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4"/></svg></span><span class="txt">${x}</span></li>`).join("")}</ul>
+        <ul class="checklist">${r.ingredients.map((x,i)=>ingLi(x,i)).join("")}</ul>
+        ${r.extra?`<h5 class="subhead">${r.extra.title}</h5><ul class="checklist">${r.extra.items.map((x,i)=>ingLi(x,r.ingredients.length+i)).join("")}</ul>`:""}
         <div class="mixbowl"><svg viewBox="0 0 120 66" aria-hidden="true">
           <path d="M8 28h104q-4 36-52 36T8 28z" fill="#A5B49C" stroke="#463C35" stroke-width="3" stroke-linejoin="round"/>
           <ellipse cx="60" cy="28" rx="52" ry="6" fill="#FBEFD5" stroke="#463C35" stroke-width="3"/>
@@ -2888,11 +2985,18 @@ function recipePDF(ev,r=recipesOf(ev)[0]){
   d.setFont("helvetica","normal");d.setFontSize(10.5);d.setTextColor(70,60,53);
   d.text(clean(`From Chapter ${ev.chapter}: ${ev.title} ${ev.subtitle} (${fmtDate(ev.date)})`),54,126);
   let y=168;
-  d.setFillColor(241,218,164);d.roundedRect(86,y-14,110,22,11,11,"F");d.setFillColor(182,206,213);d.roundedRect(204,y-14,80,22,11,11,"F");
-  d.setFont("helvetica","bold");d.setFontSize(10);d.text(clean("Time: "+r.time),96,y+1);d.text("Serves "+r.serves,214,y+1);
-  y+=44;d.setFont("times","bold");d.setFontSize(18);d.setTextColor(63,85,69);d.text("You'll need",86,y);y+=22;
+  if(r.time||r.serves){ // time / servings chips, only for recipes that have them
+    let cx=86; d.setFont("helvetica","bold");d.setFontSize(10);
+    if(r.time){ d.setFillColor(241,218,164);d.roundedRect(cx,y-14,110,22,11,11,"F");d.text(clean("Time: "+r.time),cx+10,y+1);cx+=118; }
+    if(r.serves){ d.setFillColor(182,206,213);d.roundedRect(cx,y-14,80,22,11,11,"F");d.text("Serves "+r.serves,cx+10,y+1); }
+    y+=44;
+  } else y+=10;
+  d.setFont("times","bold");d.setFontSize(18);d.setTextColor(63,85,69);d.text("You'll need",86,y);y+=22;
   d.setFont("helvetica","normal");d.setFontSize(11);d.setTextColor(70,60,53);
-  r.ingredients.forEach(x=>{const ls=d.splitTextToSize(clean(x),400);y=room(y,(ls.length-1)*22);d.setFillColor(201,137,117);d.circle(92,y-3.5,2.2,"F");ls.forEach(l=>{d.text(l,102,y);y+=22})});
+  const bullets=list=>list.forEach(x=>{const ls=d.splitTextToSize(clean(x),400);y=room(y,(ls.length-1)*22);d.setFillColor(201,137,117);d.circle(92,y-3.5,2.2,"F");ls.forEach(l=>{d.text(l,102,y);y+=22})});
+  bullets(r.ingredients);
+  if(r.extra){ y=room(y+6,44);d.setFont("times","italic");d.setFontSize(14);d.setTextColor(163,96,76);d.text(clean(r.extra.title),86,y);y+=22;
+    d.setFont("helvetica","normal");d.setFontSize(11);d.setTextColor(70,60,53); bullets(r.extra.items); }
   y=room(y+14,44);d.setFont("times","bold");d.setFontSize(18);d.setTextColor(63,85,69);d.text("Let's cook",86,y);y+=22;
   d.setFont("helvetica","normal");d.setFontSize(11);d.setTextColor(70,60,53);
   r.steps.forEach((x,i)=>{const ls=d.splitTextToSize(clean(x),400);y=room(y,(ls.length-1)*22);d.setFont("helvetica","bold");d.text(String(i+1)+".",86,y);d.setFont("helvetica","normal");ls.forEach(l=>{d.text(l,104,y);y+=22})});
