@@ -1432,6 +1432,39 @@ const PHOTOS = {
     [1600,1067,"The recipe cards for hummus, tawouk and fattoush"],
     [1600,1067,"Holding up a takeaway box with a smile"],
     [1600,1067,"The pilot plant kitchen after the workshop"]
+  ],
+  "courtyard":[ // outdoor photos from the same day; one shot per moment, blurry ones left out; 01 is the cover
+    [1600,1067,"Getting a slice of Al Daouk knefeh served, with a long cheese pull"],
+    [1600,1067,"A warm slice of knefeh with stretchy cheese"],
+    [1600,1067,"Two friends tasting their knefeh in the courtyard"],
+    [1600,1067,"A big cheese pull from the knefeh tray"],
+    [1600,1067,"Friends watching the knefeh being served"],
+    [1600,1067,"The Al Daouk chef smiling at his knefeh stand"],
+    [1600,1067,"A full tray of knefeh before the first cut"],
+    [1600,1067,"Two friends with their knefeh sandwiches"],
+    [1600,1067,"Two friends holding their knefeh"],
+    [1600,1067,"Making silly faces at the knefeh stand"],
+    [1600,1067,"Lekmet Em Ali tossing fresh saj dough"],
+    [1600,1067,"The Lekmet Em Ali saj stand under the trees"],
+    [1600,1067,"Balls of dough waiting by the saj"],
+    [1600,1067,"A za'atar and greens manousheh on the saj"],
+    [1600,1067,"Za'atar, cheese and greens manakish cooking on the saj"],
+    [1600,1067,"A folded egg manousheh on the saj"],
+    [1600,1067,"Eggs, avocado and mushrooms ready for the manakish"],
+    [1600,1067,"A table of toppings, jars and spreads"],
+    [1600,1067,"Serving at the Lekmet Em Ali stand"],
+    [1600,1067,"The Plants and Their Seeds game"],
+    [1600,1067,"Plant Bingo cards and pieces"],
+    [1600,1067,"The interactive games table"],
+    [1600,1067,"Three friends posing in the courtyard"],
+    [1600,1067,"Two friends with their sandwiches under the tent"],
+    [1600,1067,"Two friends posing in the sunshine"],
+    [1600,1067,"Two friends smiling under the trees"],
+    [1600,1067,"Two friends posing in front of the stalls"],
+    [1600,1067,"Two friends with orange balloons"],
+    [1600,1067,"Blowing up an orange balloon"],
+    [1600,1067,"Showing off a sandwich in the courtyard"],
+    [1600,1067,"Holding a rose and a plate of knefeh"]
   ]
 };
 /* Which photos each workshop album shows, and in what order (photo numbers = the NN in <slug>-NN.jpg; the first is the cover).
@@ -1494,7 +1527,12 @@ const EVENTS = [
       { label:"Kafta", name:"Kafta",
         ingredients:["500 g ready-seasoned kafta, already shaped and prepared","1 to 2 tablespoons olive oil, if needed"],
         steps:["Heat a pan over medium heat.","Add a little olive oil if needed.","Place the prepared kafta pieces in the pan.","Cook for about 4 to 5 minutes on each side, turning occasionally, until fully cooked.","Serve hot with pita bread, hummus or salad."] }
-    ] }
+    ] },
+  { slug:"courtyard", title:"The Courtyard Event", subtitle:"Back to Our Roots",
+    date:"2026-11-24", organizers:"With more than 10 AUB clubs", // same day as Sahtein; listed after it, so it is the next chapter
+    desc:"We took it back to our roots in the courtyard, with more than 10 clubs joining in. Lekmet Em Ali made fresh saj and manakish right in front of us, Al Daouk brought the knefeh, and interactive games kept everyone playing between bites.",
+    theme:"courtyard", variant:"v-pol", tape:"blue", stick:"i-star",
+    photos:realPhotos("courtyard"), recipe:null }
 ];
 EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
 EVENTS.forEach((e,i)=>e.chapter=String(i+1).padStart(2,"0"));
